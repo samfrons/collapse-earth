@@ -28,10 +28,15 @@ content in different visual languages, plus a switcher page to compare them:
 None of the above are deployed — `/` still serves `collapse-tech.html`. Open
 `collapse-v2-index.html` locally (see below) to browse the variants.
 
-Spec and plan documents for this redesign live under
-`.superpowers/sdd/2026-07-30-collapse-earth-v2-variants/` (task briefs, the
-shared variant contract, implementation reports and reviews) and
-`docs/superpowers/plans/2026-07-30-collapse-earth-v2-variants.md`.
+The durable references for this redesign are committed under `docs/`:
+
+- `docs/superpowers/specs/2026-07-30-collapse-earth-redesign-design.md` — design spec
+- `docs/superpowers/plans/2026-07-30-collapse-earth-v2-variants.md` — implementation plan
+
+Task briefs, the shared variant contract, per-variant implementation reports and
+review notes were working documents kept in a local, uncommitted
+`.superpowers/sdd/` directory; they are not part of the repository and will not
+be present in a fresh clone.
 
 ## Local development
 

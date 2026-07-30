@@ -539,6 +539,12 @@ window.COLLAPSE_DATA = {
      COMPANIES — staged by conviction, per the research doc's Recommendations.
      `keyFact.badge` uses the same vocabulary as funding badges so that nothing
      announced can be rendered as something delivered.
+     `keyFact.sourceIds` closes the "no number without a source" loop for the
+     atlas. research-doc is the source of record for every entry here, so it is
+     listed on all of them; a second id appears only where that source's own
+     row in meta.sources names the claim itself (a DAC delivery share, a
+     rescinded grant, a prize, a published TRL). The validator requires the
+     field, so a new company cannot be added without one.
      --------------------------------------------------------------------------- */
   companies: {
     tier1Label: "Biggest impact × proven commercial viability",
@@ -548,73 +554,76 @@ window.COLLAPSE_DATA = {
     tier1: [
       { name: "Fervo Energy", category: "clean-firm-power", country: "US",
         oneLiner: "Enhanced geothermal using horizontal drilling and fibre-optic sensing — the clearest bankability proof-point in frontier climate technology.",
-        keyFact: { text: "IPO'd on Nasdaq (FRVO) on 14 May 2026 raising ≈$2.2B gross at $27.00/share, and closed ≈$421M in non-recourse project debt for Cape Station Phase I — the first such financing for an enhanced-geothermal project globally.", badge: "verified", asOf: "2026-05" } },
+        keyFact: { text: "IPO'd on Nasdaq (FRVO) on 14 May 2026 raising ≈$2.2B gross at $27.00/share, and closed ≈$421M in non-recourse project debt for Cape Station Phase I — the first such financing for an enhanced-geothermal project globally.", badge: "verified", asOf: "2026-05", sourceIds: ["research-doc"] } },
       { name: "Exomad Green", category: "biochar", country: "Bolivia",
         oneLiner: "World's largest biochar producer, converting forestry residues to durable carbon via pyrolysis.",
-        keyFact: { text: "Over 320,000 tonnes delivered cumulatively; Microsoft signed the largest biochar carbon-removal deal in history by volume — at least 1.24M tonnes over 10 years. Annual run-rate is disputed (company ≈260,000 t/yr vs S&P Global ≈120,000 mtCO₂e/yr).", badge: "delivered", asOf: "2025-05" } },
+        keyFact: { text: "Over 320,000 tonnes delivered cumulatively; Microsoft signed the largest biochar carbon-removal deal in history by volume — at least 1.24M tonnes over 10 years. Annual run-rate is disputed (company ≈260,000 t/yr vs S&P Global ≈120,000 mtCO₂e/yr).", badge: "delivered", asOf: "2025-05", sourceIds: ["research-doc", "spglobal2025"] } },
       { name: "Terradot", category: "erw", country: "US / Brazil",
         oneLiner: "Enhanced rock weathering on Brazilian farmland, launched out of Stanford.",
-        keyFact: { text: "$58.2M raised (Google, Microsoft Climate Innovation Fund, John Doerr) with ≈300,000 tonnes contracted, including Google's 200,000-tonne purchase; 48,000+ tonnes of rock spread over 1,800 hectares. Acquired Eion (Feb 2026).", badge: "announced", asOf: "2026-02" } },
+        keyFact: { text: "$58.2M raised (Google, Microsoft Climate Innovation Fund, John Doerr) with ≈300,000 tonnes contracted, including Google's 200,000-tonne purchase; 48,000+ tonnes of rock spread over 1,800 hectares. Acquired Eion (Feb 2026).", badge: "announced", asOf: "2026-02", sourceIds: ["research-doc"] } },
       { name: "Lithos Carbon", category: "erw", country: "US",
         oneLiner: "Basalt on US farmland with soil-sampling MRV.",
-        keyFact: { text: "Delivered 5,160 registry-certified tonnes in Dec 2025 — described as the largest ERW issuance to date — against an 11,400-tonne Microsoft deal; ≈$63.4M raised.", badge: "delivered", asOf: "2025-12" } },
+        keyFact: { text: "Delivered 5,160 registry-certified tonnes in Dec 2025 — described as the largest ERW issuance to date — against an 11,400-tonne Microsoft deal; ≈$63.4M raised.", badge: "delivered", asOf: "2025-12", sourceIds: ["research-doc"] } },
       { name: "Climeworks", category: "dac", country: "Switzerland",
         oneLiner: "Solid-sorbent direct air capture; operates Orca and Mammoth in Iceland.",
-        keyFact: { text: "Leads DAC deliveries at ≈81% of all DAC delivered, but on tiny absolute volumes and at costs near ≈$1,000/t; raised $162M late-stage in Q3 2025 and laid off more than 10% of staff the same year.", badge: "delivered", asOf: "2025-Q3" } },
+        keyFact: { text: "Leads DAC deliveries at ≈81% of all DAC delivered, but on tiny absolute volumes and at costs near ≈$1,000/t; raised $162M late-stage in Q3 2025 and laid off more than 10% of staff the same year.", badge: "delivered", asOf: "2025-Q3", sourceIds: ["research-doc", "cdrfyi2025"] } },
       { name: "1PointFive / Carbon Engineering", category: "dac", country: "US",
         oneLiner: "Liquid-solvent DAC; an Occidental subsidiary building the largest plant in the world.",
-        keyFact: { text: "Stratos (West Texas) is designed for 500,000 t/yr; leads DAC credits sold at ≈52% with Microsoft and Airbus offtakes. Note fossil-industry ownership and potential enhanced-oil-recovery use.", badge: "announced", asOf: "2025-H1" } },
+        keyFact: { text: "Stratos (West Texas) is designed for 500,000 t/yr; leads DAC credits sold at ≈52% with Microsoft and Airbus offtakes. Note fossil-industry ownership and potential enhanced-oil-recovery use.", badge: "announced", asOf: "2025-H1", sourceIds: ["research-doc", "cdrfyi2025"] } },
       { name: "Heirloom Carbon", category: "dac", country: "US",
         oneLiner: "Accelerated limestone mineralisation DAC, targeting sub-$100/t at scale.",
-        keyFact: { text: "$150M Series B (Dec 2024, co-led by Future Positive and Lowercarbon Capital) bringing the total above $200M; two Louisiana plants planned at ≈320,000 t/yr combined, with a Microsoft offtake up to 315,000 t.", badge: "announced", asOf: "2024-12" } },
+        keyFact: { text: "$150M Series B (Dec 2024, co-led by Future Positive and Lowercarbon Capital) bringing the total above $200M; two Louisiana plants planned at ≈320,000 t/yr combined, with a Microsoft offtake up to 315,000 t.", badge: "announced", asOf: "2024-12", sourceIds: ["research-doc"] } },
       { name: "LanzaTech", category: "microbial-electro", country: "US",
         oneLiner: "Gas fermentation converting industrial CO/CO₂ into ethanol and chemicals — the commercial leader in carbon-to-products.",
-        keyFact: { text: "Six commercial facilities and 30M+ gallons of ethanol produced since 2021; went public via SPAC in Feb 2023 at a ≈$2B valuation. Faces profitability pressure and grant-dependency risk.", badge: "verified", asOf: "2023-02" } },
+        keyFact: { text: "Six commercial facilities and 30M+ gallons of ethanol produced since 2021; went public via SPAC in Feb 2023 at a ≈$2B valuation. Faces profitability pressure and grant-dependency risk.", badge: "verified", asOf: "2023-02", sourceIds: ["research-doc"] } },
       { name: "Sublime Systems", category: "cement-steel", country: "US",
         oneLiner: "Electrochemical \"true-zero\" cement, spun out of MIT.",
-        keyFact: { text: "More than $200M raised (Holcim, CRH, Siam Cement) with a Microsoft offtake up to 622,500 tonnes — but DOE rescinded its $87M grant in 2025, pausing the Holyoke plant and forcing a 10% layoff.", badge: "announced", asOf: "2025" } },
+        keyFact: { text: "More than $200M raised (Holcim, CRH, Siam Cement) with a Microsoft offtake up to 622,500 tonnes — but DOE rescinded its $87M grant in 2025, pausing the Holyoke plant and forcing a 10% layoff.", badge: "announced", asOf: "2025", sourceIds: ["research-doc", "doe2025"] } },
       { name: "Boston Metal", category: "cement-steel", country: "US",
         oneLiner: "Molten Oxide Electrolysis for zero-carbon steel and critical metals.",
-        keyFact: { text: "More than $500M raised including $75M in 2026 with Tata Steel; produced 1+ ton of steel/iron at pilot scale in 2025, with a Brazilian commercial plant focused on critical metals.", badge: "announced", asOf: "2026" } }
+        keyFact: { text: "More than $500M raised including $75M in 2026 with Tata Steel; produced 1+ ton of steel/iron at pilot scale in 2025, with a Brazilian commercial plant focused on critical metals.", badge: "announced", asOf: "2026", sourceIds: ["research-doc"] } }
     ],
 
     tier2: [
       { name: "Ebb Carbon", category: "ocean-cdr", country: "US",
         oneLiner: "Electrochemical ocean alkalinity enhancement, splitting seawater into acid and base streams.",
-        keyFact: { text: "Agreement with Microsoft to remove up to 350,000 tonnes over 10 years (Oct 2024) — the largest marine CDR commitment to date — with an initial delivery of 1,333 tonnes. Project Macoma pilot began operations in 2025.", badge: "delivered", asOf: "2024-10" } },
+        keyFact: { text: "Agreement with Microsoft to remove up to 350,000 tonnes over 10 years (Oct 2024) — the largest marine CDR commitment to date — with an initial delivery of 1,333 tonnes. Project Macoma pilot began operations in 2025.", badge: "delivered", asOf: "2024-10", sourceIds: ["research-doc"] } },
       { name: "Captura", category: "ocean-cdr", country: "US",
         oneLiner: "Direct ocean capture via bipolar-membrane electrodialysis, a Caltech spin-out.",
-        keyFact: { text: "Series A expanded to $45.3M plus a first close of a $12.5M Series B in June 2026 led by Equinor Ventures; 1,000-tonne-capacity pilot plants in LA and Hawaii.", badge: "announced", asOf: "2026-06" } },
+        keyFact: { text: "Series A expanded to $45.3M plus a first close of a $12.5M Series B in June 2026 led by Equinor Ventures; 1,000-tonne-capacity pilot plants in LA and Hawaii.", badge: "announced", asOf: "2026-06", sourceIds: ["research-doc"] } },
       { name: "Mati Carbon", category: "erw", country: "US / India",
         oneLiner: "Basalt on smallholder farms in India and Africa, nonprofit-controlled via Swaniti Initiative.",
-        keyFact: { text: "Won the $50M XPRIZE Carbon Removal grand prize (April 2025) on a tech-heavy MRV and smallholder-cohort model; buyers include Stripe, Shopify and Siemens.", badge: "verified", asOf: "2025-04" } },
+        keyFact: { text: "Won the $50M XPRIZE Carbon Removal grand prize (April 2025) on a tech-heavy MRV and smallholder-cohort model; buyers include Stripe, Shopify and Siemens.", badge: "verified", asOf: "2025-04", sourceIds: ["research-doc", "xprize2025"] } },
       { name: "Windfall Bio", category: "methane-removal", country: "US",
         oneLiner: "Methane-eating microbes (\"mems\") converting methane from any source into organic fertiliser plus carbon credits.",
-        keyFact: { text: "≈$37M raised ($9M seed Mar 2023 + $28M Series A Apr 2024, led by Prelude Ventures with Amazon Climate Pledge Fund and Breakthrough Energy Ventures); pilot-stage, targeting dilute ventilation-air methane at 0.2–1%. TIME Best Invention 2024.", badge: "announced", asOf: "2024-04" } },
+        keyFact: { text: "≈$37M raised ($9M seed Mar 2023 + $28M Series A Apr 2024, led by Prelude Ventures with Amazon Climate Pledge Fund and Breakthrough Energy Ventures); pilot-stage, targeting dilute ventilation-air methane at 0.2–1%. TIME Best Invention 2024.", badge: "announced", asOf: "2024-04", sourceIds: ["research-doc"] } },
       { name: "Rumin8", category: "methane-removal", country: "Australia",
         oneLiner: "Synthetic anti-methanogenic compounds for enteric methane — the furthest along in a high-impact agricultural niche.",
-        keyFact: { text: "≈$30.8M raised (Breakthrough Energy Ventures, Andrew Forrest); trials show up to ≈86–95% methane reduction and regulatory approval is secured in Brazil.", badge: "announced", asOf: "2026-07" } }
+        keyFact: { text: "≈$30.8M raised (Breakthrough Energy Ventures, Andrew Forrest); trials show up to ≈86–95% methane reduction and regulatory approval is secured in Brazil.", badge: "announced", asOf: "2026-07", sourceIds: ["research-doc"] } }
     ],
 
     tier3: [
       { name: "Ambient Carbon", category: "methane-removal", country: "Denmark",
         oneLiner: "\"MEPS\" — UV plus chlorine photochemistry destroying dilute methane at point sources; a University of Copenhagen spin-out.",
-        keyFact: { text: "No disclosed venture or equity funding — grant-funded only. Delivered a 40-ft container pilot on a 250-cow dairy barn removing up to 90% of methane (2025); a Danone-funded ≈30× scale-up in Indiana is announced, not built.", badge: "delivered", asOf: "2025",
+        keyFact: { text: "No disclosed venture or equity funding — grant-funded only. Delivered a 40-ft container pilot on a 250-cow dairy barn removing up to 90% of methane (2025); a Danone-funded ≈30× scale-up in Indiana is announced, not built.", badge: "delivered", asOf: "2025", sourceIds: ["research-doc"],
           assertedAbsence: true,
           sourceQuote: "No disclosed venture/equity funding — grant-funded only (Innovation Fund Denmark via AgriFoodTure/PERMA project; partners include Arla Foods)" } },
       { name: "Planetary Technologies", category: "ocean-cdr", country: "Canada",
         oneLiner: "Magnesium-hydroxide ocean alkalinity enhancement out of Nova Scotia.",
-        keyFact: { text: "Delivered the first net OAE credits — 138 tonnes to Shopify and Stripe (Nov 2024) — against ≈$14.6M raised and a $31M Frontier-facilitated offtake; won a $1M XPRIZE XFACTOR award in 2025.", badge: "delivered", asOf: "2024-11" } },
+        keyFact: { text: "Delivered the first net OAE credits — 138 tonnes to Shopify and Stripe (Nov 2024) — against ≈$14.6M raised and a $31M Frontier-facilitated offtake; won a $1M XPRIZE XFACTOR award in 2025.", badge: "delivered", asOf: "2024-11", sourceIds: ["research-doc"] } },
       { name: "Real Ice / Arctic Reflections", category: "ice-intervention", country: "UK / Netherlands",
         oneLiner: "Sea-ice thickening via pumping — presented here as contested research, not as an investable category.",
         investable: false,
         framing: "contested research",
-        keyFact: { text: "Real Ice directors committed ≈$5M and its research group received the largest grant (≈$13M) in the UK's ≈$75M geoengineering programme (2025); Arctic Reflections has raised ≈$1.1M. Against this, an Oct 2024 preprint by 42 glaciologists called ice-thickening infeasible and dangerous, and a Sept 2025 study found high-profile interventions not viable and potentially harmful at ≥$10B each.", badge: "announced", asOf: "2025-09" } },
+        keyFact: { text: "Real Ice directors committed ≈$5M and its research group received the largest grant (≈$13M) in the UK's ≈$75M geoengineering programme (2025); Arctic Reflections has raised ≈$1.1M. Against this, an Oct 2024 preprint by 42 glaciologists called ice-thickening infeasible and dangerous, and a Sept 2025 study found high-profile interventions not viable and potentially harmful at ≥$10B each.", badge: "announced", asOf: "2025-09", sourceIds: ["research-doc", "ice-negative2024", "ice-negative2025"] } },
       { name: "Microbial electrosynthesis (field, not a company)", category: "microbial-electro", country: "global academic",
         oneLiner: "CO₂ plus electricity to carboxylic acids via biofilms on cathodes — a research frontier, listed for honesty about its stage.",
         investable: false,
         framing: "research frontier",
-        keyFact: { text: "Assessed at TRL 3/4 in peer-reviewed literature (Trends in Biotechnology, 2024): lab scale, requiring process optimisation before an industrial prototype. No disclosed commercial funding at scale.", badge: "verified", asOf: "2024" } }
+        /* Maturity only. The sources assess this field's TRL; none of them
+           reports its capital, so no claim about funding is made here either
+           way — the same line the funding row for this field takes. */
+        keyFact: { text: "Assessed at TRL 3/4 in peer-reviewed literature (Trends in Biotechnology, 2024): lab scale, requiring process optimisation before an industrial prototype. Listed here as a field rather than a company because that is the stage the literature reports.", badge: "verified", asOf: "2024", sourceIds: ["research-doc", "mes-trl2024"] } }
     ]
   },
 

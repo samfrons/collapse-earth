@@ -4,7 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Collapse Earth — Core Sample</title>
+<!-- The only counts on this page that are typed rather than derived: a <meta>
+     cannot read the data layer. Keep "sixteen" and "ten" in sync with
+     COLLAPSE_DATA.tippingSystems.length and .hypotheses.length — everywhere in
+     the body, including the prose, those words are rendered (see numWord). -->
 <meta name="description" content="A stratigraphic reading of sixteen Earth-system tipping elements, the capital allocated against them, and ten falsifiable hypotheses. Research and opinion, not investment advice.">
+<!-- Not the canonical page yet: while / still serves collapse-tech.html this
+     must not be crawlable alongside it. Remove when it becomes the lead. -->
+<meta name="robots" content="noindex">
 <meta name="color-scheme" content="light dark">
 <!-- the four strata, stacked: avoids a favicon 404 without a second request -->
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Crect width='8' height='2' fill='%23EDE6DA'/%3E%3Crect y='2' width='8' height='2' fill='%23C8973F'/%3E%3Crect y='4' width='8' height='2' fill='%239C4A22'/%3E%3Crect y='6' width='8' height='2' fill='%2317130E'/%3E%3C/svg%3E">
@@ -1029,9 +1036,9 @@ html[data-tray="1"]{overflow:hidden}
 
       <div class="hero-grid" style="margin-top:clamp(26px,4vh,44px)">
         <div>
-          <p class="lede">Sixteen Earth systems carry thresholds we can estimate but cannot
-            schedule. Capital has concentrated in the interventions that are easiest to
-            count, not the ones with the most leverage.</p>
+          <p class="lede"><span id="ledeSysN">—</span> Earth systems carry thresholds we can
+            estimate but cannot schedule. Capital has concentrated in the interventions
+            that are easiest to count, not the ones with the most leverage.</p>
           <p class="note" style="margin-top:1.1em">Read as a core log: scroll is descent, and the
             rail reports the depth. Four strata — the thresholds, the misallocation, the
             hypotheses, the record.</p>
@@ -1262,9 +1269,10 @@ html[data-tray="1"]{overflow:hidden}
           <h2><span class="act-numeral">III</span> &nbsp;The hypothesis engine</h2>
         </div>
         <div>
-          <p class="note" style="margin:0">Ten claims, each tagged like a sample pulled from the
-            core. Open a tag for all seven fields — kill criteria always printed above validation,
-            because a claim that cannot be killed is not a hypothesis.</p>
+          <p class="note" style="margin:0"><span id="act3ClaimsN">—</span> claims, each tagged
+            like a sample pulled from the core. Open a tag for all seven fields — kill criteria
+            always printed above validation, because a claim that cannot be killed is not a
+            hypothesis.</p>
         </div>
       </header>
       <div class="tags" id="tags"></div>
@@ -1424,6 +1432,13 @@ function moneyQ(f) {
   return (QUAL[f.qualifier] ? QUAL[f.qualifier] + " " : "") + m;
 }
 function degC(v) { return v.toFixed(1) + " °C"; }
+/* Prose counts are rendered, never typed: a spelled-out number in markup is
+   the one class of hardcoded figure a digit-only audit cannot see. */
+var NUM_WORDS = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight",
+  "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen",
+  "seventeen", "eighteen", "nineteen", "twenty"];
+function numWord(n) { return NUM_WORDS[n] != null ? NUM_WORDS[n] : String(n); }
+function cap1(s) { return String(s).charAt(0).toUpperCase() + String(s).slice(1); }
 function grouped(n) { return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, " "); }
 
 /* Media is only ever addressed by tag, never by hardcoded URL. */
@@ -1460,7 +1475,8 @@ function srcInline(ids) {
    =========================================================================== */
 var CORE = {
   length: 3053,
-  anthropocene: 0.5,
+  /* Set below from the calibration itself — never typed. See ANTHRO_AGE_YR. */
+  anthropocene: null,
   anchors: [
     [0, 0], [50, 180], [100, 400], [200, 800], [300, 1300], [450, 2050],
     [600, 2900], [750, 3650], [900, 4700], [1100, 6100], [1300, 7800],
@@ -1483,6 +1499,14 @@ function interp(pairs, v, a, b) {
 }
 function depthToAge(d) { return interp(CORE.anchors, d, 0, 1); }
 function ageToDepth(a) { return interp(CORE.anchors, a, 1, 0); }
+
+/* Our own layer, read through the same anchors as everything else. The
+   mid-twentieth-century boundary is ≈75 years before present, and near the
+   surface the calibration above runs ≈278 mm/yr — so it sits tens of metres
+   down, not in the top half-metre. Deriving it means the hero copy cannot
+   contradict the log the gauge draws from the same numbers. */
+var ANTHRO_AGE_YR = 75;
+CORE.anthropocene = ageToDepth(ANTHRO_AGE_YR);
 
 /* Each page segment occupies a depth interval. Scroll through a segment maps
    linearly onto its interval, so the gauge always reads a real position in
@@ -1528,19 +1552,25 @@ function renderHero() {
     esc(D.interventions.length) + " intervention categories · " +
     esc(D.hypotheses.length) + " hypotheses";
 
+  /* the lede's own count, spelled out and read from the data like every other */
+  $("ledeSysN").textContent = cap1(numWord(D.tippingSystems.length));
+
   $("heroMeta").innerHTML = [
     "read top to bottom",
     "depth in metres, age in years before present",
     "scale illustrative — see methods"
   ].map(function (t) { return "<span>" + esc(t) + "</span>"; }).join("");
 
-  /* Anthropocene note: the honest scale of our own layer against the core. */
+  /* Anthropocene note: the honest scale of our own layer against the core.
+     Depth and percentage both read off CORE.anthropocene, so this sentence
+     moves with the calibration instead of contradicting it. */
+  var anthroM = grouped(CORE.anthropocene);
   var pct = (CORE.anthropocene / CORE.length) * 100;
-  $("anthroLab").textContent = "our own layer · the top " +
-    CORE.anthropocene.toFixed(1) + " m";
+  $("anthroLab").textContent = "our own layer · the top ≈" + anthroM + " m";
   $("anthroNote").textContent =
-    "Everything since the mid-twentieth century sits in the top half-metre of a " +
-    grouped(CORE.length) + "-metre core — " + pct.toFixed(2) + "% of its length.";
+    "Everything since the mid-twentieth century sits in the top ≈" + anthroM +
+    " m of a " + grouped(CORE.length) + "-metre core — " + pct.toFixed(1) +
+    "% of its length.";
 
   /* The one number the whole page is read against. */
   $("readoutK").textContent = "observed warming · " + w.unit;
@@ -2754,6 +2784,10 @@ function wireJumps(root) {
 function jumpTo(id, scroll) {
   var el = $(id);
   if (!el) return;
+  /* If the target is itself a drawer, open it: landing on a shut tag hides the
+     thing the link promised. Symmetrical with openIv() in the other direction.
+     Opened BEFORE scrolling so block:"center" measures the final height. */
+  if (el.tagName === "DETAILS") el.open = true;
   if (scroll) el.scrollIntoView({ behavior: REDUCED ? "auto" : "smooth", block: "center" });
   el.classList.remove("jumped");
   /* reflow so the animation restarts if the same target is jumped to twice */
@@ -2964,6 +2998,8 @@ function renderTiers() {
    Kill criteria are printed above validation criteria on every tag.
    =========================================================================== */
 function renderTags() {
+  $("act3ClaimsN").textContent = cap1(numWord(D.hypotheses.length));
+
   $("tags").innerHTML = D.hypotheses.map(function (h) {
     /* The header slot cross-links back to the intervention category this claim
        acts on — it used to repeat h.maturity, which the maturity field prints. */
@@ -3034,9 +3070,16 @@ function renderTags() {
 
 /* A one-line why-now for the card face. Cuts at a CLAUSE boundary, never mid
    figure, so a range like "84–87×" can't be split across the fold; the full
-   paragraph sits in the drawer one interaction away. */
+   paragraph sits in the drawer one interaction away.
+
+   The sentence boundary is "a full stop followed by space and a capital or an
+   opening bracket", which is why a decimal like 1.5 never splits the line.
+   Written with LOOKAHEAD ONLY: a lookbehind here is a parse-time SyntaxError on
+   Safari <= 16.3, and because this whole file is one IIFE that would take the
+   page down to blank — including the #dataFail banner meant to explain it. */
 function oneLine(text) {
-  var first = text.split(/(?<=\.)\s+(?=[A-Z(])/)[0] || text;
+  var m = /^[\s\S]*?\.(?=\s+[A-Z(])/.exec(text);
+  var first = (m ? m[0] : text).trim() || text;
   if (first.length <= 132) return first;
   var cut = first.slice(0, 128);
   var b = Math.max(cut.lastIndexOf(";"), cut.lastIndexOf(", "), cut.lastIndexOf(" — "));
@@ -3071,9 +3114,14 @@ function renderMethods() {
       "</span></li>";
   }).join("");
 
+  /* Every count in these notes is the data's, including the spelled-out ones:
+     the stamp on the tags and the sentence describing it come from one field. */
+  var nMilestone = D.hypotheses.filter(function (h) { return h.investable === false; }).length;
+
   var notes = [
     ["thresholds", "Every threshold is a minimum, a central estimate and a maximum, with the " +
-      "confidence rating the paper itself gave it. The authority for all sixteen is Armstrong " +
+      "confidence rating the paper itself gave it. The authority for all " +
+      numWord(D.tippingSystems.length) + " is Armstrong " +
       "McKay et al., Science (2022), Table 1. No threshold is rendered as a date, and nothing " +
       "on the globe flips at a central value alone: elements render by where the dial sits " +
       "inside their own range."],
@@ -3089,9 +3137,13 @@ function renderMethods() {
     ["gap assessment", "The one-to-five pips in Act II are an editorial read of how far an " +
       "intervention's potential runs ahead of its capital. They are an assessment, not a " +
       "measurement, and are labelled that way everywhere they appear."],
-    ["hypotheses", "Each of the ten claims in Act III states falsifiable kill criteria before " +
-      "its validation criteria, and an honest technology-readiness level. Two are public-good " +
-      "research milestones rather than investable propositions and are stamped as such."]
+    ["hypotheses", "Each of the " + numWord(D.hypotheses.length) + " claims in Act III states " +
+      "falsifiable kill criteria before its validation criteria, and an honest " +
+      "technology-readiness level. " + cap1(numWord(nMilestone)) +
+      (nMilestone === 1
+        ? " is a public-good research milestone rather than an investable proposition and is "
+        : " are public-good research milestones rather than investable propositions and are ") +
+      "stamped as such."]
   ];
   $("methNotes").innerHTML = notes.map(function (n) {
     return "<div class=\"field\"><p class=\"field-k\">" + esc(n[0]) +
