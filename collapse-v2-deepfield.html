@@ -25,18 +25,55 @@
      ocean circulation #12A594   deep teal   (bloom #2EC4B6)
      biosphere         #9BE564   bio-green
      carbon feedback   #C77DFF   methane violet
-     monsoon           #E5B769   arid amber
+     monsoon           #DDA24F   arid amber
 
-   The brief specifies ocean as #2EC4B6. Validated against the cryosphere
-   ice-blue that sight it beside in every chart, that pair separates by only
-   ΔE 14.4 in OKLab — below the ΔE 15 normal-vision floor, i.e. hard to tell
-   apart even with full colour vision. So #2EC4B6 is kept as the ocean *bloom*
-   (halo, hover, rule) and a darker step of the same hue, #12A594, carries the
-   mark itself. The five marks then pass CVD separation (worst adjacent pair
-   ΔE 22.7 deutan), chroma floor, and 3:1 contrast against the panel surface.
-   They sit above the dataviz dark-mode lightness band by design: these are
-   thin marks, small nodes and hairlines over near-black, never large fills.
-   Large fills use the same hues at low alpha.
+   Two hues depart from the brief's literal values, each for a measured reason.
+
+   1. OCEAN. The brief specifies #2EC4B6. Against the cryosphere ice-blue it
+      sits beside in every chart, that pair separates by only ΔE 14.4 in OKLab —
+      below the ΔE 15 normal-vision floor, i.e. hard to tell apart even with
+      full colour vision, which no secondary encoding excuses. So #2EC4B6 is
+      kept as the ocean *bloom* (halo, hover, rule) and a darker step of the
+      same hue, #12A594, carries the mark. That pair now separates at ΔE 23.3.
+
+   2. MONSOON. The brief names #E5B769 as the *degradation end of the biosphere
+      ramp*, not as a sixth category hue. Reusing it for monsoon put it on the
+      same confusion axis as the biosphere green it degrades from: #E5B769 vs
+      #9BE564 measures ΔE 3.9 under deuteranopia — the same colour. Those two
+      co-occur in the band chart, on the globe, in the category legend, and,
+      most consequentially, in the funding badges, where .badge--announced and
+      .badge--delivered are precisely the distinction this page exists to keep.
+      So monsoon is shifted away from green in hue to #DDA24F. The brief's
+      #E5B769 is retained where the brief actually put it: the warm stop of the
+      dial's ordered ramp, where adjacency to green is the point and where the
+      validator's categorical checks do not apply.
+
+   Verified with the dataviz validator over ALL TEN pairs (not the adjacent
+   pairs the tool checks by default, which is what previously concealed the
+   biosphere/monsoon collapse), against each of the three surfaces below:
+
+     PASS chroma floor · PASS all-pairs CVD separation
+          (worst pair now #DDA24F↔#9BE564 ΔE 8.9 deutan, 8.1 tritan)
+     PASS all-pairs normal-vision floor (worst ΔE 18.4)
+     PASS contrast ≥3:1 on #04070A, #0A1216 and #0D171C
+     FAIL lightness band — deliberate, see below
+
+   Residual, and the reason it is residual rather than fixed: deuteranopia
+   compresses green→amber→red onto one axis, so any amber sits between the
+   biosphere green and the alarm red. Moving monsoon far enough from green to
+   pass (3.9 → 8.9) moves it toward alarm #FF5A6E, which lands at ΔE 7.1 deutan
+   — inside the 6–8 band that is legal only with secondary encoding. Every
+   alarm on this page carries that: state chips print "above its range", the
+   globe draws alarm as a ring around a core rather than a fill, warn notes
+   print their own term, and the band chart marks it with a dot outside the bar.
+   There is no alarm badge, so the badge family never puts the two side by side.
+   Sweeping eight candidate ambers found none clearing both pairs at PASS; this
+   is the best available split, and it favours the categorical pair the check
+   governs over a status colour the check exempts.
+
+   The five marks sit above the dataviz dark-mode lightness band by design:
+   these are thin marks, small nodes and hairlines over near-black, never large
+   fills. Large fills use the same hues at low alpha.
 
    Interventions and companies are NOT hue-coded — there are nine categories,
    past the point where hues stay distinguishable, so they all wear one ink
@@ -69,7 +106,7 @@
   --ocean-bloom:#2EC4B6;
   --biosphere:#9BE564;
   --carbon:#C77DFF;
-  --monsoon:#E5B769;
+  --monsoon:#DDA24F;
 
   /* reserved status */
   --alarm:#FF5A6E;
@@ -230,7 +267,7 @@ hr.rule{border:0;border-top:1px solid var(--hair);margin:0}
   border:1px solid var(--hair-2);border-radius:2px;white-space:nowrap;color:var(--ink-2);
 }
 .badge::before{content:"";width:4px;height:4px;border-radius:50%;background:currentColor}
-.badge--announced{color:var(--monsoon);border-color:rgba(229,183,105,.32)}
+.badge--announced{color:var(--monsoon);border-color:rgba(221,162,79,.32)}
 .badge--delivered{color:var(--biosphere);border-color:rgba(155,229,100,.32)}
 .badge--verified{color:var(--cryosphere);border-color:rgba(127,231,255,.32)}
 .badge--deployed-grants{color:var(--ocean-bloom);border-color:rgba(46,196,182,.34)}
@@ -279,6 +316,9 @@ hr.rule{border:0;border-top:1px solid var(--hair);margin:0}
 .dial__track{position:relative;height:2.75rem}
 .dial__gradient{
   position:absolute;left:0;right:0;top:1.1rem;height:3px;border-radius:2px;
+  /* The one place the brief's #E5B769 belongs: the warm stop of an ordered ramp
+     on the master variable, legended by the tick scale below it. Adjacency to
+     the green it degrades from is the intent here, not a collision. */
   background:linear-gradient(90deg,#7FE7FF 0%,#2EC4B6 16%,#9BE564 36%,#E5B769 62%,#FF5A6E 100%);
   opacity:.42;
 }
@@ -384,15 +424,17 @@ hr.rule{border:0;border-top:1px solid var(--hair);margin:0}
 .drawer{position:fixed;inset:0;z-index:70}
 .drawer[hidden]{display:none}
 .drawer__scrim{position:absolute;inset:0;background:rgba(2,4,6,.72);backdrop-filter:blur(3px)}
+/* Right-anchored slide-in pane at every width — never a bottom sheet, never an
+   inline expansion below the chart that pushed the reader's place down the page. */
 .drawer__panel{
-  position:absolute;right:0;top:0;bottom:0;width:min(560px,100%);
+  position:absolute;right:0;top:0;bottom:0;width:min(560px,92vw);
   background:var(--panel);border-left:1px solid var(--hair-2);
   box-shadow:-30px 0 80px rgba(0,0,0,.55);
   overflow-y:auto;overscroll-behavior:contain;
   padding:clamp(1.25rem,3vw,2.25rem);
 }
 @media(max-width:640px){
-  .drawer__panel{top:auto;height:88svh;width:100%;border-left:0;border-top:1px solid var(--hair-2);border-radius:3px 3px 0 0}
+  .drawer__panel{padding:1.1rem}
 }
 .drawer__close{position:sticky;top:0;float:right;margin:-.4rem -.4rem 0 1rem;padding:.45rem .8rem;font:500 .625rem/1.4 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);background:var(--panel);border:1px solid var(--hair-2);border-radius:2px;z-index:2}
 .drawer__close:hover{color:var(--cryosphere);border-color:var(--hair-3)}
@@ -411,7 +453,7 @@ hr.rule{border:0;border-top:1px solid var(--hair);margin:0}
 .dos__state{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
 .state-chip{display:inline-flex;align-items:center;gap:.4rem;padding:.22rem .6rem;font:500 .625rem/1.5 var(--mono);letter-spacing:.1em;text-transform:uppercase;border:1px solid;border-radius:2px}
 .state-chip--below{color:var(--ink-3);border-color:var(--hair-2)}
-.state-chip--band{color:var(--monsoon);border-color:rgba(229,183,105,.4);background:rgba(229,183,105,.07)}
+.state-chip--band{color:var(--monsoon);border-color:rgba(221,162,79,.4);background:rgba(221,162,79,.07)}
 .state-chip--past{color:var(--alarm);border-color:rgba(255,90,110,.42);background:rgba(255,90,110,.08)}
 
 .dos__field{margin:0 0 1.4rem}
@@ -426,6 +468,66 @@ hr.rule{border:0;border-top:1px solid var(--hair);margin:0}
 .cascade-btn{padding:.28rem .6rem;font:400 .6875rem/1.4 var(--mono);color:var(--ink-2);border:1px solid var(--hair-2);border-radius:2px}
 .cascade-btn:hover{color:var(--cryosphere);border-color:var(--hair-3);background:rgba(127,231,255,.05)}
 .cascade-btn::before{content:"→ ";opacity:.55}
+
+/* ========================================================= OPPORTUNITY BOARD */
+/* Act II leads here. These are the categories the data itself assesses as having
+   the widest gap between leverage and capital — a light column each, so the eye
+   lands on them before it reaches the full ledger below. */
+.board{margin-bottom:clamp(3rem,6vw,4.5rem)}
+.board__head{display:grid;gap:.9rem;margin-bottom:clamp(1.5rem,3vw,2.25rem);max-width:56ch}
+.board__lead{
+  margin:0;font:400 clamp(1.4rem,2.9vw,2.15rem)/1.24 var(--display);letter-spacing:-.012em;color:var(--ink);
+}
+.board__lead em{font-style:italic;color:var(--cryosphere);text-shadow:0 0 30px rgba(127,231,255,.20)}
+.board__grid{display:grid;gap:var(--gap);grid-template-columns:repeat(auto-fit,minmax(min(100%,25rem),1fr))}
+
+.opp{
+  position:relative;display:grid;gap:.85rem;
+  padding:clamp(1.15rem,2.3vw,1.6rem);
+  background:linear-gradient(180deg,var(--panel-2),var(--panel));
+  border:1px solid var(--hair-2);border-radius:3px;
+  box-shadow:inset 0 1px 0 rgba(127,231,255,.06),0 0 44px rgba(46,196,182,.04);
+}
+/* the light column: a vertical hairline of glow, answering the hypothesis
+   cards' horizontal one — same grammar, turned ninety degrees */
+.opp::before{
+  content:"";position:absolute;left:-1px;top:clamp(1.15rem,2.3vw,1.6rem);bottom:clamp(1.15rem,2.3vw,1.6rem);width:1px;
+  background:linear-gradient(180deg,transparent,rgba(127,231,255,.7),transparent);
+}
+.opp--lead{border-color:var(--hair-3)}
+.opp--lead::before{background:linear-gradient(180deg,transparent,var(--cryosphere),transparent)}
+
+.opp__top{display:flex;flex-wrap:wrap;gap:.5rem 1rem;align-items:baseline;justify-content:space-between}
+.opp__name{margin:0;font:400 clamp(1.2rem,2.2vw,1.5rem)/1.2 var(--display)}
+.opp__sec{font:400 .625rem/1.5 var(--mono);letter-spacing:.1em;color:var(--ink-3)}
+
+.opp__gap{display:flex;flex-wrap:wrap;gap:.5rem .8rem;align-items:center}
+.opp__gap p{margin:0;font:400 .625rem/1.5 var(--mono);letter-spacing:.05em;color:var(--ink-3)}
+
+/* the contrast: what it raised, against the best-capitalised category */
+.opp__contrast{
+  display:grid;gap:.3rem;padding:.85rem 0;
+  border-block:1px solid var(--hair);
+}
+.opp__figure{display:flex;flex-wrap:wrap;gap:.5rem .75rem;align-items:baseline}
+.opp__amount{font:400 clamp(1.5rem,3vw,2rem)/1 var(--mono);letter-spacing:-.03em;color:var(--ink)}
+.opp__amount--none{font-size:clamp(1rem,1.9vw,1.2rem);color:var(--monsoon);letter-spacing:0}
+.opp__amountlabel{font:400 .625rem/1.5 var(--mono);letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3)}
+.opp__ratio{margin:0;font:400 .8125rem/1.55 var(--body);color:var(--ink-2)}
+.opp__ratio b{color:var(--cryosphere);font-weight:500}
+
+.opp__leverage{margin:0;font:400 .8125rem/1.62 var(--body);color:var(--ink-2)}
+.opp__hyps{display:grid;gap:.4rem;margin:0;padding:0;list-style:none}
+.opp__hypslabel{font:500 .5625rem/1.5 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+.opp__hyp{
+  display:block;padding:.5rem .65rem;text-decoration:none;
+  background:rgba(127,231,255,.035);border:1px solid var(--hair);border-radius:2px;
+}
+.opp__hyp:hover{border-color:var(--hair-2);background:rgba(127,231,255,.07)}
+.opp__hyp b{display:block;font:400 .625rem/1.5 var(--mono);letter-spacing:.1em;color:var(--cryosphere)}
+.opp__hyp span{display:block;font:400 .8125rem/1.5 var(--body);color:var(--ink-2)}
+.opp__hyp--milestone{border-style:dashed;border-color:rgba(221,162,79,.32);background:rgba(221,162,79,.035)}
+.opp__hyp--milestone b{color:var(--monsoon)}
 
 /* =================================================================== LEDGER */
 .ledger{--gutter:clamp(.75rem,1.6vw,1.5rem)}
@@ -507,11 +609,11 @@ hr.rule{border:0;border-top:1px solid var(--hair);margin:0}
 .co__one{margin:0;font:400 .875rem/1.6 var(--body);color:var(--ink-2)}
 .co__fact{margin:0;font:400 .8125rem/1.62 var(--body);color:var(--ink-2);padding-top:.6rem;border-top:1px solid var(--hair)}
 .co__meta{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center}
-.co--milestone{border-style:dashed;border-color:rgba(229,183,105,.3);background:rgba(229,183,105,.03)}
+.co--milestone{border-style:dashed;border-color:rgba(221,162,79,.3);background:rgba(221,162,79,.03)}
 .flag-milestone{
   display:inline-flex;align-items:center;gap:.4rem;padding:.24rem .6rem;
   font:500 .625rem/1.5 var(--mono);letter-spacing:.1em;text-transform:uppercase;
-  color:var(--monsoon);border:1px dashed rgba(229,183,105,.5);border-radius:2px;background:rgba(229,183,105,.06);
+  color:var(--monsoon);border:1px dashed rgba(221,162,79,.5);border-radius:2px;background:rgba(221,162,79,.06);
 }
 .quote{margin:.2rem 0 0;padding-left:.75rem;border-left:1px solid var(--hair-2);font:400 .75rem/1.6 var(--mono);color:var(--ink-2)}
 .quote::before{content:"source words: ";color:var(--ink-3);letter-spacing:.06em}
@@ -552,7 +654,7 @@ hr.rule{border:0;border-top:1px solid var(--hair);margin:0}
 
 .hyp--milestone{
   background:rgba(10,18,22,.55);
-  border:1px dashed rgba(229,183,105,.34);
+  border:1px dashed rgba(221,162,79,.34);
   box-shadow:none;
 }
 .hyp--milestone::before{display:none}
@@ -576,7 +678,7 @@ hr.rule{border:0;border-top:1px solid var(--hair);margin:0}
 .srclist__label::before{content:"[" counter(s) "] ";font-family:var(--mono);font-size:.75rem;color:var(--ink-3)}
 .srclist__meta{display:flex;flex-wrap:wrap;gap:.4rem .9rem;align-items:center;font:400 .6875rem/1.5 var(--mono);color:var(--ink-3)}
 .srclist__meta a{word-break:break-all}
-.flag-verify{color:var(--monsoon);border:1px dotted rgba(229,183,105,.45);border-radius:2px;padding:.1rem .4rem;letter-spacing:.06em}
+.flag-verify{color:var(--monsoon);border:1px dotted rgba(221,162,79,.45);border-radius:2px;padding:.1rem .4rem;letter-spacing:.06em}
 .flag-nolink{color:var(--ink-3);opacity:.85}
 
 .mediacred{margin:0;padding:0;list-style:none;display:grid;gap:.9rem}
@@ -726,7 +828,8 @@ hr.rule{border:0;border-top:1px solid var(--hair);margin:0}
       <div class="dial reveal" id="dial">
         <div class="dial__top">
           <div class="dial__readout">
-            <span class="dial__value" id="dial-value">1.40</span>
+            <!-- empty: filled from warming.current by onChange() before first paint -->
+            <span class="dial__value" id="dial-value"></span>
             <span class="dial__unit" id="dial-unit"></span>
           </div>
           <div class="dial__counts" id="dial-counts"></div>
@@ -810,12 +913,23 @@ hr.rule{border:0;border-top:1px solid var(--hair);margin:0}
         <div class="act__titles">
           <p class="eyebrow">Act II</p>
           <h2 class="act__title" id="act-ii-title">The <em>misallocation</em></h2>
-          <p class="lede">Capital can be counted. Leverage cannot. This ledger keeps them in separate
+          <p class="lede">Capital can be counted. Leverage cannot. This act keeps them in separate
           columns: every dollar figure carries the badge its source used and the date it was current,
           and no two kinds of money are ever added together.</p>
           <p class="note" id="ledger-standfirst"></p>
         </div>
       </div>
+
+      <!-- Act II leads with the gap, not the ledger. Membership, ordering and every
+           figure below are derived from the data — see the openings module. -->
+      <section class="board reveal" id="board" aria-labelledby="board-title">
+        <div class="board__head">
+          <p class="eyebrow" id="board-title">Where capital is most missing</p>
+          <h3 class="board__lead" id="board-lead"></h3>
+          <p class="note" id="board-note"></p>
+        </div>
+        <div class="board__grid" id="board-grid"></div>
+      </section>
 
       <div class="reveal">
         <div class="fnote" style="margin-bottom:1.75rem;max-width:70ch">
@@ -1067,7 +1181,7 @@ var CATS = {
   "ocean-circulation": { label: "Ocean circulation", core: "#12A594", bloom: "#2EC4B6" },
   "biosphere":         { label: "Biosphere",         core: "#9BE564", bloom: "#9BE564" },
   "carbon-feedback":   { label: "Carbon feedback",   core: "#C77DFF", bloom: "#C77DFF" },
-  "monsoon":           { label: "Monsoon",           core: "#E5B769", bloom: "#E5B769" }
+  "monsoon":           { label: "Monsoon",           core: "#DDA24F", bloom: "#DDA24F" }
 };
 var INK = "#AFC5CD", ALARM = "#FF5A6E";
 function cat(c){ return CATS[c] || { label: c, core: INK, bloom: INK }; }
@@ -1159,11 +1273,15 @@ if(videos[0]){
   if(heroHit) videos[0].setAttribute("poster", heroHit.poster);
 }
 
+/* Both directions. Turning reduced motion ON strips the src back to a poster;
+   turning it OFF has to clear the armed flag as well, or armVideo() early-returns
+   on a element that no longer has a src and the clip stays a still until reload. */
 function onMotionPrefChange(){
   videos.forEach(function(v){
     if(reduced()){
       v.pause();
       v.removeAttribute("src");
+      v.dataset.armed = "";
       v.load();
     } else {
       armVideo(v);
@@ -2235,6 +2353,170 @@ function badgeSet(entries){
   return out;
 }
 
+/* A sum is only as precise as its least precise component, so the row total
+   carries the hedge its components carry. The rule:
+     any component "at-least"      → "≥"   (a sum containing a floor is a floor)
+     else any "approximately"      → "≈"
+     else                          → no prefix, the figure is as stated
+   "≥" wins over "≈" when both appear, because the floor is the claim the
+   sources actually support and dropping it would print a hedged figure as
+   measured. The cost is that in a mixed row the "≈" component's own looseness
+   is folded into a floor — ocean-cdr is the only such row in this dataset —
+   which is why every component's own qualifier stays visible in the entry list
+   directly beneath the total rather than only in the headline. */
+function totalQualifier(entries){
+  var hasFloor = false, hasApprox = false;
+  entries.forEach(function(f){
+    if(f.qualifier === "at-least") hasFloor = true;
+    else if(f.qualifier === "approximately") hasApprox = true;
+  });
+  return hasFloor ? QUAL["at-least"] : hasApprox ? QUAL.approximately : "";
+}
+/* The row headline figure: never a bare number where the sources hedged. */
+function capitalLabel(cap){
+  if(!cap || cap.value == null) return null;
+  return totalQualifier(cap.entries) + money(cap.value);
+}
+
+/* =========================================================================
+   12b. THE OPPORTUNITY BOARD — Act II leads with the gap
+   Membership is derived, never listed: an intervention is featured when its gap
+   assessment sits within one step of the worst assessment in the dataset. On the
+   current data that is gapScore >= 4, which selects methane removal, ocean CDR,
+   blue carbon & peatland, and the microbial/electrochemical frontier.
+   Ordering: widest assessed gap first; within a tier, least capital first, with
+   categories that disclose no capital figure last — they cannot be placed on the
+   scale, so they follow it rather than topping it on a technicality.
+   ========================================================================= */
+(function openings(){
+  var grid = document.getElementById("board-grid");
+
+  var worstGap = d3.max(D.interventions, function(iv){ return iv.gapScore; });
+  var gapFloor = worstGap - 1;
+
+  var all = D.interventions.map(function(iv){
+    return { iv: iv, cap: capitalTotal(iv), hyps: D.hypotheses.filter(function(h){
+      return (h.relatedInterventions || []).indexOf(iv.id) !== -1;
+    }) };
+  });
+  var best = all.filter(function(r){ return r.cap.value != null; })
+                .sort(function(a, b){ return b.cap.value - a.cap.value; })[0];
+
+  var featured = all.filter(function(r){ return r.iv.gapScore >= gapFloor; })
+    .sort(function(a, b){
+      if(b.iv.gapScore !== a.iv.gapScore) return b.iv.gapScore - a.iv.gapScore;
+      if(a.cap.value == null && b.cap.value == null) return 0;
+      if(a.cap.value == null) return 1;
+      if(b.cap.value == null) return -1;
+      return a.cap.value - b.cap.value;
+    });
+
+  /* The ten-second read: name the two the data puts at the top, in one line. */
+  var lead = document.getElementById("board-lead");
+  var nameOf = function(r){ return r.iv.name; };
+  if(featured.length >= 2){
+    lead.appendChild(document.createTextNode(nameOf(featured[0]) + " and "));
+    var em = el("em", null, nameOf(featured[1]));
+    lead.appendChild(em);
+    lead.appendChild(document.createTextNode(
+      " are where capital is most missing relative to leverage."));
+  } else if(featured.length === 1){
+    lead.textContent = nameOf(featured[0]) + " is where capital is most missing relative to leverage.";
+  }
+
+  document.getElementById("board-note").textContent =
+    featured.length + " of " + D.interventions.length + " categories carry a gap assessment of " +
+    gapFloor + " or more out of " + worstGap + " — an editorial reading of how far potential impact " +
+    "runs ahead of capital, not a measurement. The capital beside each one is measured, and every " +
+    "figure carries the badge and date its source used. The full per-category ledger follows below.";
+
+  featured.forEach(function(r, i){
+    var iv = r.iv, cap = r.cap;
+    var card = el("article", "opp" + (i < 2 ? " opp--lead" : ""));
+    card.id = "opp-" + iv.id;
+
+    var top = el("div", "opp__top");
+    var h = el("h4", "opp__name", iv.name);
+    top.appendChild(h);
+    top.appendChild(el("span", "opp__sec", iv.section));
+    card.appendChild(top);
+
+    /* the assessment, always labelled as one */
+    var gapRow = el("div", "opp__gap");
+    var meter = el("div", "meter");
+    meter.setAttribute("role", "img");
+    meter.setAttribute("aria-label", "gap assessment " + iv.gapScore + " of " + worstGap + ", editorial");
+    for(var n = 1; n <= worstGap; n++){
+      var dot = el("i");
+      if(n <= iv.gapScore) dot.dataset.on = "true";
+      meter.appendChild(dot);
+    }
+    gapRow.appendChild(meter);
+    gapRow.appendChild(el("p", null,
+      "gap assessment " + iv.gapScore + "/" + worstGap + " — editorial, not a measurement"));
+    card.appendChild(gapRow);
+
+    /* capital against the best-capitalised category on the page */
+    var contrast = el("div", "opp__contrast");
+    var fig = el("div", "opp__figure");
+    if(cap.value != null){
+      fig.appendChild(el("span", "opp__amount", capitalLabel(cap)));
+      fig.appendChild(el("span", "opp__amountlabel", "capital raised"));
+      fig.appendChild(asOfEl(asOfSpan(cap.entries)));
+      badgeSet(cap.entries).forEach(function(b){ fig.appendChild(badgeEl(b)); });
+    } else {
+      fig.appendChild(el("span", "opp__amount opp__amount--none", "no capital figure disclosed"));
+      fig.appendChild(el("span", "opp__amountlabel", "in any source"));
+    }
+    contrast.appendChild(fig);
+
+    var ratio = el("p", "opp__ratio");
+    if(cap.value != null && best && best.iv.id !== iv.id){
+      var times = best.cap.value / cap.value;
+      ratio.appendChild(document.createTextNode("Against "));
+      ratio.appendChild(el("b", null, capitalLabel(best.cap)));
+      ratio.appendChild(document.createTextNode(
+        " for " + best.iv.name + ", the best-capitalised category here — a factor of " +
+        Math.round(times) + "."));
+    } else if(cap.value == null){
+      ratio.appendChild(document.createTextNode(
+        "The sources report funding activity but publish no capital total, so there is no figure to " +
+        "compare — which is itself the finding. Against "));
+      ratio.appendChild(el("b", null, capitalLabel(best.cap)));
+      ratio.appendChild(document.createTextNode(" for " + best.iv.name + "."));
+    }
+    contrast.appendChild(ratio);
+    card.appendChild(contrast);
+
+    card.appendChild(el("p", "opp__leverage", iv.leverage));
+
+    /* forward links into Act III — the hypotheses that address this category */
+    if(r.hyps.length){
+      var wrap = el("div");
+      wrap.appendChild(el("p", "opp__hypslabel",
+        r.hyps.length === 1 ? "The hypothesis that addresses it" : "The hypotheses that address it"));
+      var ul = el("ul", "opp__hyps");
+      r.hyps.forEach(function(hy){
+        var li = el("li");
+        var a = el("a", "opp__hyp" + (hy.investable === false ? " opp__hyp--milestone" : ""));
+        a.href = "#hyp-" + hy.id;
+        a.appendChild(el("b", null, hy.id + (hy.investable === false
+          ? " · research milestone — not investable" : "")));
+        a.appendChild(el("span", null, hy.claim));
+        li.appendChild(a);
+        ul.appendChild(li);
+      });
+      wrap.appendChild(ul);
+      card.appendChild(wrap);
+    } else {
+      card.appendChild(el("p", "opp__hypslabel", "no hypothesis in this dataset addresses it yet"));
+    }
+
+    card.appendChild(srcChips(iv.sourceIds));
+    grid.appendChild(card);
+  });
+})();
+
 /* =========================================================================
    13. THE LEDGER
    Two panels per row, each with its own unit, never sharing a scale:
@@ -2311,7 +2593,7 @@ function badgeSet(entries){
 
     if(capv.value != null){
       var amt = el("div", "lrow__amount");
-      amt.appendChild(el("b", null, money(capv.value)));
+      amt.appendChild(el("b", null, capitalLabel(capv)));
       amt.appendChild(el("span", "asof", asOfSpan(capv.entries)));
       badgeSet(capv.entries).forEach(function(b){ amt.appendChild(badgeEl(b)); });
       amt.appendChild(el("span", "stream",
@@ -2324,13 +2606,26 @@ function badgeSet(entries){
           (capv.undisclosed === 1 ? "y carries" : "ies carry") + " no amount." : ".")));
     }
 
-    /* other streams named as themselves, never folded into the total */
-    var others = {};
+    /* Everything the total leaves out, named as what it actually is. Two
+       distinct reasons for exclusion, which must not be collapsed into one
+       chip: a contract or prize is not capital, whereas a capital row carrying
+       withinCumulative IS capital and is left out only because the cumulative
+       row above it already contains that money. Saying "not capital" of the
+       second would be false. */
+    var others = {}, insideCumulative = 0;
     iv.funding.forEach(function(f){
-      if(f.stream === "capital" && !f.withinCumulative) return;
+      if(f.stream === "capital"){
+        if(!f.withinCumulative) return;      /* already in the total */
+        insideCumulative++;                  /* capital, but counted once */
+        return;
+      }
       others[f.stream] = (others[f.stream] || 0) + 1;
     });
     var streamRow = el("div", "lrow__streams");
+    if(insideCumulative){
+      streamRow.appendChild(el("span", "stream",
+        insideCumulative + " × capital already inside a cumulative total — counted once"));
+    }
     Object.keys(others).forEach(function(k){
       streamRow.appendChild(el("span", "stream",
         others[k] + " × " + (STREAM_LABEL[k] || k) + " — not capital"));
@@ -2418,14 +2713,14 @@ function badgeSet(entries){
 
   document.getElementById("ledger-standfirst").textContent =
     "Across " + D.interventions.length + " intervention categories, disclosed capital runs from " +
-    money(bottom.cap.value) + " (" + bottom.iv.name + ") to " +
-    money(top.cap.value) + " (" + top.iv.name + ") — a factor of " +
+    capitalLabel(bottom.cap) + " (" + bottom.iv.name + ") to " +
+    capitalLabel(top.cap) + " (" + top.iv.name + ") — a factor of " +
     Math.round(top.cap.value / bottom.cap.value) + ". " +
     (undisclosed.length ? undisclosed.length + " categor" + (undisclosed.length === 1 ? "y has" : "ies have") +
       " no disclosed capital figure at all. " : "") +
     "The category assessed as having the widest gap between potential and capital — " +
     widest.name + ", at " + widest.gapScore + " of 5 — holds " +
-    (widestCap.value != null ? money(widestCap.value) : "no disclosed capital") +
+    (widestCap.value != null ? capitalLabel(widestCap) : "no disclosed capital") +
     ", while the best-capitalised category is assessed at " + top.iv.gapScore + ". " +
     "The assessment is editorial; the capital is not.";
 })();
