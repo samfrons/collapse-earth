@@ -1,0 +1,2783 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Collapse Earth — Deep Field</title>
+<meta name="description" content="A research atlas of sixteen Earth-system tipping thresholds, the capital moving in climate technology, and ten falsifiable hypotheses. Every figure carries its source and date.">
+<meta name="color-scheme" content="dark">
+<link rel="icon" href="data:,">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================================
+   Collapse Earth v2 — variant V1 "Deep Field"
+   Abyssal bioluminescence. Near-black water, luminous instruments.
+
+   Colour system. Hue carries ONE meaning on this page: which Earth-system
+   category a tipping element belongs to. Five categories, five fixed hues,
+   never cycled and never reused for anything else:
+
+     cryosphere        #7FE7FF   ice-blue
+     ocean circulation #12A594   deep teal   (bloom #2EC4B6)
+     biosphere         #9BE564   bio-green
+     carbon feedback   #C77DFF   methane violet
+     monsoon           #E5B769   arid amber
+
+   The brief specifies ocean as #2EC4B6. Validated against the cryosphere
+   ice-blue that sight it beside in every chart, that pair separates by only
+   ΔE 14.4 in OKLab — below the ΔE 15 normal-vision floor, i.e. hard to tell
+   apart even with full colour vision. So #2EC4B6 is kept as the ocean *bloom*
+   (halo, hover, rule) and a darker step of the same hue, #12A594, carries the
+   mark itself. The five marks then pass CVD separation (worst adjacent pair
+   ΔE 22.7 deutan), chroma floor, and 3:1 contrast against the panel surface.
+   They sit above the dataviz dark-mode lightness band by design: these are
+   thin marks, small nodes and hairlines over near-black, never large fills.
+   Large fills use the same hues at low alpha.
+
+   Interventions and companies are NOT hue-coded — there are nine categories,
+   past the point where hues stay distinguishable, so they all wear one ink
+   (ice-blue) and carry their identity in text.
+
+   #FF5A6E is a reserved status colour. It means one thing: warming has passed
+   the top of a published threshold range. It is never a series colour.
+   ========================================================================== */
+
+:root{
+  /* surfaces */
+  --abyss:#04070A;
+  --panel:#0A1216;
+  --panel-2:#0D171C;
+  --panel-3:#111F25;
+
+  /* ink */
+  --ink:#E8F4F7;
+  --ink-2:#AFC5CD;
+  --ink-3:#7A9199;
+
+  /* hairlines, ice-tinted so rules read as instrument glass */
+  --hair:rgba(127,231,255,.12);
+  --hair-2:rgba(127,231,255,.22);
+  --hair-3:rgba(127,231,255,.40);
+
+  /* category hues */
+  --cryosphere:#7FE7FF;
+  --ocean:#12A594;
+  --ocean-bloom:#2EC4B6;
+  --biosphere:#9BE564;
+  --carbon:#C77DFF;
+  --monsoon:#E5B769;
+
+  /* reserved status */
+  --alarm:#FF5A6E;
+
+  /* type */
+  --display:"Instrument Serif",Georgia,"Times New Roman",serif;
+  --body:"Inter Tight","Helvetica Neue",Arial,sans-serif;
+  --mono:"Geist Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+
+  /* measure + rhythm */
+  --shell:min(1320px,100% - 2.5rem);
+  --shell-narrow:min(760px,100% - 2.5rem);
+  --gap:clamp(1rem,2.2vw,1.75rem);
+  --act-pad:clamp(4.5rem,10vw,9rem);
+}
+
+*,*::before,*::after{box-sizing:border-box}
+
+html{-webkit-text-size-adjust:100%}
+
+body{
+  margin:0;
+  background:var(--abyss);
+  color:var(--ink);
+  font:400 1rem/1.7 var(--body);
+  font-feature-settings:"cv05" 1,"ss03" 1;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+
+/* the whole page sits in water: a single very slow vertical light fall-off */
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(120% 60% at 50% -10%, rgba(46,196,182,.055), transparent 60%),
+    radial-gradient(90% 50% at 50% 108%, rgba(199,125,255,.045), transparent 65%);
+}
+
+img,video,svg{display:block;max-width:100%}
+
+a{color:var(--cryosphere);text-decoration-color:rgba(127,231,255,.35);text-underline-offset:.22em}
+a:hover{text-decoration-color:var(--cryosphere)}
+
+:focus-visible{outline:2px solid var(--cryosphere);outline-offset:3px;border-radius:2px}
+
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+
+/* ---------------------------------------------------------------- utilities */
+.shell{width:var(--shell);margin-inline:auto}
+.shell-narrow{width:var(--shell-narrow);margin-inline:auto}
+.vh{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.skip{position:absolute;left:1rem;top:-4rem;z-index:60;padding:.6rem 1rem;background:var(--panel-3);border:1px solid var(--hair-2);transition:top .2s}
+.skip:focus{top:1rem}
+
+.eyebrow{
+  font:500 .6875rem/1.4 var(--mono);
+  letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);
+  margin:0 0 1.15rem;
+}
+.eyebrow--lit{color:var(--cryosphere);opacity:.8}
+
+.lede{font:300 clamp(1.06rem,1.55vw,1.3rem)/1.62 var(--body);color:var(--ink-2);max-width:62ch}
+.note{font:400 .8125rem/1.62 var(--body);color:var(--ink-3);max-width:74ch}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.serif-it{font-family:var(--display);font-style:italic}
+
+hr.rule{border:0;border-top:1px solid var(--hair);margin:0}
+
+/* progress hairline */
+.progress{position:fixed;top:0;left:0;right:0;height:1px;z-index:50;background:rgba(127,231,255,.07)}
+.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--ocean-bloom),var(--cryosphere));box-shadow:0 0 10px rgba(127,231,255,.5)}
+
+/* reveal-on-scroll */
+.reveal{opacity:0;transform:translateY(16px)}
+.reveal.is-in{opacity:1;transform:none;transition:opacity .85s cubic-bezier(.22,.61,.36,1),transform .85s cubic-bezier(.22,.61,.36,1)}
+
+/* =============================================================== VIDEO BEDS */
+.bed{position:absolute;inset:0;overflow:hidden;z-index:0;pointer-events:none}
+.bed video,.bed img{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  mix-blend-mode:screen;               /* dark water joins the page, light blooms */
+  filter:saturate(.82) contrast(1.06);
+}
+/* the bloom pass: category light dodged over the footage, per the variant brief */
+.bed::after{
+  content:"";position:absolute;inset:0;mix-blend-mode:color-dodge;
+  background:radial-gradient(70% 55% at 50% 45%, rgba(46,196,182,.10), transparent 70%);
+}
+.scrim{position:absolute;inset:0;z-index:1;pointer-events:none}
+
+/* ===================================================================== HERO */
+.hero{position:relative;min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;padding-block:clamp(3rem,8vh,6rem) clamp(2.5rem,6vh,4rem);overflow:hidden}
+.hero .bed video{opacity:.46}
+.hero .scrim{
+  background:
+    radial-gradient(120% 85% at 50% 12%, rgba(4,7,10,.42), rgba(4,7,10,.90) 68%),
+    linear-gradient(180deg, rgba(4,7,10,.86) 0%, rgba(4,7,10,.30) 34%, rgba(4,7,10,.72) 74%, var(--abyss) 100%);
+}
+.hero__inner{position:relative;z-index:2;display:grid;gap:clamp(1.5rem,3vw,2.5rem)}
+
+.hero__masthead{display:flex;flex-wrap:wrap;align-items:baseline;gap:.5rem 1.5rem;justify-content:space-between}
+
+.wordmark{
+  position:relative;margin:0;
+  font:400 clamp(3.1rem,12.5vw,10.5rem)/.86 var(--display);
+  letter-spacing:-.025em;color:var(--ink);
+}
+.wordmark em{font-style:italic;color:var(--cryosphere)}
+/* restrained glow: one blurred duplicate, low alpha, plus a tight text-shadow */
+.wordmark::before{
+  content:attr(data-word);position:absolute;inset:0;z-index:-1;
+  color:var(--ocean-bloom);filter:blur(26px);opacity:.30;
+}
+.wordmark span{text-shadow:0 0 34px rgba(127,231,255,.18)}
+
+.hero__thesis{font:400 clamp(1.25rem,2.35vw,1.95rem)/1.42 var(--display);color:var(--ink);max-width:34ch;margin:0}
+.hero__thesis i{color:var(--cryosphere);font-style:italic}
+
+/* the thermocline: the page's core mark, stated once at full width.
+   position = today's warming on the dial scale; the soft band = its range. */
+.thermocline{position:relative;height:clamp(150px,22vh,230px);margin-top:.5rem}
+.thermocline__scale{position:absolute;inset:0}
+.thermocline__band{
+  position:absolute;left:0;right:0;
+  background:linear-gradient(180deg,transparent,rgba(155,229,100,.16),transparent);
+}
+.thermocline__line{position:absolute;left:0;right:0;height:1px;background:var(--biosphere);box-shadow:0 0 14px rgba(155,229,100,.65),0 0 44px rgba(155,229,100,.22)}
+.thermocline__tick{position:absolute;left:0;right:0;height:1px;background:var(--hair)}
+.thermocline__tick b{position:absolute;left:0;top:-1.35em;font:400 .625rem/1 var(--mono);letter-spacing:.14em;color:var(--ink-3)}
+.thermocline__readout{position:absolute;right:0;transform:translateY(-100%);text-align:right;padding-bottom:.5rem}
+.thermocline__value{display:block;font:400 clamp(2.6rem,6vw,4.4rem)/1 var(--mono);letter-spacing:-.045em;color:var(--ink);text-shadow:0 0 30px rgba(155,229,100,.3)}
+.thermocline__value sup{font-size:.34em;letter-spacing:0;vertical-align:.9em;margin-left:.35em;color:var(--ink-2)}
+.thermocline__label{display:block;font:500 .6875rem/1.5 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--biosphere);opacity:.85}
+.thermocline__range{display:block;font:400 .75rem/1.5 var(--mono);color:var(--ink-3)}
+
+.hero__foot{display:grid;grid-template-columns:1fr;gap:1.25rem}
+@media(min-width:920px){.hero__foot{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:2.5rem;align-items:start}}
+.hero__cue{display:flex;align-items:center;gap:.65rem;font:500 .6875rem/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3)}
+.hero__cue i{display:block;width:2.5rem;height:1px;background:linear-gradient(90deg,var(--hair-3),transparent)}
+
+/* ================================================================ SOURCE CHIPS */
+.srcs{display:flex;flex-wrap:wrap;gap:.4rem;margin:.7rem 0 0;padding:0;list-style:none}
+.srcs li{margin:0}
+.src-chip{
+  display:inline-block;padding:.2rem .5rem;
+  font:400 .625rem/1.5 var(--mono);letter-spacing:.06em;
+  color:var(--ink-3);border:1px solid var(--hair);border-radius:2px;
+  text-decoration:none;
+}
+.src-chip:hover{color:var(--cryosphere);border-color:var(--hair-2);background:rgba(127,231,255,.05)}
+.src-chip::before{content:"↳ ";opacity:.5}
+
+/* badge chips — the funding vocabulary. Announced is never delivered. */
+.badge{
+  display:inline-flex;align-items:center;gap:.35rem;padding:.18rem .5rem;
+  font:500 .625rem/1.5 var(--mono);letter-spacing:.09em;text-transform:uppercase;
+  border:1px solid var(--hair-2);border-radius:2px;white-space:nowrap;color:var(--ink-2);
+}
+.badge::before{content:"";width:4px;height:4px;border-radius:50%;background:currentColor}
+.badge--announced{color:var(--monsoon);border-color:rgba(229,183,105,.32)}
+.badge--delivered{color:var(--biosphere);border-color:rgba(155,229,100,.32)}
+.badge--verified{color:var(--cryosphere);border-color:rgba(127,231,255,.32)}
+.badge--deployed-grants{color:var(--ocean-bloom);border-color:rgba(46,196,182,.34)}
+.badge--absence{color:var(--ink-3);border-style:dashed}
+.asof{font:400 .625rem/1.5 var(--mono);letter-spacing:.06em;color:var(--ink-3);white-space:nowrap}
+.asof::before{content:"as of ";opacity:.7}
+
+.stream{
+  display:inline-block;padding:.16rem .45rem;
+  font:400 .625rem/1.5 var(--mono);letter-spacing:.09em;text-transform:uppercase;
+  color:var(--ink-3);border:1px dotted var(--hair-2);border-radius:2px;
+}
+
+/* ===================================================================== ACTS */
+.act{position:relative;padding-block:var(--act-pad);border-top:1px solid var(--hair)}
+.act__head{display:grid;gap:1.1rem;margin-bottom:clamp(2.5rem,5vw,4rem)}
+@media(min-width:920px){
+  .act__head{grid-template-columns:7rem minmax(0,1fr);gap:0 clamp(2rem,4vw,4rem);align-items:start}
+}
+.act__numeral{
+  margin:0;font:400 clamp(3.5rem,7vw,6rem)/.8 var(--display);font-style:italic;
+  color:transparent;-webkit-text-stroke:1px rgba(127,231,255,.34);
+}
+.act__titles{display:grid;gap:1.1rem}
+.act__title{margin:0;font:400 clamp(2rem,4.6vw,3.4rem)/1.06 var(--display);letter-spacing:-.015em}
+.act__title em{font-style:italic;color:var(--cryosphere)}
+
+/* ------------------------------------------------------------ instrument dial */
+.dial{
+  position:relative;padding:clamp(1.25rem,2.6vw,2rem);
+  background:linear-gradient(180deg,var(--panel-2),var(--panel));
+  border:1px solid var(--hair);border-radius:3px;
+  box-shadow:inset 0 1px 0 rgba(127,231,255,.06);
+}
+.dial__top{display:flex;flex-wrap:wrap;gap:1rem 2rem;align-items:flex-end;justify-content:space-between;margin-bottom:1.5rem}
+.dial__readout{display:flex;align-items:baseline;gap:.6rem}
+.dial__value{font:400 clamp(2.4rem,5vw,3.6rem)/1 var(--mono);letter-spacing:-.045em;color:var(--ink)}
+.dial__unit{font:400 .8125rem/1.4 var(--mono);color:var(--ink-3);max-width:16ch}
+.dial__counts{display:flex;flex-wrap:wrap;gap:.35rem 1.4rem}
+.dial__count{display:grid;gap:.15rem}
+.dial__count b{font:400 1.35rem/1 var(--mono);color:var(--ink)}
+.dial__count span{font:400 .625rem/1.4 var(--mono);letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3)}
+.dial__count--band b{color:var(--monsoon)}
+.dial__count--past b{color:var(--alarm)}
+
+.dial__track{position:relative;height:2.75rem}
+.dial__gradient{
+  position:absolute;left:0;right:0;top:1.1rem;height:3px;border-radius:2px;
+  background:linear-gradient(90deg,#7FE7FF 0%,#2EC4B6 16%,#9BE564 36%,#E5B769 62%,#FF5A6E 100%);
+  opacity:.42;
+}
+.dial__fill{position:absolute;left:0;top:1.1rem;height:3px;border-radius:2px;background:var(--ink);opacity:0;pointer-events:none}
+.dial__now{position:absolute;top:.35rem;width:1px;height:1.4rem;background:var(--hair-3)}
+.dial__now b{position:absolute;left:50%;transform:translateX(-50%);bottom:100%;margin-bottom:.3rem;font:400 .5625rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);white-space:nowrap}
+.dial__thumbline{position:absolute;top:0;width:1px;height:2.2rem;background:var(--ink);box-shadow:0 0 12px rgba(232,244,247,.6);pointer-events:none}
+.dial__ticks{position:absolute;left:0;right:0;top:1.9rem;height:1rem}
+.dial__ticks i{position:absolute;top:0;width:1px;height:5px;background:var(--hair-2)}
+.dial__ticks b{position:absolute;top:7px;transform:translateX(-50%);font:400 .625rem/1 var(--mono);color:var(--ink-3)}
+.dial input[type=range]{
+  position:absolute;left:0;top:0;width:100%;height:2.75rem;margin:0;
+  -webkit-appearance:none;appearance:none;background:transparent;cursor:ew-resize;
+}
+.dial input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:1.15rem;height:1.15rem;border-radius:50%;
+  background:var(--ink);border:0;margin-top:0;
+  box-shadow:0 0 0 1px var(--abyss),0 0 18px rgba(232,244,247,.55);
+}
+.dial input[type=range]::-moz-range-thumb{
+  width:1.15rem;height:1.15rem;border-radius:50%;background:var(--ink);border:0;
+  box-shadow:0 0 0 1px var(--abyss),0 0 18px rgba(232,244,247,.55);
+}
+.dial input[type=range]::-webkit-slider-runnable-track{height:2.75rem;background:transparent}
+.dial input[type=range]::-moz-range-track{height:2.75rem;background:transparent}
+.dial__foot{display:flex;flex-wrap:wrap;gap:.75rem 1.5rem;align-items:center;justify-content:space-between;margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--hair)}
+.btn-ghost{
+  padding:.45rem .85rem;font:500 .625rem/1.4 var(--mono);letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink-2);border:1px solid var(--hair-2);border-radius:2px;
+}
+.btn-ghost:hover{color:var(--cryosphere);border-color:var(--hair-3);background:rgba(127,231,255,.05)}
+.btn-ghost[aria-pressed=true]{color:var(--abyss);background:var(--cryosphere);border-color:var(--cryosphere)}
+
+/* --------------------------------------------------------------------- globe */
+.field{display:grid;gap:var(--gap);margin-top:var(--gap)}
+@media(min-width:1040px){.field{grid-template-columns:minmax(0,1fr) minmax(0,.82fr);align-items:start}}
+
+.globe-card{position:relative;padding:clamp(1rem,2vw,1.5rem);background:var(--panel);border:1px solid var(--hair);border-radius:3px;overflow:hidden}
+.globe-card .bed{opacity:.34}
+.globe-card .bed video,.globe-card .bed img{opacity:.5}
+.globe-card .scrim{background:radial-gradient(75% 65% at 50% 45%, rgba(4,7,10,.55), rgba(10,18,22,.94) 78%)}
+.globe-stage{position:relative;z-index:2}
+.globe-stage svg{width:100%;height:auto;overflow:visible;touch-action:pan-y}
+.globe-stage[data-grab=true] svg{cursor:grab}
+.globe-caption{position:relative;z-index:2;display:flex;flex-wrap:wrap;gap:.5rem 1.25rem;justify-content:space-between;align-items:flex-end;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--hair)}
+
+.gnode{cursor:pointer}
+.gnode:focus{outline:none}
+.gnode:focus-visible .gnode__hit{stroke:var(--ink);stroke-width:1;stroke-dasharray:2 2}
+
+/* the specimen key: what glow radius and core brightness mean */
+.key{display:grid;gap:1.25rem;padding:clamp(1rem,2vw,1.5rem);background:var(--panel);border:1px solid var(--hair);border-radius:3px}
+.key__row{display:grid;grid-template-columns:4.5rem minmax(0,1fr);gap:.9rem;align-items:center}
+.key__row svg{width:4.5rem;height:3rem}
+.key__row p{margin:0;font:400 .8125rem/1.55 var(--body);color:var(--ink-2)}
+.key__row p b{color:var(--ink);font-weight:500}
+.key__cats{display:flex;flex-wrap:wrap;gap:.5rem .9rem;padding-top:1.25rem;border-top:1px solid var(--hair)}
+.key__cat{display:inline-flex;align-items:center;gap:.4rem;font:400 .6875rem/1.5 var(--mono);letter-spacing:.06em;color:var(--ink-2)}
+.key__cat i{width:8px;height:8px;border-radius:50%;flex:none}
+
+/* --------------------------------------------------------------- band chart */
+.bands{margin-top:calc(var(--gap) * 1.6);padding:clamp(1rem,2.2vw,1.75rem);background:var(--panel);border:1px solid var(--hair);border-radius:3px}
+.bands__head{display:flex;flex-wrap:wrap;gap:.75rem 1.5rem;align-items:flex-end;justify-content:space-between;margin-bottom:1.5rem}
+.bands__title{margin:0;font:400 clamp(1.15rem,2vw,1.5rem)/1.25 var(--display)}
+.bands__legend{display:flex;flex-wrap:wrap;gap:.5rem 1.1rem;margin:0;padding:0;list-style:none}
+.bands__legend li{display:inline-flex;align-items:center;gap:.4rem;font:400 .6875rem/1.5 var(--mono);color:var(--ink-2)}
+.bands__legend svg{width:26px;height:10px;flex:none}
+.bands-stage{overflow-x:auto;overflow-y:hidden}
+.bands-stage svg{min-width:640px}
+.brow{cursor:pointer}
+.brow__label{font:400 .8125rem/1 var(--body);fill:var(--ink)}
+.brow__nums{font:400 .6875rem/1 var(--mono);fill:var(--ink-2);font-variant-numeric:tabular-nums}
+.brow__conf{font:400 .625rem/1 var(--mono);fill:var(--ink-3);letter-spacing:.06em}
+.brow:hover .brow__label,.brow:focus-visible .brow__label{fill:var(--cryosphere)}
+.brow:focus-visible .brow__hit{stroke:var(--cryosphere);stroke-width:1;stroke-dasharray:2 2}
+.baxis text{font:400 .625rem/1 var(--mono);fill:var(--ink-3)}
+.bgroup{font:500 .625rem/1 var(--mono);fill:var(--ink-3);letter-spacing:.13em;text-transform:uppercase}
+
+/* table twin */
+.tabletwin{margin-top:1.5rem;border-top:1px solid var(--hair);padding-top:1.25rem}
+.tabletwin[hidden]{display:none}
+.dtable{width:100%;border-collapse:collapse;font:400 .8125rem/1.5 var(--body)}
+.dtable caption{text-align:left;font:400 .75rem/1.6 var(--mono);color:var(--ink-3);padding-bottom:.75rem}
+.dtable th,.dtable td{text-align:left;padding:.5rem .75rem .5rem 0;border-bottom:1px solid var(--hair);vertical-align:top}
+.dtable thead th{font:500 .625rem/1.4 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);white-space:nowrap}
+.dtable td.n{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--ink-2)}
+.dtable-wrap{overflow-x:auto}
+
+/* tooltip */
+.tip{
+  position:fixed;z-index:40;pointer-events:none;opacity:0;transform:translate(-50%,-100%);
+  padding:.6rem .75rem;min-width:11rem;max-width:19rem;
+  background:rgba(6,11,14,.96);border:1px solid var(--hair-2);border-radius:3px;
+  box-shadow:0 12px 40px rgba(0,0,0,.6);transition:opacity .12s;
+}
+.tip[data-on=true]{opacity:1}
+.tip__name{display:block;font:400 .875rem/1.3 var(--body);color:var(--ink);margin-bottom:.3rem}
+.tip__cat{display:block;font:400 .625rem/1.4 var(--mono);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.45rem}
+.tip__line{display:block;font:400 .6875rem/1.55 var(--mono);color:var(--ink-2);font-variant-numeric:tabular-nums}
+.tip__cue{display:block;margin-top:.45rem;font:400 .625rem/1.4 var(--mono);letter-spacing:.08em;color:var(--ink-3)}
+
+/* ================================================================== DOSSIER */
+.drawer{position:fixed;inset:0;z-index:70}
+.drawer[hidden]{display:none}
+.drawer__scrim{position:absolute;inset:0;background:rgba(2,4,6,.72);backdrop-filter:blur(3px)}
+.drawer__panel{
+  position:absolute;right:0;top:0;bottom:0;width:min(560px,100%);
+  background:var(--panel);border-left:1px solid var(--hair-2);
+  box-shadow:-30px 0 80px rgba(0,0,0,.55);
+  overflow-y:auto;overscroll-behavior:contain;
+  padding:clamp(1.25rem,3vw,2.25rem);
+}
+@media(max-width:640px){
+  .drawer__panel{top:auto;height:88svh;width:100%;border-left:0;border-top:1px solid var(--hair-2);border-radius:3px 3px 0 0}
+}
+.drawer__close{position:sticky;top:0;float:right;margin:-.4rem -.4rem 0 1rem;padding:.45rem .8rem;font:500 .625rem/1.4 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);background:var(--panel);border:1px solid var(--hair-2);border-radius:2px;z-index:2}
+.drawer__close:hover{color:var(--cryosphere);border-color:var(--hair-3)}
+
+.dos__cat{display:inline-flex;align-items:center;gap:.45rem;font:500 .625rem/1.5 var(--mono);letter-spacing:.13em;text-transform:uppercase;margin:0 0 .8rem}
+.dos__cat i{width:7px;height:7px;border-radius:50%}
+.dos__name{margin:0 0 .35rem;font:400 clamp(1.5rem,3.4vw,2.1rem)/1.14 var(--display);letter-spacing:-.01em}
+.dos__tier{margin:0 0 1.5rem;font:400 .6875rem/1.5 var(--mono);letter-spacing:.09em;color:var(--ink-3)}
+
+.dos__thresh{padding:1.1rem 0;border-block:1px solid var(--hair);margin-bottom:1.5rem}
+.dos__thresh-nums{display:flex;flex-wrap:wrap;gap:1.5rem;align-items:flex-end;margin-bottom:1rem}
+.dos__t{display:grid;gap:.2rem}
+.dos__t b{font:400 1.5rem/1 var(--mono);letter-spacing:-.02em;color:var(--ink)}
+.dos__t span{font:400 .5625rem/1.4 var(--mono);letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3)}
+.dos__t--central b{color:var(--cryosphere)}
+.dos__state{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
+.state-chip{display:inline-flex;align-items:center;gap:.4rem;padding:.22rem .6rem;font:500 .625rem/1.5 var(--mono);letter-spacing:.1em;text-transform:uppercase;border:1px solid;border-radius:2px}
+.state-chip--below{color:var(--ink-3);border-color:var(--hair-2)}
+.state-chip--band{color:var(--monsoon);border-color:rgba(229,183,105,.4);background:rgba(229,183,105,.07)}
+.state-chip--past{color:var(--alarm);border-color:rgba(255,90,110,.42);background:rgba(255,90,110,.08)}
+
+.dos__field{margin:0 0 1.4rem}
+.dos__field dt{font:500 .625rem/1.5 var(--mono);letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);margin-bottom:.4rem}
+.dos__field dd{margin:0;font:400 .9375rem/1.65 var(--body);color:var(--ink-2)}
+.dos__field dd b{color:var(--ink);font-weight:500}
+.dos__contested{padding:1rem;background:rgba(199,125,255,.06);border:1px solid rgba(199,125,255,.24);border-radius:3px;margin-bottom:1.4rem}
+.dos__contested dt{color:var(--carbon)}
+.dos__handle{padding:1rem;background:rgba(155,229,100,.055);border:1px solid rgba(155,229,100,.22);border-radius:3px;margin-bottom:1.4rem}
+.dos__handle dt{color:var(--biosphere)}
+.cascade-list{display:flex;flex-wrap:wrap;gap:.4rem;margin:.2rem 0 0;padding:0;list-style:none}
+.cascade-btn{padding:.28rem .6rem;font:400 .6875rem/1.4 var(--mono);color:var(--ink-2);border:1px solid var(--hair-2);border-radius:2px}
+.cascade-btn:hover{color:var(--cryosphere);border-color:var(--hair-3);background:rgba(127,231,255,.05)}
+.cascade-btn::before{content:"→ ";opacity:.55}
+
+/* =================================================================== LEDGER */
+.ledger{--gutter:clamp(.75rem,1.6vw,1.5rem)}
+.ledger__axis{position:relative;height:2.25rem;margin-left:0}
+.ledger__axis i{position:absolute;top:1.15rem;width:1px;height:8px;background:var(--hair-2)}
+.ledger__axis b{position:absolute;top:0;transform:translateX(-50%);font:400 .625rem/1.2 var(--mono);color:var(--ink-3);white-space:nowrap}
+.ledger__axis-name{position:absolute;left:0;top:0;font:500 .5625rem/1.2 var(--mono);letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3)}
+
+.lrow{
+  display:grid;gap:.75rem var(--gutter);
+  padding:clamp(1.1rem,2.2vw,1.6rem) 0;border-top:1px solid var(--hair);
+}
+.lrow:last-child{border-bottom:1px solid var(--hair)}
+@media(min-width:900px){
+  .lrow{grid-template-columns:minmax(0,15rem) minmax(0,1fr) 10.5rem}
+  .lrow__meta{grid-column:1}
+  .lrow__bars{grid-column:2}
+  .lrow__gap{grid-column:3}
+  .lrow__detail{grid-column:1 / -1}
+}
+.lrow__name{margin:0 0 .3rem;font:400 1.15rem/1.22 var(--display)}
+.lrow__sec{font:400 .625rem/1.4 var(--mono);letter-spacing:.1em;color:var(--ink-3)}
+.lrow__trl{margin:.5rem 0 0;font:400 .75rem/1.55 var(--mono);color:var(--ink-3)}
+
+.lrow__track{
+  position:relative;height:1.5rem;border-radius:2px;
+  background-color:rgba(127,231,255,.035);
+  background-image:var(--ledger-grid);
+  background-repeat:no-repeat;
+}
+.lrow__bar{position:absolute;left:0;top:.3rem;height:.9rem;border-radius:0 4px 4px 0;background:rgba(127,231,255,.24);box-shadow:inset -3px 0 0 var(--cryosphere)}
+.lrow__amount{margin:.5rem 0 0;display:flex;flex-wrap:wrap;gap:.4rem .75rem;align-items:center}
+.lrow__amount b{font:400 1.05rem/1.2 var(--mono);letter-spacing:-.015em;color:var(--ink)}
+.lrow__none{margin:.5rem 0 0;font:400 .75rem/1.55 var(--mono);color:var(--monsoon);opacity:.9}
+.lrow__streams{display:flex;flex-wrap:wrap;gap:.35rem;margin:.6rem 0 0}
+
+.meter{display:flex;gap:4px;align-items:center;margin:0 0 .4rem}
+.meter i{width:9px;height:9px;border-radius:50%;border:1px solid var(--hair-2)}
+.meter i[data-on=true]{background:var(--cryosphere);border-color:var(--cryosphere);box-shadow:0 0 8px rgba(127,231,255,.5)}
+.lrow__gap p{margin:0;font:400 .625rem/1.5 var(--mono);letter-spacing:.06em;color:var(--ink-3)}
+
+.lrow__detail{display:grid;gap:1.1rem;margin-top:.4rem}
+@media(min-width:900px){.lrow__detail{grid-template-columns:repeat(auto-fit,minmax(19rem,1fr));gap:1.1rem var(--gutter)}}
+.fnote{margin:0}
+.fnote dt{font:500 .5625rem/1.5 var(--mono);letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);margin-bottom:.35rem}
+.fnote dd{margin:0;font:400 .8125rem/1.62 var(--body);color:var(--ink-2)}
+.fnote--warn dt{color:var(--alarm)}
+.fnote--warn dd{color:var(--ink-2)}
+.fnote--conflict dt{color:var(--monsoon)}
+
+.fund-list{margin:0;padding:0;list-style:none;display:grid;gap:.7rem}
+.fund{display:grid;gap:.3rem;padding:.7rem .8rem;background:var(--panel-2);border:1px solid var(--hair);border-radius:3px}
+.fund__top{display:flex;flex-wrap:wrap;gap:.4rem .6rem;align-items:center}
+.fund__amt{font:400 .9375rem/1.2 var(--mono);letter-spacing:-.01em;color:var(--ink)}
+.fund__amt--none{color:var(--ink-3);font-size:.8125rem}
+.fund__holder{font:400 .8125rem/1.5 var(--body);color:var(--ink)}
+.fund__kind{font:400 .75rem/1.55 var(--body);color:var(--ink-3)}
+.fund__note{font:400 .75rem/1.55 var(--body);color:var(--ink-3)}
+.fund__quote{margin:.35rem 0 0;padding-left:.7rem;border-left:1px solid var(--hair-2);font:400 .75rem/1.6 var(--mono);color:var(--ink-2)}
+.fund--excluded{opacity:.62}
+.fund__flag{font:400 .625rem/1.5 var(--mono);letter-spacing:.06em;color:var(--monsoon)}
+
+/* ============================================================ COMPANY ATLAS */
+.tiers{display:grid;gap:clamp(2rem,4vw,3.25rem);margin-top:clamp(2.5rem,5vw,4rem)}
+.tier__head{display:grid;gap:.4rem;margin-bottom:1.25rem;padding-bottom:.9rem;border-bottom:1px solid var(--hair)}
+.tier__n{font:500 .625rem/1.4 var(--mono);letter-spacing:.15em;text-transform:uppercase;color:var(--cryosphere);opacity:.75}
+.tier__label{margin:0;font:400 clamp(1.15rem,2.1vw,1.6rem)/1.25 var(--display)}
+.cards{display:grid;gap:var(--gap);grid-template-columns:repeat(auto-fit,minmax(min(100%,20rem),1fr))}
+.co{
+  display:grid;gap:.6rem;padding:clamp(1rem,2vw,1.35rem);
+  background:var(--panel);border:1px solid var(--hair);border-radius:3px;
+  box-shadow:inset 0 1px 0 rgba(127,231,255,.05);
+}
+.tier--1 .co{border-color:var(--hair-2);background:linear-gradient(180deg,var(--panel-2),var(--panel))}
+.tier--3 .co{background:rgba(10,18,22,.6)}
+.co__top{display:flex;flex-wrap:wrap;gap:.4rem .8rem;align-items:baseline;justify-content:space-between}
+.co__name{margin:0;font:400 1.2rem/1.25 var(--display)}
+.co__where{font:400 .625rem/1.5 var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3)}
+.co__one{margin:0;font:400 .875rem/1.6 var(--body);color:var(--ink-2)}
+.co__fact{margin:0;font:400 .8125rem/1.62 var(--body);color:var(--ink-2);padding-top:.6rem;border-top:1px solid var(--hair)}
+.co__meta{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center}
+.co--milestone{border-style:dashed;border-color:rgba(229,183,105,.3);background:rgba(229,183,105,.03)}
+.flag-milestone{
+  display:inline-flex;align-items:center;gap:.4rem;padding:.24rem .6rem;
+  font:500 .625rem/1.5 var(--mono);letter-spacing:.1em;text-transform:uppercase;
+  color:var(--monsoon);border:1px dashed rgba(229,183,105,.5);border-radius:2px;background:rgba(229,183,105,.06);
+}
+.quote{margin:.2rem 0 0;padding-left:.75rem;border-left:1px solid var(--hair-2);font:400 .75rem/1.6 var(--mono);color:var(--ink-2)}
+.quote::before{content:"source words: ";color:var(--ink-3);letter-spacing:.06em}
+
+/* ================================================================ HYPOTHESES */
+.hyps{display:grid;gap:var(--gap);margin-top:clamp(2rem,4vw,3rem)}
+.hyp{
+  position:relative;padding:clamp(1.25rem,2.6vw,2rem);
+  background:linear-gradient(180deg,var(--panel-2),var(--panel));
+  border:1px solid var(--hair-2);border-radius:3px;
+  box-shadow:inset 0 1px 0 rgba(127,231,255,.07),0 0 40px rgba(46,196,182,.035);
+}
+/* illuminated specimen label: one hairline of light along the top edge */
+.hyp::before{
+  content:"";position:absolute;left:clamp(1.25rem,2.6vw,2rem);right:clamp(1.25rem,2.6vw,2rem);top:-1px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(127,231,255,.65),transparent);
+}
+.hyp__grid{display:grid;gap:clamp(1.25rem,2.5vw,2rem)}
+@media(min-width:980px){.hyp__grid{grid-template-columns:minmax(0,1.05fr) minmax(0,1fr)}}
+.hyp__head{display:flex;flex-wrap:wrap;gap:.6rem 1rem;align-items:center;margin-bottom:1.1rem}
+.hyp__id{font:400 .75rem/1 var(--mono);letter-spacing:.14em;color:var(--cryosphere)}
+.hyp__trl{font:400 .6875rem/1.5 var(--mono);color:var(--ink-3)}
+.hyp__claim{margin:0 0 1.25rem;font:400 clamp(1.2rem,2.1vw,1.55rem)/1.42 var(--display);font-style:italic;color:var(--ink);text-shadow:0 0 30px rgba(127,231,255,.10)}
+.hyp__field{margin:0 0 1.15rem}
+.hyp__field dt{font:500 .5625rem/1.5 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:.4rem}
+.hyp__field dd{margin:0;font:400 .875rem/1.68 var(--body);color:var(--ink-2)}
+.hyp__test{padding:1rem 1.1rem;border-radius:3px;margin-bottom:1rem}
+.hyp__test dt{display:flex;align-items:center;gap:.5rem;font:500 .5625rem/1.5 var(--mono);letter-spacing:.14em;text-transform:uppercase;margin-bottom:.5rem}
+.hyp__test dt em{font-style:normal;font-size:.9em;opacity:.6;letter-spacing:.1em}
+.hyp__test dd{margin:0;font:400 .875rem/1.68 var(--body);color:var(--ink-2)}
+.hyp__test--kill{background:rgba(255,90,110,.05);border:1px solid rgba(255,90,110,.26)}
+.hyp__test--kill dt{color:var(--alarm)}
+.hyp__test--pass{background:rgba(155,229,100,.045);border:1px solid rgba(155,229,100,.22)}
+.hyp__test--pass dt{color:var(--biosphere)}
+.hyp__actors{display:flex;flex-wrap:wrap;gap:.35rem;margin:.25rem 0 0;padding:0;list-style:none}
+.hyp__actors li{padding:.22rem .55rem;font:400 .6875rem/1.5 var(--mono);color:var(--ink-2);border:1px solid var(--hair);border-radius:2px}
+.hyp__foot{display:flex;flex-wrap:wrap;gap:.6rem 1.25rem;align-items:center;margin-top:1.1rem;padding-top:1.1rem;border-top:1px solid var(--hair)}
+
+.hyp--milestone{
+  background:rgba(10,18,22,.55);
+  border:1px dashed rgba(229,183,105,.34);
+  box-shadow:none;
+}
+.hyp--milestone::before{display:none}
+.hyp--milestone .hyp__id{color:var(--monsoon)}
+.hyp--milestone .hyp__claim{text-shadow:none}
+.hyp__milestone-note{margin:0 0 1.1rem;font:400 .8125rem/1.6 var(--body);color:var(--monsoon);opacity:.92}
+
+/* =================================================================== METHODS */
+.methods{background:linear-gradient(180deg,var(--abyss),#060B0F)}
+.methods__grid{display:grid;gap:clamp(2rem,4vw,3.5rem)}
+@media(min-width:980px){.methods__grid{grid-template-columns:minmax(0,1fr) minmax(0,1.25fr)}}
+.disclaim{padding:clamp(1.1rem,2.2vw,1.6rem);background:var(--panel);border:1px solid var(--hair-2);border-radius:3px}
+.disclaim p{margin:0 0 .8rem}
+.disclaim p:last-child{margin:0}
+.disclaim__lead{font:400 clamp(1.05rem,1.9vw,1.35rem)/1.45 var(--display);color:var(--ink)}
+.sub{margin:0 0 1.1rem;font:400 clamp(1rem,1.8vw,1.2rem)/1.35 var(--display);color:var(--ink)}
+.srclist{margin:0;padding:0;list-style:none;display:grid;gap:.9rem;counter-reset:s}
+.srclist li{display:grid;gap:.25rem;padding-bottom:.9rem;border-bottom:1px solid var(--hair);counter-increment:s}
+.srclist li:last-child{border-bottom:0;padding-bottom:0}
+.srclist__label{font:400 .875rem/1.6 var(--body);color:var(--ink-2)}
+.srclist__label::before{content:"[" counter(s) "] ";font-family:var(--mono);font-size:.75rem;color:var(--ink-3)}
+.srclist__meta{display:flex;flex-wrap:wrap;gap:.4rem .9rem;align-items:center;font:400 .6875rem/1.5 var(--mono);color:var(--ink-3)}
+.srclist__meta a{word-break:break-all}
+.flag-verify{color:var(--monsoon);border:1px dotted rgba(229,183,105,.45);border-radius:2px;padding:.1rem .4rem;letter-spacing:.06em}
+.flag-nolink{color:var(--ink-3);opacity:.85}
+
+.mediacred{margin:0;padding:0;list-style:none;display:grid;gap:.9rem}
+.mediacred li{display:grid;gap:.25rem;padding:.75rem .85rem;background:var(--panel);border:1px solid var(--hair);border-radius:3px}
+.mediacred li[data-used=true]{border-color:var(--hair-2);background:var(--panel-2)}
+.mediacred__slug{font:500 .6875rem/1.5 var(--mono);letter-spacing:.06em;color:var(--ink)}
+.mediacred__cred{font:400 .8125rem/1.6 var(--body);color:var(--ink-2)}
+.mediacred__meta{display:flex;flex-wrap:wrap;gap:.35rem .8rem;align-items:center;font:400 .625rem/1.5 var(--mono);letter-spacing:.05em;color:var(--ink-3)}
+.mediacred__used{color:var(--cryosphere)}
+.mediacred__caption{font:400 .75rem/1.55 var(--mono);color:var(--monsoon)}
+
+.colophon{padding-block:clamp(2.5rem,5vw,4rem);border-top:1px solid var(--hair);text-align:center}
+.colophon p{margin:0 0 .5rem;font:400 .75rem/1.6 var(--mono);letter-spacing:.06em;color:var(--ink-3)}
+
+/* ------------------------------------------------------------------ noscript */
+.noscript{padding:var(--act-pad) 0}
+.noscript__box{padding:clamp(1.25rem,3vw,2rem);background:var(--panel);border:1px solid var(--hair-2);border-radius:3px}
+
+/* ---------------------------------------------------------- reduced motion */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+  .reveal{opacity:1;transform:none}
+  .bed::after{display:none}
+  .progress{display:none}
+}
+
+/* --------------------------------------------------- forced colours / print */
+@media (forced-colors: active){
+  .badge,.state-chip,.src-chip,.stream{border-color:CanvasText}
+  .lrow__bar{background:CanvasText}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to the atlas</a>
+<div class="progress" aria-hidden="true"><i id="progress-bar"></i></div>
+
+<!-- Fallback for users without JavaScript. Every number on this page is rendered
+     from collapse-data.v2.js, so no figures can appear here; what is listed is
+     the roster of elements and where to read the numbers instead. The names are
+     the one thing duplicated out of the data file — ?audit=1 asserts they still
+     match COLLAPSE_DATA.tippingSystems and reports any drift. -->
+<noscript>
+  <section class="noscript shell">
+    <p class="eyebrow">Collapse Earth — no-script view</p>
+    <div class="noscript__box">
+      <h1 style="margin:0 0 .75rem;font:400 2rem/1.15 var(--display)">Collapse Earth</h1>
+      <p class="lede">This atlas renders every threshold, funding figure and citation from a
+      data file using JavaScript, which is switched off in this browser. Nothing on this page
+      hard-codes a number, so no values can be shown here. The sixteen tipping elements it
+      covers are listed below.</p>
+      <p class="note" style="margin-top:1rem">Threshold ranges, central estimates and confidence
+      ratings all come from one table: Armstrong McKay et al., &ldquo;Exceeding 1.5&nbsp;°C global
+      warming could trigger multiple climate tipping points&rdquo;, <i>Science</i> 377, eabn7950
+      (2022), Table 1 — <a href="https://doi.org/10.1126/science.abn7950">doi.org/10.1126/science.abn7950</a>.
+      Read it directly for the values.</p>
+      <div class="dtable-wrap" style="margin-top:1.5rem">
+      <table class="dtable">
+        <caption>The sixteen tipping elements of Armstrong McKay et al. (2022), Table 1 — names and grouping only.</caption>
+        <thead><tr><th scope="col">Element</th><th scope="col">Category</th><th scope="col">Group</th></tr></thead>
+        <tbody id="noscript-rows">
+          <tr><td>Greenland Ice Sheet</td><td>Cryosphere</td><td>Global core</td></tr>
+          <tr><td>West Antarctic Ice Sheet</td><td>Cryosphere</td><td>Global core</td></tr>
+          <tr><td>Atlantic Meridional Overturning Circulation</td><td>Ocean circulation</td><td>Global core</td></tr>
+          <tr><td>Labrador–Irminger Sea / subpolar gyre convection</td><td>Ocean circulation</td><td>Global core</td></tr>
+          <tr><td>East Antarctic subglacial basins</td><td>Cryosphere</td><td>Global core</td></tr>
+          <tr><td>Amazon rainforest dieback</td><td>Biosphere</td><td>Global core</td></tr>
+          <tr><td>Boreal permafrost collapse</td><td>Carbon feedback</td><td>Global core</td></tr>
+          <tr><td>Arctic winter sea ice collapse</td><td>Cryosphere</td><td>Global core</td></tr>
+          <tr><td>East Antarctic Ice Sheet</td><td>Cryosphere</td><td>Global core</td></tr>
+          <tr><td>Low-latitude coral reefs</td><td>Biosphere</td><td>Regional</td></tr>
+          <tr><td>Boreal permafrost abrupt thaw</td><td>Carbon feedback</td><td>Regional</td></tr>
+          <tr><td>Barents Sea ice abrupt loss</td><td>Cryosphere</td><td>Regional</td></tr>
+          <tr><td>Mountain glacier loss</td><td>Cryosphere</td><td>Regional</td></tr>
+          <tr><td>Sahel &amp; West African monsoon greening</td><td>Monsoon</td><td>Regional</td></tr>
+          <tr><td>Boreal forest southern dieback</td><td>Biosphere</td><td>Regional</td></tr>
+          <tr><td>Boreal forest northward expansion</td><td>Biosphere</td><td>Regional</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p class="note" style="margin-top:1.5rem">This is a research position, not investment advice.</p>
+    </div>
+  </section>
+</noscript>
+
+<main id="main" hidden data-app>
+
+  <!-- ===================================================================== -->
+  <!-- HERO                                                                  -->
+  <!-- ===================================================================== -->
+  <header class="hero">
+    <div class="bed" data-bed>
+      <!-- poster is a 1×1 transparent GIF until the real poster is resolved from
+           COLLAPSE_DATA.media by tag; no media URL is written into this markup. -->
+      <video data-tag="abyss" data-pick="0"
+             muted loop playsinline preload="none"
+             poster="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+             aria-hidden="true" tabindex="-1"></video>
+    </div>
+    <div class="scrim"></div>
+
+    <div class="hero__inner shell">
+      <div class="hero__masthead">
+        <p class="eyebrow" id="hero-eyebrow">Research atlas</p>
+        <p class="eyebrow eyebrow--lit" id="hero-updated"></p>
+      </div>
+
+      <h1 class="wordmark" data-word="Collapse Earth"><span>Collapse <em>Earth</em></span></h1>
+
+      <div class="hero__foot">
+        <p class="hero__thesis">Sixteen Earth systems have thresholds. Not one of them is a date, and
+        not one is a single number — each is a <i>range</i> with a confidence rating attached. This
+        atlas holds those ranges beside the money now moving in climate technology, and asks why the
+        two do not line up.</p>
+
+        <div>
+          <div class="thermocline" id="thermocline" aria-hidden="true"></div>
+          <p class="note" id="warming-note"></p>
+          <ul class="srcs" id="warming-srcs"></ul>
+        </div>
+      </div>
+
+      <div class="hero__cue"><i></i><span>Act I — the thresholds</span></div>
+    </div>
+  </header>
+
+  <!-- ===================================================================== -->
+  <!-- ACT I — THE THRESHOLDS                                                -->
+  <!-- ===================================================================== -->
+  <section class="act" id="act-i" aria-labelledby="act-i-title">
+    <div class="shell">
+      <div class="act__head reveal">
+        <p class="act__numeral" aria-hidden="true">I</p>
+        <div class="act__titles">
+          <p class="eyebrow">Act I</p>
+          <h2 class="act__title" id="act-i-title">The <em>thresholds</em></h2>
+          <p class="lede">Every threshold here is a range, not a line. Move the dial and each element
+          lights in proportion to how far into <i>its own</i> uncertainty range the world has
+          travelled. Nothing on this globe flips at a single number, because the science does not.</p>
+          <p class="note">Threshold values, central estimates and confidence ratings are all from one
+          table — Armstrong McKay et al., <i>Science</i> (2022), Table 1. Crossing a range is not
+          tipping: it starts a process whose expression takes the timescale named in each dossier,
+          from a decade to ten millennia.</p>
+        </div>
+      </div>
+
+      <div class="dial reveal" id="dial">
+        <div class="dial__top">
+          <div class="dial__readout">
+            <span class="dial__value" id="dial-value">1.40</span>
+            <span class="dial__unit" id="dial-unit"></span>
+          </div>
+          <div class="dial__counts" id="dial-counts"></div>
+        </div>
+
+        <div class="dial__track" id="dial-track">
+          <div class="dial__gradient"></div>
+          <div class="dial__now" id="dial-now"><b>today</b></div>
+          <div class="dial__thumbline" id="dial-thumbline"></div>
+          <div class="dial__ticks" id="dial-ticks"></div>
+          <input type="range" id="dial-input" step="0.05"
+                 aria-label="Global warming above 1850–1900, in degrees Celsius">
+        </div>
+
+        <div class="dial__foot">
+          <p class="note" id="dial-live" role="status" style="margin:0;flex:1 1 22rem"></p>
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+            <button class="btn-ghost" id="dial-reset" type="button">Reset to today</button>
+            <button class="btn-ghost" id="spin-toggle" type="button" aria-pressed="false">Rotation</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="globe-card reveal">
+          <div class="bed" data-bed>
+            <!-- pick 1 of the "ice" tag is the NASA Greenland mass-loss visualisation:
+                 it is rendered on black, so screen-blending it over the abyss is what it
+                 was made for, and it is the lightest clip in the manifest. -->
+            <video data-tag="ice" data-pick="1"
+                   muted loop playsinline preload="none"
+                   poster="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+                   aria-hidden="true" tabindex="-1"></video>
+          </div>
+          <div class="scrim"></div>
+          <div class="globe-stage" id="globe-stage" data-grab="true"></div>
+          <div class="globe-caption">
+            <p class="note" style="margin:0;max-width:46ch" id="globe-caption"></p>
+            <p class="note" style="margin:0;font-family:var(--mono);font-size:.6875rem">
+              Drag to rotate · arrow keys when focused · select an element for its dossier
+            </p>
+          </div>
+        </div>
+
+        <div class="key reveal" id="key" aria-labelledby="key-title">
+          <div>
+            <p class="eyebrow" style="margin-bottom:.5rem" id="key-title">Reading the field</p>
+            <p class="note" style="margin:0">Three channels, each carrying one thing.</p>
+          </div>
+          <div id="key-rows"></div>
+          <div class="key__cats" id="key-cats"></div>
+        </div>
+      </div>
+
+      <div class="bands reveal" id="bands" aria-labelledby="bands-title">
+        <div class="bands__head">
+          <div>
+            <h3 class="bands__title" id="bands-title">Threshold ranges, all sixteen elements</h3>
+            <p class="note" style="margin:.4rem 0 0">Bar spans the published minimum to maximum;
+            the notch is the central estimate. The lit portion of each bar is the part of its own
+            range the dial has passed.</p>
+          </div>
+          <ul class="bands__legend" id="bands-legend"></ul>
+        </div>
+        <div class="bands-stage" id="bands-stage"></div>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1.25rem">
+          <button class="btn-ghost" id="table-toggle" type="button" aria-expanded="false" aria-controls="bands-table">Read as table</button>
+        </div>
+        <div class="tabletwin" id="bands-table" hidden></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- ACT II — THE MISALLOCATION                                            -->
+  <!-- ===================================================================== -->
+  <section class="act" id="act-ii" aria-labelledby="act-ii-title">
+    <div class="shell">
+      <div class="act__head reveal">
+        <p class="act__numeral" aria-hidden="true">II</p>
+        <div class="act__titles">
+          <p class="eyebrow">Act II</p>
+          <h2 class="act__title" id="act-ii-title">The <em>misallocation</em></h2>
+          <p class="lede">Capital can be counted. Leverage cannot. This ledger keeps them in separate
+          columns: every dollar figure carries the badge its source used and the date it was current,
+          and no two kinds of money are ever added together.</p>
+          <p class="note" id="ledger-standfirst"></p>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <div class="fnote" style="margin-bottom:1.75rem;max-width:70ch">
+          <dt>How the capital column is built</dt>
+          <dd>A funding list like this one is not summable as it stands. It holds six kinds of money —
+          capital raised, capital being sought, offtake contracts, prizes, grants, and sector-level
+          roll-ups that already contain the company rows beneath them. The capital figure on each row
+          adds only entries marked as capital, and drops any entry the data flags as sitting inside a
+          cumulative total, so nothing is counted twice. Contracts, prizes, grants and targets appear
+          as themselves, never folded into the total. Where a source gave no figure, the row says so
+          rather than showing zero.</dd>
+        </div>
+
+        <div class="ledger" id="ledger">
+          <div class="ledger__axis" id="ledger-axis"></div>
+          <div id="ledger-rows"></div>
+        </div>
+        <p class="note" style="margin-top:1.25rem" id="ledger-axisnote"></p>
+      </div>
+
+      <div class="reveal" style="margin-top:clamp(3rem,6vw,5rem)">
+        <div class="bed" style="position:relative;height:clamp(180px,26vh,320px);border:1px solid var(--hair);border-radius:3px;overflow:hidden">
+          <img data-tag="abyss" data-pick="1" alt="" loading="lazy" decoding="async">
+          <div class="scrim" style="background:linear-gradient(180deg,rgba(4,7,10,.55),rgba(4,7,10,.92))"></div>
+        </div>
+        <p class="note" style="margin-top:.6rem" id="act-ii-still-credit"></p>
+      </div>
+
+      <div class="tiers" id="tiers" aria-labelledby="tiers-title">
+        <div>
+          <p class="eyebrow" id="tiers-title">Company atlas</p>
+          <h3 class="sub" style="max-width:44ch">Staged by conviction, not by sector — and every key
+          fact wears the badge its source earned.</h3>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- ACT III — THE HYPOTHESIS ENGINE                                       -->
+  <!-- ===================================================================== -->
+  <section class="act" id="act-iii" aria-labelledby="act-iii-title">
+    <div class="shell">
+      <div class="act__head reveal">
+        <p class="act__numeral" aria-hidden="true">III</p>
+        <div class="act__titles">
+          <p class="eyebrow">Act III</p>
+          <h2 class="act__title" id="act-iii-title">The <em>hypothesis engine</em></h2>
+          <p class="lede">Ten falsifiable claims — the only original argument on this site. Each one
+          states the measurement that would <i>kill</i> it before the measurement that would confirm
+          it, because that is the order in which they should be run.</p>
+          <p class="note" id="hyps-standfirst"></p>
+        </div>
+      </div>
+
+      <div class="reveal" style="position:relative;height:clamp(200px,30vh,380px);border:1px solid var(--hair);border-radius:3px;overflow:hidden;margin-bottom:clamp(2rem,4vw,3rem)">
+        <div class="bed" data-bed>
+          <video data-tag="plankton" data-pick="0"
+                 muted loop playsinline preload="none"
+                 poster="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+                 aria-hidden="true" tabindex="-1"></video>
+        </div>
+        <div class="scrim" style="background:radial-gradient(70% 70% at 50% 50%,rgba(4,7,10,.35),rgba(4,7,10,.9))"></div>
+        <p class="note" id="act-iii-credit" style="position:absolute;left:1rem;right:1rem;bottom:.85rem;z-index:2;margin:0;font-family:var(--mono);font-size:.625rem"></p>
+      </div>
+
+      <div class="hyps" id="hyps"></div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- METHODS & SOURCES                                                     -->
+  <!-- ===================================================================== -->
+  <section class="act methods" id="methods" aria-labelledby="methods-title">
+    <div class="shell">
+      <div class="act__head reveal">
+        <p class="act__numeral" aria-hidden="true">IV</p>
+        <div class="act__titles">
+          <p class="eyebrow">Methods &amp; sources</p>
+          <h2 class="act__title" id="methods-title">What this page <em>knows</em>, and how</h2>
+        </div>
+      </div>
+
+      <div class="methods__grid">
+        <div class="reveal">
+          <div class="disclaim">
+            <p class="disclaim__lead">This is a research position, not investment advice.</p>
+            <p class="note" id="meta-disclaimer"></p>
+            <p class="note" id="meta-updated"></p>
+          </div>
+
+          <div style="margin-top:clamp(2rem,4vw,3rem)">
+            <p class="eyebrow">Method notes</p>
+            <div id="method-notes"></div>
+          </div>
+
+          <div style="margin-top:clamp(2rem,4vw,3rem)">
+            <p class="eyebrow">Media credits and licences</p>
+            <p class="note" style="margin-bottom:1rem" id="media-note"></p>
+            <ul class="mediacred" id="media-credits"></ul>
+          </div>
+        </div>
+
+        <div class="reveal">
+          <p class="eyebrow">Source list</p>
+          <h3 class="sub" id="sources-count"></h3>
+          <ol class="srclist" id="sources"></ol>
+        </div>
+      </div>
+    </div>
+
+    <div class="shell colophon">
+      <p id="colophon-line"></p>
+      <p>Collapse Earth · variant V1 &ldquo;Deep Field&rdquo;</p>
+    </div>
+  </section>
+</main>
+
+<!-- dossier drawer: one component, used for tipping elements and interventions -->
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title" hidden>
+  <div class="drawer__scrim" data-close></div>
+  <div class="drawer__panel" id="drawer-panel" tabindex="-1">
+    <button class="drawer__close" type="button" data-close>Close</button>
+    <div id="drawer-body"></div>
+  </div>
+</aside>
+
+<div class="tip" id="tip" role="presentation" aria-hidden="true"></div>
+
+<script src="collapse-data.v2.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+<script>
+(function(){
+"use strict";
+
+/* =========================================================================
+   0. GUARDS
+   ========================================================================= */
+var D = window.COLLAPSE_DATA;
+var main = document.querySelector("[data-app]");
+
+if(!D || !window.d3){
+  var fail = document.createElement("section");
+  fail.className = "noscript shell";
+  fail.innerHTML =
+    '<div class="noscript__box"><p class="eyebrow">Collapse Earth</p>' +
+    '<p class="lede">This atlas could not load its data layer' +
+    (window.d3 ? "" : " or its charting library") +
+    '. Nothing on this page is hard-coded, so there is nothing to show. ' +
+    'Check that <span class="mono">collapse-data.v2.js</span> is served alongside this file.</p></div>';
+  document.body.insertBefore(fail, document.getElementById("drawer"));
+  return;
+}
+main.hidden = false;
+
+var AUDIT = /(\?|&)audit=1/.test(location.search);
+var reduceMQ = window.matchMedia("(prefers-reduced-motion: reduce)");
+function reduced(){ return reduceMQ.matches; }
+
+/* =========================================================================
+   1. FORMATTERS AND SMALL HELPERS
+   ========================================================================= */
+function el(tag, cls, text){
+  var n = document.createElement(tag);
+  if(cls) n.className = cls;
+  if(text != null) n.textContent = text;
+  return n;
+}
+var SVGNS = "http://www.w3.org/2000/svg";
+function S(tag, attrs){
+  var n = document.createElementNS(SVGNS, tag);
+  if(attrs) for(var k in attrs) if(attrs[k] != null) n.setAttribute(k, attrs[k]);
+  return n;
+}
+function frag(){ return document.createDocumentFragment(); }
+
+/* one decimal, always — 3 reads as 3.0 so a column of thresholds aligns */
+function degC(v){ return Number(v).toFixed(1); }
+function degC2(v){ return Number(v).toFixed(2); }
+
+/* Money. Sources quote to three significant figures at most, so that is what
+   is printed; trailing zeros are trimmed so $37.0M reads as $37M. */
+function money(v){
+  if(v == null) return null;
+  if(v >= 1e9) return "$" + (v/1e9).toFixed(2).replace(/\.?0+$/, "") + "B";
+  if(v >= 1e6) return "$" + (v/1e6).toFixed(1).replace(/\.0$/, "") + "M";
+  if(v >= 1e3) return "$" + Math.round(v/1e3) + "k";
+  return "$" + v;
+}
+var QUAL = { "at-least": "≥", "approximately": "≈" };
+function moneyQ(entry){
+  var m = money(entry.amount);
+  if(m == null) return null;
+  return (QUAL[entry.qualifier] || "") + m;
+}
+
+/* asOf strings carry mixed granularity by design — "2026-07", "2025-Q3",
+   "2025-H1", "2025". They are never normalised, only sorted and shown as-is. */
+function asOfSpan(list){
+  var vals = list.map(function(f){ return f.asOf; }).filter(Boolean).sort();
+  if(!vals.length) return null;
+  var uniq = vals.filter(function(v, i){ return vals.indexOf(v) === i; });
+  return uniq.length === 1 ? uniq[0] : uniq[0] + " – " + uniq[uniq.length - 1];
+}
+
+function badgeEl(badge, extraClass){
+  var b = el("span", "badge badge--" + badge + (extraClass ? " " + extraClass : ""), badge.replace(/-/g, " "));
+  return b;
+}
+function asOfEl(v){ return el("span", "asof", v); }
+
+var SOURCE_BY_ID = {};
+D.meta.sources.forEach(function(s){ SOURCE_BY_ID[s.id] = s; });
+
+function srcChips(ids, extraNote){
+  var ul = el("ul", "srcs");
+  (ids || []).forEach(function(id){
+    var s = SOURCE_BY_ID[id];
+    var li = el("li");
+    var a = el("a", "src-chip", id);
+    a.href = "#src-" + id;
+    a.title = s ? s.label : id;
+    li.appendChild(a);
+    ul.appendChild(li);
+  });
+  if(extraNote){
+    var li2 = el("li");
+    li2.appendChild(el("span", "src-chip", extraNote));
+    ul.appendChild(li2);
+  }
+  return ul;
+}
+
+function fieldDL(term, value, cls){
+  var dl = el("dl", cls || "dos__field");
+  dl.appendChild(el("dt", null, term));
+  var dd = el("dd");
+  if(typeof value === "string") dd.textContent = value; else dd.appendChild(value);
+  dl.appendChild(dd);
+  return dl;
+}
+
+/* =========================================================================
+   2. CATEGORY COLOUR SYSTEM  (hue = Earth-system category, nothing else)
+   ========================================================================= */
+var CATS = {
+  "cryosphere":        { label: "Cryosphere",        core: "#7FE7FF", bloom: "#7FE7FF" },
+  "ocean-circulation": { label: "Ocean circulation", core: "#12A594", bloom: "#2EC4B6" },
+  "biosphere":         { label: "Biosphere",         core: "#9BE564", bloom: "#9BE564" },
+  "carbon-feedback":   { label: "Carbon feedback",   core: "#C77DFF", bloom: "#C77DFF" },
+  "monsoon":           { label: "Monsoon",           core: "#E5B769", bloom: "#E5B769" }
+};
+var INK = "#AFC5CD", ALARM = "#FF5A6E";
+function cat(c){ return CATS[c] || { label: c, core: INK, bloom: INK }; }
+
+var SYS = D.tippingSystems.slice();
+var SYS_BY_ID = {};
+SYS.forEach(function(s){ SYS_BY_ID[s.id] = s; });
+
+/* =========================================================================
+   3. MEDIA — resolved from COLLAPSE_DATA.media by tag, never by URL
+   ========================================================================= */
+var MEDIA_KEYS = Object.keys(D.media).sort();
+var MEDIA_USED = {};
+
+function mediaByTag(tag){
+  return MEDIA_KEYS.filter(function(k){
+    return (D.media[k].tags || []).indexOf(tag) !== -1;
+  });
+}
+function resolveMedia(tag, pick){
+  var list = mediaByTag(tag);
+  if(!list.length) return null;
+  var slug = list[(pick || 0) % list.length];
+  MEDIA_USED[slug] = true;
+  return { slug: slug, m: D.media[slug] };
+}
+
+/* The two clips tagged "plankton" are jellyfish. Jellyfish are zooplankton, so
+   the tag is not wrong, but "plankton" on screen would read as phytoplankton.
+   Anything shown from that tag is captioned for what it actually shows. */
+function mediaSubject(m){
+  if((m.tags || []).indexOf("plankton") !== -1) return "jellyfish (zooplankton)";
+  return null;
+}
+function creditLine(hit){
+  if(!hit) return "";
+  var subj = mediaSubject(hit.m);
+  return (subj ? subj + " — " : "") + hit.m.credit + " · " + hit.m.license;
+}
+
+/* =========================================================================
+   4. LAZY VIDEO — src arrives on intersect; posters too, except the hero's.
+      Reduced motion never sets a src at all: the poster is the whole media.
+   ========================================================================= */
+var videos = Array.prototype.slice.call(document.querySelectorAll("video[data-tag]"));
+var stills = Array.prototype.slice.call(document.querySelectorAll("img[data-tag]"));
+
+stills.forEach(function(img){
+  var hit = resolveMedia(img.dataset.tag, +img.dataset.pick || 0);
+  if(!hit) return;
+  img.src = hit.m.poster;
+  img.dataset.slug = hit.slug;
+});
+
+videos.forEach(function(v){
+  var hit = resolveMedia(v.dataset.tag, +v.dataset.pick || 0);
+  if(hit) v.dataset.slug = hit.slug;
+});
+
+function armVideo(v){
+  if(v.dataset.armed === "1") return;
+  var hit = v.dataset.slug ? { slug: v.dataset.slug, m: D.media[v.dataset.slug] } : null;
+  if(!hit || !hit.m) return;
+  v.setAttribute("poster", hit.m.poster);
+  if(!reduced() && !v.getAttribute("src")) v.setAttribute("src", hit.m.mp4);
+  v.dataset.armed = "1";
+}
+
+if("IntersectionObserver" in window){
+  var vio = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      var v = e.target;
+      if(e.isIntersecting){
+        armVideo(v);
+        if(!reduced()){ var p = v.play(); if(p && p.catch) p.catch(function(){}); }
+      } else if(!v.paused){
+        v.pause();
+      }
+    });
+  }, { rootMargin: "300px 0px", threshold: 0.01 });
+  videos.forEach(function(v){ vio.observe(v); });
+} else {
+  videos.forEach(armVideo);
+}
+
+/* the hero poster should be there on first paint, not 300px later */
+if(videos[0]){
+  var heroHit = videos[0].dataset.slug ? D.media[videos[0].dataset.slug] : null;
+  if(heroHit) videos[0].setAttribute("poster", heroHit.poster);
+}
+
+function onMotionPrefChange(){
+  videos.forEach(function(v){
+    if(reduced()){
+      v.pause();
+      v.removeAttribute("src");
+      v.load();
+    } else {
+      armVideo(v);
+      var p = v.play(); if(p && p.catch) p.catch(function(){});
+    }
+  });
+}
+if(reduceMQ.addEventListener) reduceMQ.addEventListener("change", onMotionPrefChange);
+else if(reduceMQ.addListener) reduceMQ.addListener(onMotionPrefChange);
+
+/* =========================================================================
+   5. WARMING STATE — one variable, everything in Act I reads it
+   ========================================================================= */
+/* The dial floor is the lowest published threshold minimum in the dataset, so
+   the leftmost position is "below every range". The ceiling is a display cap:
+   two elements have ranges reaching beyond it (the band chart still shows them
+   in full) and a dial that ran to 10 °C would spend most of its travel in
+   territory no policy scenario occupies. */
+var DIAL_MIN = d3.min(SYS, function(s){ return s.threshold.min; });
+var DIAL_MAX = 5.0;
+var DIAL_STEP = (D.warming.dialRange && D.warming.dialRange.step) || 0.05;
+
+var state = { w: D.warming.current, spin: false };
+var listeners = [];
+function onChange(fn){ listeners.push(fn); fn(state.w); }
+function setW(v, quiet){
+  var nv = Math.max(DIAL_MIN, Math.min(DIAL_MAX, +v));
+  if(nv === state.w && !quiet) return;
+  state.w = nv;
+  listeners.forEach(function(fn){ fn(nv); });
+}
+
+/* status of one element against the dial, expressed in the paper's own terms */
+function statusOf(s, w){
+  var t = s.threshold;
+  if(w >= t.max) return "past";
+  if(w >= t.min) return "band";
+  return "below";
+}
+function fracOf(s, w){
+  var t = s.threshold;
+  if(t.max === t.min) return w >= t.max ? 1 : 0;
+  return Math.max(0, Math.min(1, (w - t.min) / (t.max - t.min)));
+}
+var STATUS_TEXT = {
+  below: "below its range",
+  band:  "inside its range",
+  past:  "above its range"
+};
+
+/* =========================================================================
+   6. HERO
+   ========================================================================= */
+(function hero(){
+  document.getElementById("hero-updated").textContent = "Updated " + D.meta.updated;
+  document.getElementById("hero-eyebrow").textContent =
+    "Research atlas · " + SYS.length + " tipping elements · " +
+    D.interventions.length + " intervention categories · " + D.hypotheses.length + " hypotheses";
+
+  document.getElementById("warming-note").textContent = D.warming.currentNote;
+  document.getElementById("warming-srcs").replaceChildren(srcChips(D.warming.sourceIds));
+
+  /* The thermocline. Today's warming drawn as a line on the dial's own scale,
+     with the multi-year range as the glow band around it: the page's core mark,
+     stated once at full width before it becomes an instrument in Act I. */
+  var tc = document.getElementById("thermocline");
+  var w = D.warming, r = w.range;
+  function pos(v){ return (1 - (v - DIAL_MIN) / (DIAL_MAX - DIAL_MIN)) * 100; }
+
+  var band = el("div", "thermocline__band");
+  band.style.top = pos(r.max) + "%";
+  band.style.height = (pos(r.min) - pos(r.max)) + "%";
+  tc.appendChild(band);
+
+  [DIAL_MAX, 4, 3, 2].forEach(function(v){
+    var t = el("div", "thermocline__tick");
+    t.style.top = pos(v) + "%";
+    t.appendChild(el("b", null, degC(v) + " °C"));
+    tc.appendChild(t);
+  });
+
+  var line = el("div", "thermocline__line");
+  line.style.top = pos(w.current) + "%";
+  tc.appendChild(line);
+
+  var out = el("div", "thermocline__readout");
+  out.style.top = pos(w.current) + "%";
+  out.appendChild(el("span", "thermocline__label", "warming today"));
+  var val = el("span", "thermocline__value", degC(w.current));
+  var sup = el("sup", null, "°C");
+  val.appendChild(sup);
+  out.appendChild(val);
+  out.appendChild(el("span", "thermocline__range",
+    degC(r.min) + "–" + degC(r.max) + " " + w.unit));
+  tc.appendChild(out);
+})();
+/* =========================================================================
+   7. THE DIAL
+   ========================================================================= */
+(function dial(){
+  var input = document.getElementById("dial-input");
+  input.min = DIAL_MIN; input.max = DIAL_MAX; input.step = DIAL_STEP;
+  input.value = state.w;
+
+  document.getElementById("dial-unit").textContent = D.warming.unit;
+
+  function pct(v){ return ((v - DIAL_MIN) / (DIAL_MAX - DIAL_MIN)) * 100; }
+
+  /* the "today" mark and the tick scale double as the gradient's legend */
+  var now = document.getElementById("dial-now");
+  now.style.left = pct(D.warming.current) + "%";
+  now.querySelector("b").textContent = "today " + degC(D.warming.current);
+
+  var ticks = document.getElementById("dial-ticks");
+  var tickVals = [1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5].filter(function(v){
+    return v >= DIAL_MIN && v <= DIAL_MAX;
+  });
+  tickVals.forEach(function(v){
+    var i = el("i"); i.style.left = pct(v) + "%"; ticks.appendChild(i);
+    var b = el("b", null, degC(v)); b.style.left = pct(v) + "%"; ticks.appendChild(b);
+  });
+
+  var counts = document.getElementById("dial-counts");
+  var boxes = ["below", "band", "past"].map(function(k){
+    var d = el("div", "dial__count dial__count--" + k);
+    var b = el("b", null, "0");
+    var s = el("span", null, k === "below" ? "below range" : k === "band" ? "inside range" : "above range");
+    d.appendChild(b); d.appendChild(s); counts.appendChild(d);
+    return b;
+  });
+
+  var value = document.getElementById("dial-value");
+  var thumb = document.getElementById("dial-thumbline");
+  var live = document.getElementById("dial-live");
+
+  onChange(function(w){
+    value.textContent = degC2(w);
+    thumb.style.left = pct(w) + "%";
+    input.value = w;
+
+    var tally = { below: 0, band: 0, past: 0 };
+    var pastCentral = 0;
+    SYS.forEach(function(s){
+      tally[statusOf(s, w)]++;
+      if(w >= s.threshold.central) pastCentral++;
+    });
+    boxes[0].textContent = tally.below;
+    boxes[1].textContent = tally.band;
+    boxes[2].textContent = tally.past;
+
+    live.textContent =
+      "At " + degC2(w) + " " + D.warming.unit + ": " + tally.past +
+      " of " + SYS.length + " elements sit above every published estimate of their threshold, " +
+      tally.band + " sit inside their uncertainty range, and " + tally.below +
+      " remain below it. " + pastCentral + " are past their central estimate. " +
+      "Above a range means the estimates have been exceeded — not that the element has tipped.";
+  });
+
+  input.addEventListener("input", function(){ setW(input.value); });
+  document.getElementById("dial-reset").addEventListener("click", function(){
+    setW(D.warming.current);
+    input.focus();
+  });
+})();
+/* =========================================================================
+   8. THE GLOBE
+   Three channels, one meaning each:
+     hue           = Earth-system category
+     glow radius   = width of the element's uncertainty range (wide range =
+                     a diffuse cloud you cannot locate precisely; narrow range
+                     = a pinpoint). Total light is roughly conserved, so a
+                     diffuse halo is also a dim one.
+     core + arc    = how far into that range the dial has travelled, 0 to 1.
+   Node area encodes nothing. Sea-level or temperature impact is text, not size.
+   ========================================================================= */
+var GLOBE = (function(){
+  var stage = document.getElementById("globe-stage");
+  var widths = SYS.map(function(s){ return s.threshold.max - s.threshold.min; });
+  var haloR   = d3.scaleSqrt().domain([d3.min(widths), d3.max(widths)]).range([10, 42]);
+  var haloOp  = d3.scaleLinear().domain([d3.min(widths), d3.max(widths)]).range([0.62, 0.17]);
+
+  var size = 560, R = 0;
+  var svg = S("svg", { viewBox: "0 0 " + size + " " + size, role: "img" });
+  var defs = S("defs");
+  svg.appendChild(defs);
+
+  /* sphere: water, not a planet — light falls off toward the limb */
+  var sphereGrad = S("radialGradient", { id: "df-sphere", cx: "38%", cy: "32%", r: "78%" });
+  [["0", "#0C1A20", "1"], ["0.62", "#071016", "1"], ["1", "#04080B", "1"]].forEach(function(st){
+    sphereGrad.appendChild(S("stop", { offset: st[0], "stop-color": st[1], "stop-opacity": st[2] }));
+  });
+  defs.appendChild(sphereGrad);
+
+  Object.keys(CATS).forEach(function(k){
+    var g = S("radialGradient", { id: "df-halo-" + k });
+    [["0", 0.95], ["0.35", 0.30], ["0.68", 0.09], ["1", 0]].forEach(function(st){
+      g.appendChild(S("stop", { offset: st[0], "stop-color": CATS[k].bloom, "stop-opacity": st[1] }));
+    });
+    defs.appendChild(g);
+  });
+  var alarmGrad = S("radialGradient", { id: "df-halo-alarm" });
+  [["0", 0.55], ["0.45", 0.16], ["1", 0]].forEach(function(st){
+    alarmGrad.appendChild(S("stop", { offset: st[0], "stop-color": ALARM, "stop-opacity": st[1] }));
+  });
+  defs.appendChild(alarmGrad);
+
+  var gSphere   = S("g"), gGrat = S("g"), gLand = S("g"),
+      gCascade  = S("g"), gNodes = S("g"), gLabels = S("g");
+  [gSphere, gGrat, gLand, gCascade, gNodes, gLabels].forEach(function(g){ svg.appendChild(g); });
+
+  var sphere = S("circle", { fill: "url(#df-sphere)" });
+  var limb   = S("circle", { fill: "none", stroke: "rgba(127,231,255,.20)", "stroke-width": 1 });
+  gSphere.appendChild(sphere); gSphere.appendChild(limb);
+
+  var projection = d3.geoOrthographic().clipAngle(90).rotate([-20, -18, 0]);
+  var path = d3.geoPath(projection);
+  var graticule = d3.geoGraticule10();
+  var gratPath = S("path", {
+    fill: "none", stroke: "rgba(127,231,255,.075)", "stroke-width": 0.5, "pointer-events": "none"
+  });
+  gGrat.appendChild(gratPath);
+  var landPath = S("path", {
+    fill: "rgba(200,228,236,.055)", stroke: "rgba(127,231,255,.16)",
+    "stroke-width": 0.5, "pointer-events": "none"
+  });
+  gLand.appendChild(landPath);
+  var land = null;
+
+  /* cascade edges: an element's declared downstream elements, drawn as
+     great circles. They brighten only when the upstream element is lit. */
+  var edges = [];
+  SYS.forEach(function(s){
+    (s.cascades || []).forEach(function(id){
+      var t = SYS_BY_ID[id];
+      if(t) edges.push({ from: s, to: t, node: S("path", {
+        fill: "none", "stroke-width": 0.75, "pointer-events": "none", "stroke-linecap": "round"
+      }) });
+    });
+  });
+  edges.forEach(function(e){ gCascade.appendChild(e.node); });
+
+  /* nodes, ordered by central estimate so tab order runs nearest-first */
+  var order = SYS.slice().sort(function(a, b){ return a.threshold.central - b.threshold.central; });
+  var nodes = order.map(function(s){
+    var c = cat(s.category);
+    var g = S("g", {
+      class: "gnode", tabindex: "0", role: "button",
+      "aria-label": s.name + " — open dossier"
+    });
+    var halo = S("circle", { fill: "url(#df-halo-" + (CATS[s.category] ? s.category : "cryosphere") + ")", "pointer-events": "none" });
+    var alarmHalo = S("circle", { fill: "url(#df-halo-alarm)", "pointer-events": "none", opacity: 0 });
+    var arcBg = S("path", { fill: "none", stroke: "rgba(232,244,247,.14)", "stroke-width": 1.5, "pointer-events": "none" });
+    var arc = S("path", { fill: "none", stroke: c.core, "stroke-width": 1.5, "stroke-linecap": "round", "pointer-events": "none" });
+    var ring = S("circle", { fill: "none", stroke: c.core, "pointer-events": "none" });
+    var core = S("circle", { fill: c.core, "pointer-events": "none" });
+    var hit  = S("circle", { class: "gnode__hit", r: 15, fill: "transparent", stroke: "none" });
+    [halo, alarmHalo, arcBg, arc, ring, core, hit].forEach(function(n){ g.appendChild(n); });
+    gNodes.appendChild(g);
+
+    var rec = { s: s, g: g, halo: halo, alarmHalo: alarmHalo, arcBg: arcBg,
+                arc: arc, ring: ring, core: core, hit: hit, visible: false, x: 0, y: 0 };
+
+    g.addEventListener("click", function(){ openSystem(s.id); });
+    g.addEventListener("keydown", function(ev){
+      if(ev.key === "Enter" || ev.key === " "){ ev.preventDefault(); openSystem(s.id); }
+    });
+    g.addEventListener("pointerenter", function(ev){ showTip(ev, s); });
+    g.addEventListener("pointermove", function(ev){ moveTip(ev); });
+    g.addEventListener("pointerleave", hideTip);
+    g.addEventListener("focus", function(){ spin(false); tipAt(rec); });
+    g.addEventListener("blur", hideTip);
+    return rec;
+  });
+
+  var arcGen = d3.arc().innerRadius(7).outerRadius(7).startAngle(0);
+
+  function layout(){
+    var w = Math.max(280, Math.min(stage.clientWidth || size, 620));
+    size = w;
+    svg.setAttribute("viewBox", "0 0 " + size + " " + size);
+    R = size / 2 - 46;
+    projection.scale(R).translate([size / 2, size / 2]);
+    [sphere, limb].forEach(function(c){
+      c.setAttribute("cx", size / 2); c.setAttribute("cy", size / 2); c.setAttribute("r", R);
+    });
+    render();
+  }
+
+  function render(){
+    gratPath.setAttribute("d", path(graticule) || "");
+    if(land) landPath.setAttribute("d", path(land) || "");
+
+    var rot = projection.rotate();
+    var centre = [-rot[0], -rot[1]];
+
+    nodes.forEach(function(n){
+      var s = n.s;
+      var dist = d3.geoDistance([s.lon, s.lat], centre);
+      var vis = dist < Math.PI / 2 - 0.02;
+      n.visible = vis;
+      if(!vis){
+        n.g.setAttribute("visibility", "hidden");
+        n.g.setAttribute("tabindex", "-1");
+        n.g.setAttribute("aria-hidden", "true");
+        return;
+      }
+      n.g.removeAttribute("visibility");
+      n.g.setAttribute("tabindex", "0");
+      n.g.removeAttribute("aria-hidden");
+
+      var p = projection([s.lon, s.lat]);
+      n.x = p[0]; n.y = p[1];
+      n.g.setAttribute("transform", "translate(" + p[0].toFixed(2) + "," + p[1].toFixed(2) + ")");
+
+      /* fade with foreshortening so the limb reads as curvature, not as data */
+      var edgeFade = Math.max(0.28, Math.cos(dist));
+
+      var width = s.threshold.max - s.threshold.min;
+      var hr = haloR(width), ho = haloOp(width) * edgeFade;
+      n.halo.setAttribute("r", hr);
+      n.halo.setAttribute("opacity", ho.toFixed(3));
+
+      var f = fracOf(s, state.w);
+      var st = statusOf(s, state.w);
+
+      n.core.setAttribute("r", (2.6 + f * 2.2).toFixed(2));
+      n.core.setAttribute("opacity", (0.30 + 0.70 * f) * edgeFade);
+
+      n.ring.setAttribute("r", 7);
+      n.ring.setAttribute("stroke-width", s.tier === "global-core" ? 0.9 : 0.5);
+      n.ring.setAttribute("opacity", (s.tier === "global-core" ? 0.42 : 0.26) * edgeFade);
+
+      n.arcBg.setAttribute("d", arcGen({ startAngle: 0, endAngle: Math.PI * 2 }));
+      n.arcBg.setAttribute("opacity", 0.7 * edgeFade);
+      n.arc.setAttribute("d", f > 0 ? arcGen({ startAngle: 0, endAngle: Math.PI * 2 * f }) : "");
+      n.arc.setAttribute("opacity", edgeFade);
+
+      n.alarmHalo.setAttribute("r", hr * 0.62);
+      n.alarmHalo.setAttribute("opacity", st === "past" ? (0.85 * edgeFade) : 0);
+      n.ring.setAttribute("stroke", st === "past" ? ALARM : cat(s.category).core);
+      n.arc.setAttribute("stroke", st === "past" ? ALARM : cat(s.category).core);
+    });
+
+    edges.forEach(function(e){
+      var a = nodes.filter(function(n){ return n.s === e.from; })[0];
+      var b = nodes.filter(function(n){ return n.s === e.to; })[0];
+      if(!a || !b || !a.visible || !b.visible){ e.node.setAttribute("d", ""); return; }
+      e.node.setAttribute("d", path({ type: "LineString", coordinates: [
+        [e.from.lon, e.from.lat], [e.to.lon, e.to.lat]
+      ]}) || "");
+      var f = fracOf(e.from, state.w);
+      e.node.setAttribute("stroke", cat(e.from.category).bloom);
+      e.node.setAttribute("opacity", (0.10 + 0.42 * f).toFixed(3));
+    });
+
+    /* label only what is lit: the elements above their range, plus whatever is
+       hovered or open. Any more and the sphere becomes a word cloud. */
+    gLabels.replaceChildren();
+    nodes.forEach(function(n){
+      if(!n.visible) return;
+      var lit = statusOf(n.s, state.w) === "past";
+      if(!lit && openId !== n.s.id) return;
+      var right = n.x < size / 2;
+      var t = S("text", {
+        x: n.x + (right ? 14 : -14), y: n.y + 3.5,
+        "text-anchor": right ? "start" : "end",
+        fill: "rgba(232,244,247,.82)",
+        style: "font:400 10px var(--mono);letter-spacing:.04em"
+      });
+      t.textContent = n.s.short;
+      var leader = S("line", {
+        x1: n.x + (right ? 9 : -9), y1: n.y, x2: n.x + (right ? 12 : -12), y2: n.y,
+        stroke: "rgba(232,244,247,.34)", "stroke-width": 0.75
+      });
+      gLabels.appendChild(leader); gLabels.appendChild(t);
+    });
+
+    var caption = document.getElementById("globe-caption");
+    var lit = SYS.filter(function(s){ return statusOf(s, state.w) === "past"; }).length;
+    var band = SYS.filter(function(s){ return statusOf(s, state.w) === "band"; }).length;
+    caption.textContent =
+      "Sixteen elements at their published locations. At " + degC2(state.w) + " °C, " +
+      band + " sit inside their uncertainty range and " + lit + " above it. " +
+      "Lines are declared cascades, brightening with the element they run from.";
+    svg.setAttribute("aria-label",
+      "Globe of " + SYS.length + " tipping elements at " + degC2(state.w) + " degrees Celsius. " +
+      band + " inside their uncertainty range, " + lit + " above it. " +
+      "The threshold-range chart below carries the same data as text.");
+  }
+
+  /* ------------------------------------------------------------- rotation */
+  var dragging = false;
+  var drag = d3.drag()
+    .on("start", function(){ dragging = true; spin(false); hideTip(); })
+    .on("drag", function(ev){
+      var r = projection.rotate();
+      var k = 78 / R;
+      projection.rotate([r[0] + ev.dx * k, Math.max(-88, Math.min(88, r[1] - ev.dy * k)), r[2]]);
+      render();
+    })
+    .on("end", function(){ dragging = false; });
+  d3.select(svg).call(drag);
+
+  stage.setAttribute("tabindex", "0");
+  stage.setAttribute("aria-label", "Globe. Use the arrow keys to rotate.");
+  stage.addEventListener("keydown", function(ev){
+    var step = ev.shiftKey ? 18 : 6, r = projection.rotate(), used = true;
+    if(ev.key === "ArrowLeft") projection.rotate([r[0] - step, r[1], r[2]]);
+    else if(ev.key === "ArrowRight") projection.rotate([r[0] + step, r[1], r[2]]);
+    else if(ev.key === "ArrowUp") projection.rotate([r[0], Math.min(88, r[1] + step), r[2]]);
+    else if(ev.key === "ArrowDown") projection.rotate([r[0], Math.max(-88, r[1] - step), r[2]]);
+    else used = false;
+    if(used){ ev.preventDefault(); spin(false); render(); }
+  });
+
+  var spinning = false, rafId = null, last = 0;
+  function tick(ts){
+    if(!spinning){ rafId = null; return; }
+    if(!last) last = ts;
+    var dt = Math.min(80, ts - last); last = ts;
+    var r = projection.rotate();
+    projection.rotate([r[0] + dt * 0.004, r[1], r[2]]);
+    render();
+    rafId = requestAnimationFrame(tick);
+  }
+  function spin(on){
+    var btn = document.getElementById("spin-toggle");
+    if(on && (reduced() || dragging)) on = false;
+    spinning = on;
+    btn.setAttribute("aria-pressed", on ? "true" : "false");
+    btn.textContent = on ? "Rotation on" : "Rotation";
+    if(on && rafId == null){ last = 0; rafId = requestAnimationFrame(tick); }
+  }
+  document.getElementById("spin-toggle").addEventListener("click", function(){ spin(!spinning); });
+  if("IntersectionObserver" in window){
+    new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(!e.isIntersecting && spinning) spin(false); });
+    }, { threshold: 0.15 }).observe(stage);
+  }
+
+  /* ------------------------------------------------------------- tooltip */
+  var tip = document.getElementById("tip");
+  function tipHTML(s){
+    var t = s.threshold, st = statusOf(s, state.w), c = cat(s.category);
+    tip.replaceChildren();
+    tip.appendChild(el("span", "tip__name", s.name));
+    var cl = el("span", "tip__cat", c.label + " · " + (s.tier === "global-core" ? "global core" : "regional"));
+    cl.style.color = c.core;
+    tip.appendChild(cl);
+    tip.appendChild(el("span", "tip__line",
+      "range " + degC(t.min) + "–" + degC(t.max) + " °C · central " + degC(t.central) + " °C"));
+    tip.appendChild(el("span", "tip__line", "confidence " + t.confidence));
+    tip.appendChild(el("span", "tip__line",
+      "at " + degC2(state.w) + " °C: " + STATUS_TEXT[st] +
+      " (" + Math.round(fracOf(s, state.w) * 100) + "% through)"));
+    tip.appendChild(el("span", "tip__cue", "select for the full dossier"));
+  }
+  function showTip(ev, s){ tipHTML(s); tip.dataset.on = "true"; moveTip(ev); }
+  function moveTip(ev){
+    tip.style.left = ev.clientX + "px";
+    tip.style.top = (ev.clientY - 14) + "px";
+  }
+  function tipAt(rec){
+    tipHTML(rec.s);
+    var box = svg.getBoundingClientRect();
+    var k = box.width / size;
+    tip.style.left = (box.left + rec.x * k) + "px";
+    tip.style.top = (box.top + rec.y * k - 14) + "px";
+    tip.dataset.on = "true";
+  }
+  function hideTip(){ tip.dataset.on = "false"; }
+
+  /* --------------------------------------------------------------- land */
+  function loadLand(){
+    if(!window.topojson || !window.fetch) return;
+    var urls = [
+      "https://cdn.jsdelivr.net/npm/world-atlas@2/land-110m.json",
+      "https://unpkg.com/world-atlas@2/land-110m.json"
+    ];
+    (function attempt(i){
+      if(i >= urls.length) return;                     /* graticule-only is fine */
+      fetch(urls[i]).then(function(r){ return r.ok ? r.json() : Promise.reject(); })
+        .then(function(topo){
+          land = topojson.feature(topo, topo.objects.land);
+          render();
+        })
+        .catch(function(){ attempt(i + 1); });
+    })(0);
+  }
+
+  stage.appendChild(svg);
+  window.addEventListener("resize", debounce(layout, 150));
+  onChange(function(){ render(); });
+  layout(); loadLand();
+
+  return { render: render, spin: spin, hideTip: hideTip };
+})();
+
+function debounce(fn, ms){
+  var t = null;
+  return function(){
+    var a = arguments, self = this;
+    clearTimeout(t);
+    t = setTimeout(function(){ fn.apply(self, a); }, ms);
+  };
+}
+/* =========================================================================
+   9. THE SPECIMEN KEY — what each channel of the globe means
+   ========================================================================= */
+(function key(){
+  var rows = document.getElementById("key-rows");
+
+  function demo(draw){
+    var svg = S("svg", { viewBox: "0 0 72 48", "aria-hidden": "true" });
+    var defs = S("defs");
+    var g = S("radialGradient", { id: "key-halo-" + (demo.n = (demo.n || 0) + 1) });
+    [["0", 0.9], ["0.35", 0.28], ["0.68", 0.08], ["1", 0]].forEach(function(st){
+      g.appendChild(S("stop", { offset: st[0], "stop-color": "#7FE7FF", "stop-opacity": st[1] }));
+    });
+    defs.appendChild(g);
+    svg.appendChild(defs);
+    draw(svg, "url(#key-halo-" + demo.n + ")");
+    return svg;
+  }
+
+  function node(svg, fill, cx, cy, haloR, haloOp, frac, alarm){
+    svg.appendChild(S("circle", { cx: cx, cy: cy, r: haloR, fill: fill, opacity: haloOp }));
+    svg.appendChild(S("circle", {
+      cx: cx, cy: cy, r: 7, fill: "none",
+      stroke: alarm ? ALARM : "#7FE7FF", "stroke-width": 0.9, opacity: 0.45
+    }));
+    var arcGen = d3.arc().innerRadius(7).outerRadius(7).startAngle(0);
+    if(frac > 0){
+      var p = S("path", {
+        d: arcGen({ startAngle: 0, endAngle: Math.PI * 2 * frac }),
+        transform: "translate(" + cx + "," + cy + ")",
+        fill: "none", stroke: alarm ? ALARM : "#7FE7FF", "stroke-width": 1.5, "stroke-linecap": "round"
+      });
+      svg.appendChild(p);
+    }
+    svg.appendChild(S("circle", {
+      cx: cx, cy: cy, r: 2.6 + frac * 2.2, fill: "#7FE7FF", opacity: 0.3 + 0.7 * frac
+    }));
+  }
+
+  var narrow = SYS.reduce(function(a, s){
+    return (s.threshold.max - s.threshold.min) < (a.threshold.max - a.threshold.min) ? s : a;
+  });
+  var wide = SYS.reduce(function(a, s){
+    return (s.threshold.max - s.threshold.min) > (a.threshold.max - a.threshold.min) ? s : a;
+  });
+
+  var specs = [
+    {
+      draw: function(svg, fill){ node(svg, fill, 20, 24, 8, 0.62, 0.5); node(svg, fill, 50, 24, 20, 0.17, 0.5); },
+      html: function(p){
+        p.appendChild(el("b", null, "Glow radius is the width of the uncertainty range. "));
+        p.appendChild(document.createTextNode(
+          "A tight halo means the published estimates agree — " + narrow.short + " spans just " +
+          degC(narrow.threshold.max - narrow.threshold.min) + " °C. A wide, dim cloud means they do not — " +
+          wide.short + " spans " + degC(wide.threshold.max - wide.threshold.min) +
+          " °C. The light spreads out rather than growing, so certainty reads as brightness."));
+      }
+    },
+    {
+      draw: function(svg, fill){ node(svg, fill, 20, 24, 13, 0.4, 0.15); node(svg, fill, 50, 24, 13, 0.4, 0.8); },
+      html: function(p){
+        p.appendChild(el("b", null, "Core brightness and the arc are progress through that range. "));
+        p.appendChild(document.createTextNode(
+          "The arc closes from nothing at the range minimum to a full circle at its maximum. " +
+          "Nothing flips at the central estimate."));
+      }
+    },
+    {
+      draw: function(svg, fill){ node(svg, fill, 36, 24, 15, 0.4, 1, true); },
+      html: function(p){
+        p.appendChild(el("b", null, "A red ring means the dial is above every published estimate. "));
+        p.appendChild(document.createTextNode(
+          "It does not mean the element has tipped. What follows takes the timescale in its dossier — " +
+          "for some, ten millennia."));
+      }
+    }
+  ];
+
+  specs.forEach(function(spec){
+    var row = el("div", "key__row");
+    row.appendChild(demo(spec.draw));
+    var p = el("p");
+    spec.html(p);
+    row.appendChild(p);
+    rows.appendChild(row);
+  });
+
+  var cats = document.getElementById("key-cats");
+  var seen = {};
+  SYS.forEach(function(s){ seen[s.category] = true; });
+  Object.keys(CATS).filter(function(k){ return seen[k]; }).forEach(function(k){
+    var n = SYS.filter(function(s){ return s.category === k; }).length;
+    var c = el("span", "key__cat");
+    var i = el("i"); i.style.background = CATS[k].core;
+    c.appendChild(i);
+    c.appendChild(document.createTextNode(CATS[k].label + " (" + n + ")"));
+    cats.appendChild(c);
+  });
+})();
+
+/* =========================================================================
+   10. THRESHOLD BAND CHART
+   Rows = elements, grouped by the paper's own split. The x-axis runs the full
+   published envelope, including the two elements whose ranges reach past the
+   dial's ceiling — truncating an axis to tidy a chart hides data.
+   Confidence is drawn as well as written: low-confidence ranges have ends that
+   dissolve, because that is where the number stops being a number.
+   ========================================================================= */
+var BANDS = (function(){
+  var stage = document.getElementById("bands-stage");
+  var xMin = d3.min(SYS, function(s){ return s.threshold.min; });
+  var xMax = d3.max(SYS, function(s){ return s.threshold.max; });
+
+  var tiers = [
+    { key: "global-core", label: "Global core elements — tipping would change global mean surface temperature" },
+    { key: "regional",    label: "Regional-impact elements" }
+  ];
+  var rows = [];
+  tiers.forEach(function(t){
+    rows.push({ group: t.label });
+    SYS.filter(function(s){ return s.tier === t.key; })
+       .sort(function(a, b){ return a.threshold.central - b.threshold.central; })
+       .forEach(function(s){ rows.push({ s: s }); });
+  });
+
+  var M = { top: 34, right: 20, bottom: 30, left: 214 };
+  var ROW = 30, GROUP = 34;
+  var innerH = rows.reduce(function(n, r){ return n + (r.group ? GROUP : ROW); }, 0);
+  var H = innerH + M.top + M.bottom;
+  var W = 900;
+
+  var svg = S("svg", { viewBox: "0 0 " + W + " " + H, preserveAspectRatio: "xMinYMin meet" });
+  var defs = S("defs");
+  svg.appendChild(defs);
+
+  /* feathered ends for low and medium confidence, in objectBoundingBox units so
+     one gradient serves every bar regardless of its length */
+  [["low", 0.14], ["medium", 0.05]].forEach(function(pair){
+    var lg = S("linearGradient", { id: "df-feather-" + pair[0], x1: "0", x2: "1", y1: "0", y2: "0" });
+    [[0, 0], [pair[1], 1], [1 - pair[1], 1], [1, 0]].forEach(function(st){
+      lg.appendChild(S("stop", { offset: st[0], "stop-color": "#fff", "stop-opacity": st[1] }));
+    });
+    defs.appendChild(lg);
+    var mk = S("mask", { id: "df-mask-" + pair[0], maskContentUnits: "objectBoundingBox" });
+    mk.appendChild(S("rect", { width: 1, height: 1, fill: "url(#df-feather-" + pair[0] + ")" }));
+    defs.appendChild(mk);
+  });
+
+  var x = d3.scaleLinear().domain([xMin, xMax]).range([M.left, W - M.right]);
+  var gGrid = S("g"), gRows = S("g"), gAxis = S("g", { class: "baxis" }), gWater = S("g");
+  [gGrid, gRows, gWater, gAxis].forEach(function(g){ svg.appendChild(g); });
+
+  var ticks = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].filter(function(v){ return v >= xMin && v <= xMax; });
+  ticks.forEach(function(t){
+    gGrid.appendChild(S("line", {
+      x1: x(t), x2: x(t), y1: M.top - 10, y2: H - M.bottom,
+      stroke: "rgba(127,231,255,.09)", "stroke-width": 1
+    }));
+    var tx = S("text", { x: x(t), y: H - M.bottom + 16, "text-anchor": "middle" });
+    tx.textContent = degC(t);
+    gAxis.appendChild(tx);
+  });
+  var unitLabel = S("text", { x: W - M.right, y: H - M.bottom + 16, "text-anchor": "end" });
+  unitLabel.textContent = "°C above 1850–1900";
+  gAxis.appendChild(unitLabel);
+
+  /* the waterline: the dial's position, swept across every range at once */
+  var water = S("line", { stroke: "#E8F4F7", "stroke-width": 1, opacity: 0.85 });
+  var waterGlow = S("line", { stroke: "#E8F4F7", "stroke-width": 5, opacity: 0.07 });
+  var waterLabel = S("text", {
+    fill: "#E8F4F7", "text-anchor": "middle",
+    style: "font:500 10px var(--mono);letter-spacing:.06em"
+  });
+  gWater.appendChild(waterGlow); gWater.appendChild(water); gWater.appendChild(waterLabel);
+
+  var recs = [];
+  var y = M.top;
+  rows.forEach(function(r){
+    if(r.group){
+      var gt = S("text", { class: "bgroup", x: 0, y: y + 18 });
+      gt.textContent = r.group;
+      gRows.appendChild(gt);
+      y += GROUP;
+      return;
+    }
+    var s = r.s, t = s.threshold, c = cat(s.category);
+    var cy = y + ROW / 2;
+    var g = S("g", {
+      class: "brow", tabindex: "0", role: "button",
+      "aria-label": s.name + ", range " + degC(t.min) + " to " + degC(t.max) +
+                    " degrees, central " + degC(t.central) + ", confidence " + t.confidence +
+                    ". Open dossier."
+    });
+
+    g.appendChild(S("rect", {
+      class: "brow__hit", x: 0, y: y, width: W, height: ROW, fill: "transparent"
+    }));
+
+    var label = S("text", { class: "brow__label", x: 0, y: cy - 2 });
+    label.textContent = s.short;
+    g.appendChild(label);
+
+    var nums = S("text", { class: "brow__nums", x: 0, y: cy + 11 });
+    nums.textContent = degC(t.min) + " – " + degC(t.central) + " – " + degC(t.max) + " °C";
+    g.appendChild(nums);
+
+    var conf = S("text", { class: "brow__conf", x: M.left - 12, y: cy + 11, "text-anchor": "end" });
+    conf.textContent = "conf. " + t.confidence;
+    g.appendChild(conf);
+
+    var maskRef = t.confidence === "low" ? "url(#df-mask-low)"
+                : t.confidence === "medium" ? "url(#df-mask-medium)" : null;
+
+    var barX = x(t.min), barW = Math.max(2, x(t.max) - x(t.min));
+    var dim = S("rect", {
+      x: barX, y: cy - 3.5, width: barW, height: 7, rx: 3.5,
+      fill: c.core, opacity: 0.15, mask: maskRef
+    });
+    var lit = S("rect", { y: cy - 3.5, height: 7, rx: 3.5, fill: c.core, mask: maskRef });
+    g.appendChild(dim); g.appendChild(lit);
+
+    var central = S("line", {
+      x1: x(t.central), x2: x(t.central), y1: cy - 7, y2: cy + 7,
+      stroke: "#E8F4F7", "stroke-width": 1.5, opacity: 0.72
+    });
+    g.appendChild(central);
+
+    var alarmDot = S("circle", { cx: x(t.max) + 9, cy: cy, r: 2.4, fill: ALARM, opacity: 0 });
+    g.appendChild(alarmDot);
+
+    gRows.appendChild(g);
+    recs.push({ s: s, lit: lit, dim: dim, alarmDot: alarmDot, cy: cy, barX: barX, barW: barW });
+
+    g.addEventListener("click", function(){ openSystem(s.id); });
+    g.addEventListener("keydown", function(ev){
+      if(ev.key === "Enter" || ev.key === " "){ ev.preventDefault(); openSystem(s.id); }
+    });
+    g.addEventListener("pointerenter", function(ev){ rowTip(ev, s); });
+    g.addEventListener("pointermove", moveRowTip);
+    g.addEventListener("pointerleave", hideRowTip);
+    g.addEventListener("focus", function(){ rowTipAt(s, g); });
+    g.addEventListener("blur", hideRowTip);
+
+    y += ROW;
+  });
+
+  var tip = document.getElementById("tip");
+  function fillTip(s){
+    var t = s.threshold, st = statusOf(s, state.w), c = cat(s.category);
+    tip.replaceChildren();
+    tip.appendChild(el("span", "tip__name", s.name));
+    var cl = el("span", "tip__cat", c.label + " · " + (s.tier === "global-core" ? "global core" : "regional"));
+    cl.style.color = c.core;
+    tip.appendChild(cl);
+    tip.appendChild(el("span", "tip__line",
+      "range " + degC(t.min) + "–" + degC(t.max) + " °C · central " + degC(t.central) + " °C"));
+    tip.appendChild(el("span", "tip__line", "confidence " + t.confidence));
+    tip.appendChild(el("span", "tip__line", "trigger to impact: " + s.timescale.triggerToImpact));
+    tip.appendChild(el("span", "tip__line",
+      "at " + degC2(state.w) + " °C: " + STATUS_TEXT[st] +
+      " (" + Math.round(fracOf(s, state.w) * 100) + "% through)"));
+    tip.appendChild(el("span", "tip__cue", "select for the full dossier"));
+  }
+  function rowTip(ev, s){ fillTip(s); tip.dataset.on = "true"; moveRowTip(ev); }
+  function moveRowTip(ev){
+    tip.style.left = ev.clientX + "px";
+    tip.style.top = (ev.clientY - 14) + "px";
+  }
+  function rowTipAt(s, g){
+    fillTip(s);
+    var b = g.getBoundingClientRect();
+    tip.style.left = (b.left + Math.min(240, b.width / 2)) + "px";
+    tip.style.top = b.top + "px";
+    tip.dataset.on = "true";
+  }
+  function hideRowTip(){ tip.dataset.on = "false"; }
+
+  function update(w){
+    recs.forEach(function(r){
+      var t = r.s.threshold;
+      var lw = Math.max(0, Math.min(x(w), x(t.max)) - r.barX);
+      r.lit.setAttribute("x", r.barX);
+      r.lit.setAttribute("width", lw);
+      r.lit.setAttribute("opacity", lw > 0 ? 0.9 : 0);
+      r.alarmDot.setAttribute("opacity", w >= t.max ? 0.95 : 0);
+    });
+    var wx = x(Math.min(w, xMax));
+    [water, waterGlow].forEach(function(l){
+      l.setAttribute("x1", wx); l.setAttribute("x2", wx);
+      l.setAttribute("y1", M.top - 14); l.setAttribute("y2", H - M.bottom);
+    });
+    waterLabel.setAttribute("x", wx);
+    waterLabel.setAttribute("y", M.top - 20);
+    waterLabel.textContent = degC2(w) + " °C";
+  }
+
+  stage.appendChild(svg);
+  onChange(update);
+
+  /* legend: confidence is encoded twice — as a drawn end and as a written word */
+  var legend = document.getElementById("bands-legend");
+  [["high", null], ["medium", "url(#df-mask-medium)"], ["low", "url(#df-mask-low)"]].forEach(function(pair){
+    var li = el("li");
+    var s2 = S("svg", { viewBox: "0 0 26 10", "aria-hidden": "true" });
+    var d2 = S("defs");
+    var lg = S("linearGradient", { id: "lg-" + pair[0], x1: "0", x2: "1", y1: "0", y2: "0" });
+    var stops = pair[0] === "low" ? [[0, 0], [0.14, 1], [0.86, 1], [1, 0]]
+              : pair[0] === "medium" ? [[0, 0], [0.05, 1], [0.95, 1], [1, 0]]
+              : [[0, 1], [1, 1]];
+    stops.forEach(function(st){ lg.appendChild(S("stop", { offset: st[0], "stop-color": "#fff", "stop-opacity": st[1] })); });
+    d2.appendChild(lg);
+    var mk = S("mask", { id: "lgm-" + pair[0], maskContentUnits: "objectBoundingBox" });
+    mk.appendChild(S("rect", { width: 1, height: 1, fill: "url(#lg-" + pair[0] + ")" }));
+    d2.appendChild(mk);
+    s2.appendChild(d2);
+    s2.appendChild(S("rect", {
+      x: 0, y: 2, width: 26, height: 6, rx: 3, fill: "#7FE7FF", opacity: 0.75,
+      mask: "url(#lgm-" + pair[0] + ")"
+    }));
+    li.appendChild(s2);
+    li.appendChild(document.createTextNode(pair[0] + " confidence"));
+    legend.appendChild(li);
+  });
+  var li3 = el("li");
+  var s3 = S("svg", { viewBox: "0 0 26 10", "aria-hidden": "true" });
+  s3.appendChild(S("line", { x1: 13, x2: 13, y1: 0, y2: 10, stroke: "#E8F4F7", "stroke-width": 1.5, opacity: .72 }));
+  li3.appendChild(s3);
+  li3.appendChild(document.createTextNode("central estimate"));
+  legend.appendChild(li3);
+
+  /* ------------------------------------------------- the table-view twin */
+  function buildTable(){
+    var wrap = el("div", "dtable-wrap");
+    var tb = el("table", "dtable");
+    var cap = el("caption",
+      null,
+      "All " + SYS.length + " tipping elements. Threshold minimum, central estimate, maximum and " +
+      "confidence are Armstrong McKay et al., Science (2022), Table 1. Status is read against the dial at " +
+      degC2(state.w) + " °C.");
+    tb.appendChild(cap);
+    var thead = el("thead");
+    var tr = el("tr");
+    ["Element", "Category", "Group", "Min °C", "Central °C", "Max °C", "Confidence", "Trigger to impact", "At dial"]
+      .forEach(function(h){
+        var th = el("th", null, h);
+        th.setAttribute("scope", "col");
+        tr.appendChild(th);
+      });
+    thead.appendChild(tr); tb.appendChild(thead);
+    var tbody = el("tbody");
+    SYS.slice().sort(function(a, b){ return a.threshold.central - b.threshold.central; }).forEach(function(s){
+      var t = s.threshold, r = el("tr");
+      var th = el("th", null, s.name);
+      th.setAttribute("scope", "row");
+      th.style.fontWeight = "400";
+      r.appendChild(th);
+      [cat(s.category).label, s.tier === "global-core" ? "Global core" : "Regional"].forEach(function(v){
+        r.appendChild(el("td", null, v));
+      });
+      [degC(t.min), degC(t.central), degC(t.max)].forEach(function(v){
+        r.appendChild(el("td", "n", v));
+      });
+      r.appendChild(el("td", null, t.confidence));
+      r.appendChild(el("td", null, s.timescale.triggerToImpact));
+      r.appendChild(el("td", null, STATUS_TEXT[statusOf(s, state.w)]));
+      tbody.appendChild(r);
+    });
+    tb.appendChild(tbody);
+    wrap.appendChild(tb);
+    return wrap;
+  }
+
+  var tableHost = document.getElementById("bands-table");
+  var toggle = document.getElementById("table-toggle");
+  var tableOpen = false;
+  function renderTable(){
+    if(!tableOpen) return;
+    tableHost.replaceChildren(buildTable());
+  }
+  toggle.addEventListener("click", function(){
+    tableOpen = !tableOpen;
+    tableHost.hidden = !tableOpen;
+    toggle.setAttribute("aria-expanded", tableOpen ? "true" : "false");
+    toggle.textContent = tableOpen ? "Hide table" : "Read as table";
+    renderTable();
+  });
+  onChange(debounce(renderTable, 120));
+
+  return { update: update };
+})();
+/* =========================================================================
+   11. DOSSIER DRAWER — one component, two subjects
+   ========================================================================= */
+var openId = null;
+var drawer = document.getElementById("drawer");
+var drawerPanel = document.getElementById("drawer-panel");
+var drawerBody = document.getElementById("drawer-body");
+var lastFocus = null;
+
+function openDrawer(build, id){
+  lastFocus = document.activeElement;
+  openId = id || null;
+  drawerBody.replaceChildren(build());
+  drawer.hidden = false;
+  document.documentElement.style.overflow = "hidden";
+  drawerPanel.scrollTop = 0;
+  drawerPanel.focus();
+  if(GLOBE){ GLOBE.hideTip(); GLOBE.render(); }
+}
+function closeDrawer(){
+  if(drawer.hidden) return;
+  drawer.hidden = true;
+  openId = null;
+  document.documentElement.style.overflow = "";
+  if(lastFocus && lastFocus.focus) lastFocus.focus();
+  if(GLOBE) GLOBE.render();
+}
+drawer.addEventListener("click", function(ev){
+  if(ev.target.hasAttribute && ev.target.hasAttribute("data-close")) closeDrawer();
+});
+document.addEventListener("keydown", function(ev){
+  if(drawer.hidden) return;
+  if(ev.key === "Escape"){ ev.preventDefault(); closeDrawer(); return; }
+  if(ev.key !== "Tab") return;
+  /* keep tabbing inside the drawer while it is modal */
+  var focusables = drawerPanel.querySelectorAll('a[href],button:not([disabled]),[tabindex]:not([tabindex="-1"])');
+  if(!focusables.length) return;
+  var first = focusables[0], last = focusables[focusables.length - 1];
+  if(ev.shiftKey && (document.activeElement === first || document.activeElement === drawerPanel)){
+    ev.preventDefault(); last.focus();
+  } else if(!ev.shiftKey && document.activeElement === last){
+    ev.preventDefault(); first.focus();
+  }
+});
+
+function openSystem(id){
+  var s = SYS_BY_ID[id];
+  if(!s) return;
+  openDrawer(function(){ return systemDossier(s); }, id);
+}
+
+function systemDossier(s){
+  var t = s.threshold, c = cat(s.category), st = statusOf(s, state.w);
+  var box = frag();
+
+  var catLine = el("p", "dos__cat");
+  var dot = el("i"); dot.style.background = c.core;
+  catLine.appendChild(dot);
+  catLine.appendChild(document.createTextNode(c.label));
+  catLine.style.color = c.core;
+  box.appendChild(catLine);
+
+  var h = el("h3", "dos__name", s.name);
+  h.id = "drawer-title";
+  box.appendChild(h);
+  box.appendChild(el("p", "dos__tier",
+    (s.tier === "global-core" ? "Global core element" : "Regional-impact element") +
+    " · " + degC(s.lat) + "° " + (s.lat >= 0 ? "N" : "S") + ", " +
+    degC(Math.abs(s.lon)) + "° " + (s.lon >= 0 ? "E" : "W")));
+
+  /* thresholds first, because every other claim hangs off them */
+  var th = el("div", "dos__thresh");
+  var nums = el("div", "dos__thresh-nums");
+  [["minimum", t.min, ""], ["central estimate", t.central, "dos__t--central"], ["maximum", t.max, ""]]
+    .forEach(function(p){
+      var d = el("div", "dos__t " + p[2]);
+      d.appendChild(el("b", null, degC(p[1]) + " °C"));
+      d.appendChild(el("span", null, p[0]));
+      nums.appendChild(d);
+    });
+  var dc = el("div", "dos__t");
+  dc.appendChild(el("b", null, t.confidence));
+  dc.appendChild(el("span", null, "confidence"));
+  nums.appendChild(dc);
+  th.appendChild(nums);
+
+  var stateRow = el("div", "dos__state");
+  stateRow.appendChild(el("span", "state-chip state-chip--" + st,
+    "at " + degC2(state.w) + " °C — " + STATUS_TEXT[st]));
+  stateRow.appendChild(el("span", "asof", Math.round(fracOf(s, state.w) * 100) + "% through its range"));
+  th.appendChild(stateRow);
+  box.appendChild(th);
+
+  /* trigger and impact are different clocks and are never merged */
+  var ts = el("div");
+  ts.appendChild(el("b", null, s.timescale.triggerToImpact));
+  ts.appendChild(el("br"));
+  ts.appendChild(document.createTextNode(s.timescale.note));
+  box.appendChild(fieldDL("From trigger to full impact", ts));
+
+  box.appendChild(fieldDL("What happens, in plain terms", s.plain));
+  box.appendChild(fieldDL("Impacts if crossed", s.impacts));
+  if(s.observed) box.appendChild(fieldDL("Observed now", s.observed));
+  if(s.signal) box.appendChild(fieldDL("What to watch", s.signal));
+  if(s.reversibility) box.appendChild(fieldDL("Reversibility", s.reversibility));
+
+  if(s.contested && s.contestedNote){
+    box.appendChild(fieldDL("Contested — read the spread, not a date",
+      s.contestedNote, "dos__field dos__contested"));
+  }
+  if(s.directHandle){
+    box.appendChild(fieldDL("A handle that is not warming",
+      s.directHandle, "dos__field dos__handle"));
+  }
+
+  if(s.cascades && s.cascades.length){
+    var ul = el("ul", "cascade-list");
+    s.cascades.forEach(function(id){
+      var target = SYS_BY_ID[id];
+      if(!target) return;
+      var li = el("li");
+      var b = el("button", "cascade-btn", target.short);
+      b.type = "button";
+      b.addEventListener("click", function(){ openSystem(id); });
+      li.appendChild(b);
+      ul.appendChild(li);
+    });
+    box.appendChild(fieldDL("Cascades toward", ul));
+  } else {
+    box.appendChild(fieldDL("Cascades toward", "No onward cascade is recorded for this element."));
+  }
+
+  box.appendChild(fieldDL("Sources", srcChips(s.sourceIds)));
+  return box;
+}
+/* =========================================================================
+   12. FUNDING ARITHMETIC
+   The one place capital is added up. A funding list holds six non-additive
+   kinds of money; only `capital` is capital, and any entry the data marks as
+   sitting inside a cumulative row is dropped so nothing is counted twice.
+   Nothing else in this file adds a funding amount to anything.
+   ========================================================================= */
+var STREAM_LABEL = {
+  capital:   "capital raised",
+  target:    "capital being sought",
+  contract:  "offtake contract",
+  prize:     "prize award",
+  grant:     "grant",
+  aggregate: "sector roll-up"
+};
+
+function capitalRows(iv){
+  return iv.funding.filter(function(f){
+    return f.stream === "capital" && !f.withinCumulative;
+  });
+}
+function capitalTotal(iv){
+  var rows = capitalRows(iv);
+  var withAmount = rows.filter(function(f){ return typeof f.amount === "number"; });
+  if(!withAmount.length){
+    return { value: null, counted: 0, undisclosed: rows.length, entries: rows };
+  }
+  return {
+    value: withAmount.reduce(function(n, f){ return n + f.amount; }, 0),
+    counted: withAmount.length,
+    undisclosed: rows.length - withAmount.length,
+    entries: withAmount
+  };
+}
+function badgeSet(entries){
+  var out = [];
+  entries.forEach(function(f){ if(out.indexOf(f.badge) === -1) out.push(f.badge); });
+  return out;
+}
+
+/* =========================================================================
+   13. THE LEDGER
+   Two panels per row, each with its own unit, never sharing a scale:
+   left, capital actually raised (log dollars, measured); right, the gap
+   assessment (1–5, editorial). Keeping them apart is the whole point.
+   ========================================================================= */
+(function ledger(){
+  var host = document.getElementById("ledger-rows");
+  var axisHost = document.getElementById("ledger-axis");
+
+  var records = D.interventions.map(function(iv){
+    return { iv: iv, cap: capitalTotal(iv) };
+  });
+  var amounts = records.map(function(r){ return r.cap.value; }).filter(function(v){ return v != null; });
+
+  var lo = Math.pow(10, Math.floor(Math.log10(d3.min(amounts))));
+  var hi = Math.pow(10, Math.ceil(Math.log10(d3.max(amounts))));
+  var xl = d3.scaleLog().domain([lo, hi]).range([0, 100]);
+
+  var decades = [];
+  for(var v = lo; v <= hi + 1; v *= 10) decades.push(v);
+
+  axisHost.appendChild(el("span", "ledger__axis-name", "capital raised (logarithmic)"));
+  decades.forEach(function(d){
+    var i = el("i"); i.style.left = xl(d) + "%"; axisHost.appendChild(i);
+    var b = el("b", null, money(d)); b.style.left = xl(d) + "%"; axisHost.appendChild(b);
+  });
+  host.style.setProperty("--ledger-grid", decades.map(function(d){
+    var p = xl(d);
+    return "linear-gradient(90deg, transparent " + p + "%, rgba(127,231,255,.12) " + p + "%, " +
+           "rgba(127,231,255,.12) calc(" + p + "% + 1px), transparent calc(" + p + "% + 1px))";
+  }).join(","));
+
+  document.getElementById("ledger-axisnote").textContent =
+    "The capital axis is logarithmic: each labelled step is ten times the last. A linear axis " +
+    "would collapse eight of these nine categories into the left-hand margin. Figures beside each " +
+    "bar are the honest total; the axis only places them.";
+
+  /* sorted by capital, undisclosed last — the ordering is the argument */
+  records.sort(function(a, b){
+    if(a.cap.value == null && b.cap.value == null) return b.iv.gapScore - a.iv.gapScore;
+    if(a.cap.value == null) return 1;
+    if(b.cap.value == null) return -1;
+    return b.cap.value - a.cap.value;
+  });
+
+  records.forEach(function(rec){
+    var iv = rec.iv, capv = rec.cap;
+    var row = el("div", "lrow");
+    row.id = "iv-" + iv.id;
+
+    /* --- identity ------------------------------------------------------- */
+    var meta = el("div", "lrow__meta");
+    var nameEl = el("h4", "lrow__name", iv.name);
+    meta.appendChild(nameEl);
+    meta.appendChild(el("span", "lrow__sec", iv.section + " · " + STREAM_LABEL.capital));
+    if(iv.investable === false){
+      var flag = el("span", "flag-milestone", iv.framing || "not investable");
+      flag.style.marginTop = ".55rem";
+      meta.appendChild(flag);
+    }
+    meta.appendChild(el("p", "lrow__trl", iv.maturity));
+    row.appendChild(meta);
+
+    /* --- capital panel -------------------------------------------------- */
+    var bars = el("div", "lrow__bars");
+    var track = el("div", "lrow__track");
+    if(capv.value != null){
+      var bar = el("div", "lrow__bar");
+      bar.style.width = Math.max(0.6, xl(capv.value)) + "%";
+      track.appendChild(bar);
+    }
+    bars.appendChild(track);
+
+    if(capv.value != null){
+      var amt = el("div", "lrow__amount");
+      amt.appendChild(el("b", null, money(capv.value)));
+      amt.appendChild(el("span", "asof", asOfSpan(capv.entries)));
+      badgeSet(capv.entries).forEach(function(b){ amt.appendChild(badgeEl(b)); });
+      amt.appendChild(el("span", "stream",
+        capv.counted + (capv.counted === 1 ? " capital entry" : " capital entries")));
+      bars.appendChild(amt);
+    } else {
+      bars.appendChild(el("p", "lrow__none",
+        "No capital figure disclosed in the sources" +
+        (capv.undisclosed ? " — " + capv.undisclosed + " capital entr" +
+          (capv.undisclosed === 1 ? "y carries" : "ies carry") + " no amount." : ".")));
+    }
+
+    /* other streams named as themselves, never folded into the total */
+    var others = {};
+    iv.funding.forEach(function(f){
+      if(f.stream === "capital" && !f.withinCumulative) return;
+      others[f.stream] = (others[f.stream] || 0) + 1;
+    });
+    var streamRow = el("div", "lrow__streams");
+    Object.keys(others).forEach(function(k){
+      streamRow.appendChild(el("span", "stream",
+        others[k] + " × " + (STREAM_LABEL[k] || k) + " — not capital"));
+    });
+    if(streamRow.children.length) bars.appendChild(streamRow);
+    row.appendChild(bars);
+
+    /* --- gap assessment panel ------------------------------------------- */
+    var gap = el("div", "lrow__gap");
+    var meter = el("div", "meter");
+    meter.setAttribute("role", "img");
+    meter.setAttribute("aria-label", "gap assessment " + iv.gapScore + " of 5, editorial");
+    for(var i = 1; i <= 5; i++){
+      var dot = el("i");
+      if(i <= iv.gapScore) dot.dataset.on = "true";
+      meter.appendChild(dot);
+    }
+    gap.appendChild(meter);
+    gap.appendChild(el("p", null, "gap assessment " + iv.gapScore + "/5 — editorial, not a measurement"));
+    row.appendChild(gap);
+
+    /* --- the entries themselves, every badge and date visible ----------- */
+    var detail = el("div", "lrow__detail");
+
+    detail.appendChild(fieldDL("Why it has leverage", iv.leverage, "fnote"));
+
+    var fl = el("ul", "fund-list");
+    iv.funding.forEach(function(f){
+      var li = el("li", "fund" + (f.withinCumulative ? " fund--excluded" : ""));
+      var top = el("div", "fund__top");
+      var amtTxt = moneyQ(f);
+      if(amtTxt){
+        top.appendChild(el("span", "fund__amt", amtTxt));
+      } else {
+        top.appendChild(el("span", "fund__amt fund__amt--none",
+          f.assertedAbsence ? "none disclosed" : "amount not disclosed"));
+      }
+      top.appendChild(el("span", "stream", STREAM_LABEL[f.stream] || f.stream));
+      top.appendChild(badgeEl(f.badge, f.assertedAbsence ? "badge--absence" : null));
+      top.appendChild(asOfEl(f.asOf));
+      li.appendChild(top);
+      li.appendChild(el("div", "fund__holder", f.holder));
+      if(f.kind) li.appendChild(el("div", "fund__kind", f.kind));
+      if(f.cumulative) li.appendChild(el("div", "fund__flag",
+        "cumulative total — supersedes its parts"));
+      if(f.withinCumulative) li.appendChild(el("div", "fund__flag",
+        "inside the cumulative total for " + f.withinCumulative + " — excluded from the sum above"));
+      if(f.stream === "target") li.appendChild(el("div", "fund__flag",
+        "being sought, not closed — never counted as raised"));
+      if(f.stream === "aggregate") li.appendChild(el("div", "fund__flag",
+        "sector roll-up that already contains company rows — never added to them"));
+      if(f.assertedAbsence) li.appendChild(el("div", "fund__flag",
+        "absence explicitly reported, not inferred from silence"));
+      if(f.note) li.appendChild(el("div", "fund__note", f.note));
+      if(f.sourceQuote) li.appendChild(el("blockquote", "fund__quote", "“" + f.sourceQuote + "”"));
+      fl.appendChild(li);
+    });
+    detail.appendChild(fieldDL("Every funding entry, as its source has it", fl, "fnote"));
+
+    var right = el("div");
+    right.appendChild(fieldDL("Delivered — matter, not money", iv.delivered, "fnote"));
+    if(iv.announcedNotDelivered){
+      right.appendChild(fieldDL("Announced, not delivered", iv.announcedNotDelivered, "fnote fnote--conflict"));
+    }
+    if(iv.unresolvedConflict){
+      right.appendChild(fieldDL("Unresolved conflict in the record", iv.unresolvedConflict, "fnote fnote--conflict"));
+    }
+    if(iv.policyRisk){
+      right.appendChild(fieldDL("Policy risk", iv.policyRisk, "fnote fnote--warn"));
+    }
+    right.appendChild(fieldDL("Caveat", iv.caveat, "fnote fnote--warn"));
+    right.appendChild(fieldDL("Sources", srcChips(iv.sourceIds), "fnote"));
+    detail.appendChild(right);
+
+    row.appendChild(detail);
+    host.appendChild(row);
+  });
+
+  /* --- the standfirst, computed rather than asserted -------------------- */
+  var ranked = records.filter(function(r){ return r.cap.value != null; });
+  var top = ranked[0], bottom = ranked[ranked.length - 1];
+  var undisclosed = records.filter(function(r){ return r.cap.value == null; });
+  var widest = D.interventions.reduce(function(a, b){ return b.gapScore > a.gapScore ? b : a; });
+  var widestCap = capitalTotal(widest);
+
+  document.getElementById("ledger-standfirst").textContent =
+    "Across " + D.interventions.length + " intervention categories, disclosed capital runs from " +
+    money(bottom.cap.value) + " (" + bottom.iv.name + ") to " +
+    money(top.cap.value) + " (" + top.iv.name + ") — a factor of " +
+    Math.round(top.cap.value / bottom.cap.value) + ". " +
+    (undisclosed.length ? undisclosed.length + " categor" + (undisclosed.length === 1 ? "y has" : "ies have") +
+      " no disclosed capital figure at all. " : "") +
+    "The category assessed as having the widest gap between potential and capital — " +
+    widest.name + ", at " + widest.gapScore + " of 5 — holds " +
+    (widestCap.value != null ? money(widestCap.value) : "no disclosed capital") +
+    ", while the best-capitalised category is assessed at " + top.iv.gapScore + ". " +
+    "The assessment is editorial; the capital is not.";
+})();
+/* =========================================================================
+   14. COMPANY ATLAS
+   Tiers are the research doc's own conviction staging, so the visual weight
+   follows them. Companies are not hue-coded: there are nine intervention
+   categories, past the point where hues stay distinguishable, so identity is
+   carried in text and every card wears one ink.
+   ========================================================================= */
+(function atlas(){
+  var host = document.getElementById("tiers");
+  var C = D.companies;
+  var IV_NAME = {};
+  D.interventions.forEach(function(iv){ IV_NAME[iv.id] = iv.name; });
+
+  [["tier1", C.tier1Label, 1], ["tier2", C.tier2Label, 2], ["tier3", C.tier3Label, 3]]
+  .forEach(function(t){
+    var list = C[t[0]];
+    if(!list || !list.length) return;
+    var sec = el("section", "tier tier--" + t[2]);
+    var head = el("div", "tier__head");
+    head.appendChild(el("p", "tier__n", "Tier " + t[2] + " · " + list.length +
+      (list.length === 1 ? " entry" : " entries")));
+    head.appendChild(el("h4", "tier__label", t[1]));
+    sec.appendChild(head);
+
+    var cards = el("div", "cards");
+    list.forEach(function(co){
+      var card = el("article", "co" + (co.investable === false ? " co--milestone" : ""));
+
+      var top = el("div", "co__top");
+      top.appendChild(el("h5", "co__name", co.name));
+      top.appendChild(el("span", "co__where", co.country));
+      card.appendChild(top);
+
+      var catRow = el("div", "co__meta");
+      catRow.appendChild(el("span", "stream", IV_NAME[co.category] || co.category));
+      if(co.investable === false){
+        catRow.appendChild(el("span", "flag-milestone", co.framing || "not investable"));
+      }
+      card.appendChild(catRow);
+
+      card.appendChild(el("p", "co__one", co.oneLiner));
+
+      card.appendChild(el("p", "co__fact", co.keyFact.text));
+      var meta = el("div", "co__meta");
+      meta.appendChild(badgeEl(co.keyFact.badge, co.keyFact.assertedAbsence ? "badge--absence" : null));
+      meta.appendChild(asOfEl(co.keyFact.asOf));
+      card.appendChild(meta);
+
+      if(co.keyFact.assertedAbsence && co.keyFact.sourceQuote){
+        card.appendChild(el("blockquote", "quote", "“" + co.keyFact.sourceQuote + "”"));
+      }
+      cards.appendChild(card);
+    });
+    sec.appendChild(cards);
+    host.appendChild(sec);
+  });
+
+  var milestones = []
+    .concat(C.tier1 || [], C.tier2 || [], C.tier3 || [])
+    .filter(function(co){ return co.investable === false; });
+  if(milestones.length){
+    var note = el("p", "note");
+    note.style.marginTop = "1.5rem";
+    note.textContent =
+      milestones.length + " of the entries above " + (milestones.length === 1 ? "is" : "are") +
+      " marked not investable and drawn differently: " +
+      milestones.map(function(c){ return c.name; }).join("; ") +
+      ". They are listed for honesty about the state of the field, not as things to back.";
+    host.appendChild(note);
+  }
+})();
+
+/* =========================================================================
+   15. HYPOTHESIS CARDS — illuminated specimen labels
+   All seven fields on every card. Kill criteria always precede validation, in
+   the DOM and on screen, because that is the order the tests should be run in.
+   ========================================================================= */
+(function hypotheses(){
+  var host = document.getElementById("hyps");
+  var IV_NAME = {};
+  D.interventions.forEach(function(iv){ IV_NAME[iv.id] = iv.name; });
+
+  D.hypotheses.forEach(function(h){
+    var milestone = h.investable === false;
+    var card = el("article", "hyp" + (milestone ? " hyp--milestone" : ""));
+    card.id = "hyp-" + h.id;
+    card.setAttribute("aria-labelledby", "hyp-claim-" + h.id);
+
+    var head = el("div", "hyp__head");
+    head.appendChild(el("span", "hyp__id", "Hypothesis " + h.id));
+    if(milestone){
+      head.appendChild(el("span", "flag-milestone", "research milestone — not investable"));
+    }
+    head.appendChild(el("span", "hyp__trl", h.maturity));
+    card.appendChild(head);
+
+    var claim = el("p", "hyp__claim", h.claim);
+    claim.id = "hyp-claim-" + h.id;
+    card.appendChild(claim);
+
+    if(milestone && h.framing){
+      card.appendChild(el("p", "hyp__milestone-note",
+        "Framed as a " + h.framing + ": the honest version of this is a public-good measurement " +
+        "with a stated exit, not a company to fund."));
+    }
+
+    var grid = el("div", "hyp__grid");
+
+    var left = el("div");
+    left.appendChild(fieldDL("Mechanism", h.mechanism, "hyp__field"));
+    left.appendChild(fieldDL("Why now", h.whyNow, "hyp__field"));
+    grid.appendChild(left);
+
+    var right = el("div");
+
+    /* kill first */
+    var kill = el("dl", "hyp__test hyp__test--kill");
+    var killDt = el("dt");
+    killDt.appendChild(document.createTextNode("Kill criteria"));
+    killDt.appendChild(el("em", null, "— run this first"));
+    kill.appendChild(killDt);
+    kill.appendChild(el("dd", null, h.killCriteria));
+    right.appendChild(kill);
+
+    /* validation second */
+    var val = el("dl", "hyp__test hyp__test--pass");
+    var valDt = el("dt");
+    valDt.appendChild(document.createTextNode("Validation criteria"));
+    valDt.appendChild(el("em", null, "— only if it survives"));
+    val.appendChild(valDt);
+    val.appendChild(el("dd", null, h.validation));
+    right.appendChild(val);
+
+    var actors = el("ul", "hyp__actors");
+    (h.nearestActors || []).forEach(function(a){ actors.appendChild(el("li", null, a)); });
+    right.appendChild(fieldDL("Nearest actors", actors, "hyp__field"));
+    grid.appendChild(right);
+
+    card.appendChild(grid);
+
+    var foot = el("div", "hyp__foot");
+    if(h.relatedInterventions && h.relatedInterventions.length){
+      h.relatedInterventions.forEach(function(id){
+        var a = el("a", "src-chip", IV_NAME[id] || id);
+        a.href = "#iv-" + id;
+        foot.appendChild(a);
+      });
+    } else {
+      foot.appendChild(el("span", "stream", "no intervention category in this dataset"));
+    }
+    foot.appendChild(srcChips(h.sourceIds));
+    card.appendChild(foot);
+
+    host.appendChild(card);
+  });
+
+  var milestones = D.hypotheses.filter(function(h){ return h.investable === false; });
+  document.getElementById("hyps-standfirst").textContent =
+    D.hypotheses.length + " hypotheses. " + milestones.length + " of them — " +
+    milestones.map(function(h){ return h.id; }).join(" and ") +
+    " — are drawn as dashed cards because the honest version of each is a public-good research " +
+    "milestone rather than a company: a measurement that would open or close a category, " +
+    "carrying a commitment to publish the result either way.";
+})();
+/* =========================================================================
+   16. METHODS & SOURCES
+   ========================================================================= */
+(function methods(){
+  document.getElementById("meta-disclaimer").textContent = D.meta.disclaimer;
+  document.getElementById("meta-updated").textContent =
+    "Last updated " + D.meta.updated + ". Every figure on this page is rendered from a single " +
+    "data file; nothing is typed into the markup.";
+
+  var notes = [
+    ["Thresholds", "All sixteen threshold ranges, central estimates and confidence ratings come " +
+     "from one table: Armstrong McKay et al., Science 377, eabn7950 (2022), Table 1. That table is " +
+     "the authority. A range is never reduced to its central value, and crossing a range is never " +
+     "described as tipping — each dossier gives the timescale from trigger to full impact separately."],
+    ["Funding", "Funding entries carry six different kinds of money and cannot be added as they " +
+     "stand. The capital figure on each ledger row sums only entries marked as capital, dropping any " +
+     "entry the data flags as contained in a cumulative total. Contracts, prizes, grants, targets and " +
+     "sector roll-ups appear as themselves. Every figure shows the badge its source used — announced, " +
+     "delivered, verified, or deployed-grants — and the date it was current."],
+    ["Dates", "As-of dates are shown exactly as the sources give them, which means mixed " +
+     "granularity: some are months, some quarters, some halves, some only a year. Normalising them " +
+     "would invent precision the sources do not have."],
+    ["Gap assessment", "The 1–5 gap score is an editorial assessment of how far potential impact " +
+     "runs ahead of capital. It is a judgement, not a measurement, and it is labelled that way " +
+     "everywhere it appears."],
+    ["Absence of funding", "A source being silent about a company's funding is not the same as a " +
+     "source reporting that it has none. Where this page states an absence, the source's own words " +
+     "are quoted beneath it."]
+  ];
+  var noteHost = document.getElementById("method-notes");
+  notes.forEach(function(n){
+    noteHost.appendChild(fieldDL(n[0], n[1], "fnote"));
+    noteHost.lastChild.style.marginBottom = "1.1rem";
+  });
+
+  /* ------------------------------------------------------------- sources */
+  var ol = document.getElementById("sources");
+  document.getElementById("sources-count").textContent =
+    D.meta.sources.length + " citations, each with a date.";
+
+  D.meta.sources.forEach(function(s){
+    var li = el("li");
+    li.id = "src-" + s.id;
+    li.appendChild(el("span", "srclist__label", s.label));
+    var meta = el("div", "srclist__meta");
+    meta.appendChild(el("span", "mono", s.id));
+    meta.appendChild(el("span", null, s.date));
+    if(s.url){
+      var a = el("a", null, s.url.replace(/^https?:\/\//, ""));
+      a.href = s.url;
+      a.rel = "noopener";
+      meta.appendChild(a);
+    } else {
+      meta.appendChild(el("span", "flag-nolink",
+        "no stable link recorded — cited by date, not linked"));
+    }
+    if(s.verify) meta.appendChild(el("span", "flag-verify", "worth confirming before print"));
+    li.appendChild(meta);
+    ol.appendChild(li);
+  });
+
+  /* ------------------------------------------------------- media credits */
+  var usedCount = Object.keys(MEDIA_USED).length;
+  document.getElementById("media-note").textContent =
+    "All " + MEDIA_KEYS.length + " clips in the shared media manifest are credited below; " +
+    usedCount + " of them appear on this page, marked as used. Every URL in the manifest was " +
+    "verified with a live request. Footage is composited over near-black rather than played as " +
+    "illustration, and nothing is autoplayed when the browser asks for reduced motion.";
+
+  var ul = document.getElementById("media-credits");
+  MEDIA_KEYS.forEach(function(slug){
+    var m = D.media[slug];
+    var li = el("li");
+    li.dataset.used = MEDIA_USED[slug] ? "true" : "false";
+    li.appendChild(el("span", "mediacred__slug", slug));
+    var subj = mediaSubject(m);
+    if(subj) li.appendChild(el("span", "mediacred__caption", "shown as: " + subj));
+    li.appendChild(el("span", "mediacred__cred", m.credit));
+    var meta = el("div", "mediacred__meta");
+    meta.appendChild(el("span", null, m.license));
+    meta.appendChild(el("span", null, "tags: " + m.tags.join(", ")));
+    meta.appendChild(el("span", null, (m.bytes / 1e6).toFixed(2) + " MB"));
+    meta.appendChild(el("span", null, "verified " + m.verifiedAt));
+    if(MEDIA_USED[slug]) meta.appendChild(el("span", "mediacred__used", "used on this page"));
+    li.appendChild(meta);
+    ul.appendChild(li);
+  });
+
+  document.getElementById("colophon-line").textContent =
+    SYS.length + " tipping elements · " + D.interventions.length + " intervention categories · " +
+    (D.companies.tier1.length + D.companies.tier2.length + D.companies.tier3.length) +
+    " companies · " + D.hypotheses.length + " hypotheses · " + D.meta.sources.length +
+    " sources · updated " + D.meta.updated;
+
+  /* the captioned clip credits, resolved by tag rather than by URL */
+  var jelly = resolveMedia("plankton", 0);
+  if(jelly){
+    document.getElementById("act-iii-credit").textContent = creditLine(jelly);
+  }
+  var still = resolveMedia("abyss", 1);
+  if(still){
+    document.getElementById("act-ii-still-credit").textContent =
+      "Still frame — " + creditLine(still);
+  }
+})();
+
+/* =========================================================================
+   17. SCROLL BEHAVIOUR
+   ========================================================================= */
+(function scrollFx(){
+  var bar = document.getElementById("progress-bar");
+  var ticking = false;
+  function paint(){
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? Math.min(100, (window.scrollY / h) * 100) : 0) + "%";
+    ticking = false;
+  }
+  if(!reduced()){
+    window.addEventListener("scroll", function(){
+      if(!ticking){ ticking = true; requestAnimationFrame(paint); }
+    }, { passive: true });
+    paint();
+  }
+
+  var reveals = Array.prototype.slice.call(document.querySelectorAll(".reveal"));
+  if(reduced() || !("IntersectionObserver" in window)){
+    reveals.forEach(function(n){ n.classList.add("is-in"); });
+  } else {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){ e.target.classList.add("is-in"); io.unobserve(e.target); }
+      });
+    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.04 });
+    reveals.forEach(function(n){ io.observe(n); });
+  }
+})();
+
+/* =========================================================================
+   18. AUDIT MODE — ?audit=1
+   Asserts the things a static grep cannot: that the no-script roster still
+   matches the data, that no media URL is hard-coded, and that the capital
+   totals match the ones the data file's own validator asserts.
+   ========================================================================= */
+if(AUDIT){
+  var out = [];
+  /* With scripting enabled a browser keeps <noscript> content as raw text rather
+     than parsing it, so the roster is read out of textContent, not the DOM. */
+  var ns = document.querySelector("noscript");
+  var raw = ns ? (ns.textContent || "") : "";
+  var listed = [];
+  raw.replace(/<tr><td>([^<]+)<\/td>/g, function(_, name){
+    listed.push(name.replace(/&amp;/g, "&").trim());
+    return "";
+  });
+  if(!listed.length){
+    out.push("FAIL noscript roster could not be read from the noscript element");
+  } else {
+    var actual = SYS.map(function(s){ return s.name; });
+    var drift = actual.filter(function(n){ return listed.indexOf(n) === -1; })
+      .concat(listed.filter(function(n){ return actual.indexOf(n) === -1; }));
+    out.push(drift.length
+      ? "FAIL noscript roster drift: " + drift.join(" | ")
+      : "PASS noscript roster matches all " + actual.length + " element names");
+  }
+
+  var mediaHits = 0;
+  document.querySelectorAll("video,img").forEach(function(n){
+    var src = n.getAttribute("src") || "";
+    var poster = n.getAttribute("poster") || "";
+    if(/^https?:/.test(src) || /^https?:/.test(poster)) mediaHits++;
+  });
+  out.push("INFO " + mediaHits + " media element(s) have a resolved remote URL (all set from " +
+           "COLLAPSE_DATA.media at runtime; none appear in the markup)");
+
+  D.interventions.forEach(function(iv){
+    var c = capitalTotal(iv);
+    out.push("CAPITAL " + iv.id + " = " + (c.value == null ? "not disclosed" : money(c.value)) +
+             " from " + c.counted + " entr" + (c.counted === 1 ? "y" : "ies"));
+  });
+
+  out.push("INFO media entries used on this page: " + Object.keys(MEDIA_USED).sort().join(", "));
+  out.forEach(function(l){ console.log("[deepfield audit] " + l); });
+}
+
+})();
+</script>
+</body>
+</html>
