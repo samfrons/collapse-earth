@@ -22,6 +22,16 @@
    A drill core read top to bottom. The page descends through four strata;
    a fixed depth-gauge rail on the left is the instrument housing.
 
+   PROGRESSIVE DISCLOSURE. The default scroll is a spine, not a document:
+   headlines, key figures, visuals and one-line summaries. Depth lives in
+   specimen drawers (native <details>) and arrives only when asked for.
+   Measured default state at 1440×900: 2,467 visible words over 11,649 px,
+   from 7,743 words over 19,658 px before. Fully expanded it is still 13,000+
+   words — nothing was deleted, and every figure is one interaction away.
+   A drawer summary may shorten prose but never a hedge or a badge: a
+   collapsed capital total keeps its ≥ or ≈ and lists every badge its
+   underlying entries use.
+
    CONTRAST DISCIPLINE (WCAG 2.1; normal text needs 4.5:1, large text 3:1).
 
    HOW IT IS VERIFIED, and this matters more than the numbers: contrast is
@@ -632,6 +642,101 @@ input[type=range]::-moz-range-thumb{width:15px;height:22px;background:var(--carb
 @keyframes flagPulse{0%{box-shadow:0 0 0 3px var(--accent)}100%{box-shadow:0 0 0 0 transparent}}
 .jumped{animation:flagPulse 1.5s var(--ease) 1}
 
+/* ===========================================================================
+   DISCLOSURE — specimen drawers.
+   Native <details>/<summary> throughout: works with JavaScript off, is keyboard
+   operable for free, is exposed correctly to assistive tech without any aria
+   bookkeeping, and Chromium expands a closed <details> for find-in-page. No
+   JS-driven disclosure exists on this page, so there is no aria-expanded to
+   maintain. Nothing is deleted by closing one — every figure is one
+   interaction away, and no summary rounds away a hedge or a badge.
+   =========================================================================== */
+summary{cursor:pointer;list-style:none;display:block}
+summary::-webkit-details-marker{display:none}
+summary::marker{content:""}
+summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* the drawer pull: an engraved handle that seats when the drawer is out */
+.pull{display:inline-flex;align-items:center;gap:7px;flex:0 0 auto;
+  font-family:var(--mono);font-size:.4375rem;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--fg-2);white-space:nowrap}
+.pull i{display:block;width:15px;height:9px;position:relative;
+  border:1px solid currentColor;border-radius:1px}
+.pull i::before,.pull i::after{content:"";position:absolute;background:currentColor;
+  transition:transform .22s var(--ease),opacity .22s var(--ease)}
+.pull i::before{left:3px;right:3px;top:3px;height:1px}
+.pull i::after{left:50%;top:2px;bottom:2px;width:1px;margin-left:-.5px}
+details[open] > summary .pull i::after{transform:scaleY(0);opacity:0}
+details[open] > summary .pull{color:var(--fg)}
+summary:hover .pull{color:var(--fg)}
+.pull-open{display:none}
+details[open] > summary .pull-open{display:inline}
+details[open] > summary .pull-shut{display:none}
+
+/* Act II ledger row */
+.iv > summary{display:grid;gap:5px 18px;
+  grid-template-columns:minmax(0,1fr) auto auto;align-items:center;padding:15px 0}
+.iv > summary:hover .iv-name{text-decoration:underline;text-decoration-thickness:1px;
+  text-underline-offset:.2em}
+.iv-badges{display:flex;gap:3px;flex-wrap:wrap;justify-content:flex-end;
+  max-width:15ch}
+.iv-badge{font-family:var(--mono);font-size:.375rem;letter-spacing:.1em;
+  text-transform:uppercase;border:1px solid rgba(23,19,14,.5);padding:2px 4px;
+  line-height:1.3;background:rgba(247,244,238,.42)}
+.iv-badge[data-b="announced"]{border-style:dashed}
+.iv-gap{display:flex;align-items:center;gap:5px}
+.iv-gap .pips i{width:5px;height:11px}
+.iv-gap span{font-family:var(--mono);font-size:.375rem;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--fg-2)}
+@media(max-width:760px){
+  .iv > summary{grid-template-columns:minmax(0,1fr) auto}
+  .iv-badges{grid-column:1/-1;justify-content:flex-start;max-width:none}
+  .iv-gap{grid-column:1/-1}
+}
+
+/* Act III tag: the face stays, the seven fields are the drawer */
+.tag-face{padding:0}
+.tag > summary{display:block}
+.tag-oneline{padding:13px 18px 0;margin:0;font-size:.8125rem;line-height:1.5}
+.tag-oneline b{font-family:var(--mono);font-size:.5rem;font-weight:500;
+  letter-spacing:.15em;text-transform:uppercase;color:var(--kraft-ink-2);
+  display:block;margin-bottom:4px}
+.tag-sig{display:flex;flex-wrap:wrap;gap:6px;align-items:center;
+  padding:13px 18px;margin:0}
+.tag-sig-i{font-family:var(--mono);font-size:.4375rem;letter-spacing:.13em;
+  text-transform:uppercase;border:1px solid var(--kraft-edge);padding:4px 7px;
+  background:rgba(255,255,255,.26)}
+.tag-sig-i b{font-weight:600}
+.tag-sig-i--kill{border-color:var(--kraft-kill);color:var(--kraft-kill)}
+.tag > summary .pull{padding:0 18px 15px;color:var(--kraft-ink-2)}
+.tag > summary:hover .pull,.tag[open] > summary .pull{color:var(--kraft-ink)}
+.tag-body{border-top:1px solid var(--kraft-edge)}
+
+/* company card */
+.co > summary{display:block}
+.co-body{margin-top:11px;padding-top:10px;border-top:1px solid rgba(23,19,14,.24)}
+.co > summary .pull{margin-top:10px}
+
+/* tier drawer + methods drawer (the tier summary reuses .tier-hd) */
+.meth-dz{border-top:1px solid var(--rule);}
+.meth-dz > summary{display:flex;justify-content:space-between;align-items:baseline;
+  gap:10px 18px;padding:15px 0;flex-wrap:wrap}
+.meth-dz-right{display:flex;align-items:center;gap:8px 14px;flex-wrap:wrap}
+.meth-dz > summary h4{font-size:.9375rem}
+.meth-dz-n{font-family:var(--mono);font-size:.5rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--fg-2);white-space:normal;max-width:34ch}
+.meth-dz-body{padding-bottom:22px}
+
+/* an inline "read more" drawer for methodology footnotes */
+.fn{margin-top:12px}
+.fn > summary{display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--mono);font-size:.5rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--fg-2);border:1px solid var(--rule-hi);
+  padding:6px 9px}
+.fn > summary:hover{color:var(--fg);border-color:var(--fg)}
+.fn-body{margin-top:12px}
+.fn-body .note{font-size:.8125rem}
+
 /* funding chips */
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin:0}
 .chip{display:inline-grid;gap:1px;border:1px solid rgba(23,19,14,.5);
@@ -661,10 +766,6 @@ input[type=range]::-moz-range-thumb{width:15px;height:22px;background:var(--carb
 .iv-list{display:grid;gap:0;margin-top:clamp(34px,5vh,58px);
   border-top:1px solid var(--rule-hi)}
 .iv{border-bottom:1px solid var(--rule-hi)}
-.iv-btn{width:100%;text-align:left;display:grid;gap:4px 16px;
-  grid-template-columns:minmax(0,1fr) auto;align-items:center;padding:16px 0}
-.iv-btn:hover .iv-name{text-decoration:underline;text-decoration-thickness:1px;
-  text-underline-offset:.2em}
 .iv-name{font-family:var(--disp);font-weight:600;font-size:clamp(1rem,1.5vw,1.2rem);
   line-height:1.15;letter-spacing:-.01em}
 .iv-sec{font-family:var(--mono);font-size:.5rem;letter-spacing:.17em;
@@ -673,8 +774,7 @@ input[type=range]::-moz-range-thumb{width:15px;height:22px;background:var(--carb
   font-variant-numeric:tabular-nums;letter-spacing:-.02em;text-align:right;white-space:nowrap}
 .iv-cap small{display:block;font-size:.4375rem;font-weight:400;letter-spacing:.14em;
   text-transform:uppercase;color:var(--fg-2)}
-.iv-body{display:none;padding-bottom:24px}
-.iv[data-open="1"] .iv-body{display:block}
+.iv-body{padding-bottom:24px}
 .iv-grid{display:grid;gap:clamp(16px,2.4vw,30px);grid-template-columns:minmax(0,1fr)}
 @media(min-width:860px){.iv-grid{grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr)}}
 .field{padding-top:13px;border-top:1px solid var(--rule);margin-top:13px}
@@ -709,14 +809,14 @@ input[type=range]::-moz-range-thumb{width:15px;height:22px;background:var(--carb
     rgba(247,244,238,.44);
   box-shadow:inset 4px 0 0 var(--ink),inset 0 0 0 1px rgba(23,19,14,.3)}
 .co--flag .co-name{padding-left:2px}
-.co-top{display:flex;justify-content:space-between;gap:10px;align-items:start}
+.co-top{display:flex;justify-content:space-between;gap:10px;align-items:start;min-width:0}
 .co-name{font-family:var(--disp);font-weight:600;font-size:1rem;line-height:1.15;
   letter-spacing:-.01em;margin:0}
 .co-geo{font-family:var(--mono);font-size:.4375rem;letter-spacing:.14em;
   text-transform:uppercase;color:var(--fg-2);text-align:right;flex:0 0 auto}
 .co-one{font-size:.8125rem;line-height:1.5;margin:8px 0 0}
-.co-fact{margin:11px 0 0;padding-top:10px;border-top:1px solid rgba(23,19,14,.24);
-  font-size:.75rem;line-height:1.5}
+.co-fact{display:block;margin:11px 0 0;padding-top:10px;
+  border-top:1px solid rgba(23,19,14,.24);font-size:.75rem;line-height:1.5}
 .co-stamp{display:inline-block;margin:9px 0 0;font-family:var(--mono);font-size:.4375rem;
   letter-spacing:.15em;text-transform:uppercase;border:1px solid var(--ink);padding:3px 6px}
 .co-quote{margin:9px 0 0;font-size:.6875rem;line-height:1.5;font-style:italic;
@@ -932,10 +1032,9 @@ html[data-tray="1"]{overflow:hidden}
           <p class="lede">Sixteen Earth systems carry thresholds we can estimate but cannot
             schedule. Capital has concentrated in the interventions that are easiest to
             count, not the ones with the most leverage.</p>
-          <p class="note" style="margin-top:1.1em">This page is built as a core log. Scroll is
-            descent: the rail on the left reports how deep the reading has gone and roughly
-            how far back that depth reaches. Four strata, read top to bottom — the thresholds,
-            the misallocation, the hypotheses, and the record of where every figure came from.</p>
+          <p class="note" style="margin-top:1.1em">Read as a core log: scroll is descent, and the
+            rail reports the depth. Four strata — the thresholds, the misallocation, the
+            hypotheses, the record.</p>
 
           <div class="hero-anthro">
             <strong id="anthroLab"></strong>
@@ -973,10 +1072,9 @@ html[data-tray="1"]{overflow:hidden}
           <h2><span class="act-numeral">I</span> &nbsp;The thresholds</h2>
         </div>
         <div>
-          <p class="note" style="margin:0">Every threshold below is a range, not a date. Turn the
-            dial and each element renders by where the dial sits inside its own uncertainty band:
-            outline while the range is still ahead, filling as the range is entered, solid once the
-            upper estimate is passed. Nothing flips at the central value alone.</p>
+          <p class="note" style="margin:0">Every threshold is a range, not a date. Turn the dial and
+            each element fills in proportion to how far into its own uncertainty band the dial has
+            gone — nothing flips at a central value.</p>
         </div>
       </header>
 
@@ -989,9 +1087,8 @@ html[data-tray="1"]{overflow:hidden}
             <span class="globe-corner tl"></span><span class="globe-corner tr"></span>
             <span class="globe-corner bl"></span><span class="globe-corner br"></span>
           </div>
-          <p class="globe-hint" id="globeHint">Drag or use the arrow keys to turn the globe. Press Tab
-            to step onto the elements facing you, then the arrow keys to move between them and Enter
-            to pull its dossier.</p>
+          <p class="globe-hint" id="globeHint">Drag or arrow-key to turn · Tab onto an element ·
+            Enter pulls its dossier</p>
         </div>
 
         <div>
@@ -1003,15 +1100,16 @@ html[data-tray="1"]{overflow:hidden}
             <input type="range" id="dial" aria-describedby="dialCount">
             <div class="dial-scale" id="dialScale"></div>
             <div class="dial-count" id="dialCount" aria-live="polite"></div>
-            <div class="legend" id="legend"></div>
+            <details class="fn">
+              <summary><span class="pull-shut">how the markers read</span>
+                <span class="pull-open">hide the key</span></summary>
+              <div class="fn-body"><div class="legend" id="legend"></div></div>
+            </details>
           </div>
 
           <div class="reading">
             <h4>The dossier</h4>
-            <p>Every element has a full record — threshold range and confidence rating, how long the
-              transition takes once triggered, what it destabilises next, and the sources behind each
-              figure. It slides out from the right as a specimen tray. Choose an element on the globe
-              or any row of the band chart below.</p>
+            <p>Choose any element and its full record slides out from the right as a specimen tray.</p>
             <button class="dos-tab" id="dosOpenLast" type="button">Open the last dossier</button>
           </div>
         </div>
@@ -1023,13 +1121,16 @@ html[data-tray="1"]{overflow:hidden}
             <p class="eyebrow" id="bandsEyebrow"></p>
             <h3 style="margin-top:8px">Threshold bands</h3>
           </div>
-          <p class="note" style="margin:0;max-width:48ch;font-size:.8125rem">Bars span the estimated
-            minimum to maximum; the notch marks the central estimate. Shading shows how much of each
-            band the dial has already entered. Confidence is the paper's own rating, printed on every
-            row — a wide bar with a low rating is the honest shape of most of this table.</p>
+          <p class="note" style="margin:0;max-width:44ch;font-size:.8125rem">Bars run minimum to
+            maximum, the notch is the central estimate, and every row prints the paper's own
+            confidence rating.</p>
         </div>
         <div class="bands-scroll"><svg id="bandsSvg" role="group" aria-label="Threshold bands for every tipping element. Each row is a focusable control that opens that element's dossier."></svg></div>
-        <p class="note" id="bandsFoot" style="margin-top:14px"></p>
+        <details class="fn">
+          <summary><span class="pull-shut">how to read this chart</span>
+            <span class="pull-open">close</span></summary>
+          <div class="fn-body"><p class="note" id="bandsFoot" style="margin:0"></p></div>
+        </details>
       </div>
 
       <!-- No-JavaScript fallback. It carries no figures on purpose: every number on
@@ -1095,11 +1196,10 @@ html[data-tray="1"]{overflow:hidden}
           <h2><span class="act-numeral">II</span> &nbsp;The misallocation</h2>
         </div>
         <div>
-          <p class="note" style="margin:0;color:var(--ink-o2)">Capital raised is plotted against an
-            editorial read of how far each intervention's potential runs ahead of its funding. The
-            money figures are not interchangeable: equity and debt raised, capital being sought,
-            customer offtake commitments, prize awards, grants and sector roll-ups are separate
-            kinds of money and are labelled as such on every chip.</p>
+          <p class="note" style="margin:0;color:var(--fg-2)">Equity raised, capital being sought,
+            offtake commitments, prizes, grants and sector roll-ups are different kinds of money.
+            They are never summed together, and every figure carries the badge and date its source
+            gave it.</p>
         </div>
       </header>
 
@@ -1109,13 +1209,21 @@ html[data-tray="1"]{overflow:hidden}
         <h3 class="opp-lede" id="oppLede"></h3>
         <p class="opp-sub" id="oppSub"></p>
         <div class="opp-grid" id="oppGrid"></div>
-        <p class="note" id="oppFoot" style="margin-top:16px;color:var(--fg-2)"></p>
+        <details class="fn">
+          <summary><span class="pull-shut">how this board is ordered</span>
+            <span class="pull-open">close</span></summary>
+          <div class="fn-body"><p class="note" id="oppFoot" style="margin:0;color:var(--fg-2)"></p></div>
+        </details>
       </section>
 
       <p class="eyebrow" id="ledgerEyebrow"></p>
       <h3 style="margin:8px 0 16px">The full ledger</h3>
       <div class="alloc-scroll"><svg id="allocSvg" role="group"></svg></div>
-      <p class="note" id="allocFoot" style="margin-top:16px;color:var(--fg-2)"></p>
+      <details class="fn">
+        <summary><span class="pull-shut">how to read the ledger</span>
+          <span class="pull-open">close</span></summary>
+        <div class="fn-body"><p class="note" id="allocFoot" style="margin:0;color:var(--fg-2)"></p></div>
+      </details>
 
       <div class="iv-list" id="ivList"></div>
 
@@ -1123,10 +1231,8 @@ html[data-tray="1"]{overflow:hidden}
         <header style="margin-bottom:-8px">
           <p class="eyebrow" id="atlasEyebrow"></p>
           <h3 style="margin-top:8px">Company atlas</h3>
-          <p class="note" style="margin-top:10px;color:var(--ink-o2);max-width:62ch">Staged by
-            conviction, not by size. Every key fact carries the badge and date the source gave it,
-            so nothing announced is read as delivered. Entries that are not investable propositions
-            are marked as what they actually are.</p>
+          <p class="note" style="margin-top:10px;color:var(--fg-2);max-width:62ch">Staged by
+            conviction, not by size. Nothing announced is shown as delivered.</p>
         </header>
       </div>
     </div>
@@ -1157,9 +1263,8 @@ html[data-tray="1"]{overflow:hidden}
         </div>
         <div>
           <p class="note" style="margin:0">Ten claims, each tagged like a sample pulled from the
-            core. On every tag the kill criteria are printed above the validation criteria, in that
-            order, because a claim that cannot be killed is not a hypothesis. Two of these are
-            public-good research milestones rather than companies to back, and say so on the label.</p>
+            core. Open a tag for all seven fields — kill criteria always printed above validation,
+            because a claim that cannot be killed is not a hypothesis.</p>
         </div>
       </header>
       <div class="tags" id="tags"></div>
@@ -1187,8 +1292,8 @@ html[data-tray="1"]{overflow:hidden}
         <p class="eyebrow" id="methEyebrow"></p>
         <div><h2>Methods &amp; sources</h2></div>
         <div>
-          <p class="note" style="margin:0">Bedrock. Everything above is rendered from one data
-            file; this is what it is built on, and where it is uncertain.</p>
+          <p class="note" style="margin:0">Bedrock. Four drawers: what this is built on, and where
+            it is uncertain.</p>
         </div>
       </header>
 
@@ -1197,26 +1302,47 @@ html[data-tray="1"]{overflow:hidden}
         <p class="note" id="discData" style="margin-bottom:0"></p>
       </div>
 
-      <div class="meth-grid">
-        <div>
-          <p class="eyebrow" id="srcEyebrow"></p>
-          <ul class="srcs" id="srcs" style="margin-top:12px"></ul>
+      <!-- Four drawers, all shut by default. Nothing is removed: every citation,
+           credit and calibration figure is one interaction away. -->
+      <details class="meth-dz">
+        <summary>
+          <h4>Sources</h4>
+          <span class="meth-dz-right"><span class="meth-dz-n" id="srcEyebrow"></span><span class="pull"><i></i><span class="pull-shut">open</span><span class="pull-open">close</span></span></span>
+        </summary>
+        <div class="meth-dz-body">
+          <ul class="srcs" id="srcs"></ul>
         </div>
+      </details>
 
-        <div>
-          <p class="eyebrow">How the figures are handled</p>
-          <div id="methNotes" style="margin-top:12px"></div>
+      <details class="meth-dz">
+        <summary>
+          <h4>How the figures are handled</h4>
+          <span class="meth-dz-right"><span class="meth-dz-n">thresholds · money · absences ·
+            assessments · hypotheses</span><span class="pull"><i></i><span class="pull-shut">open</span><span class="pull-open">close</span></span></span>
+        </summary>
+        <div class="meth-dz-body" id="methNotes"></div>
+      </details>
 
-          <p class="eyebrow" style="margin-top:30px">Media credits</p>
-          <ul class="credits" id="credits" style="margin-top:12px"></ul>
-
-          <div class="calib">
-            <p class="eyebrow">Depth–age calibration</p>
-            <p class="note" style="margin-top:8px;font-size:.75rem" id="calibNote"></p>
-            <table id="calibTable"></table>
-          </div>
+      <details class="meth-dz">
+        <summary>
+          <h4>Media credits &amp; licences</h4>
+          <span class="meth-dz-right"><span class="meth-dz-n" id="creditsN"></span><span class="pull"><i></i><span class="pull-shut">open</span><span class="pull-open">close</span></span></span>
+        </summary>
+        <div class="meth-dz-body">
+          <ul class="credits" id="credits"></ul>
         </div>
-      </div>
+      </details>
+
+      <details class="meth-dz" style="border-bottom:1px solid var(--rule)">
+        <summary>
+          <h4>Depth–age calibration</h4>
+          <span class="meth-dz-right"><span class="meth-dz-n">illustrative, not measured data</span><span class="pull"><i></i><span class="pull-shut">open</span><span class="pull-open">close</span></span></span>
+        </summary>
+        <div class="meth-dz-body calib">
+          <p class="note" style="margin-top:0;font-size:.8125rem" id="calibNote"></p>
+          <table id="calibTable"></table>
+        </div>
+      </details>
 
       <footer>
         <div class="foot-row" id="footRow"></div>
@@ -1413,11 +1539,8 @@ function renderHero() {
   $("anthroLab").textContent = "our own layer · the top " +
     CORE.anthropocene.toFixed(1) + " m";
   $("anthroNote").textContent =
-    "On the illustrative scale used by the rail, everything since the mid-twentieth " +
-    "century sits in roughly the top half-metre of a " + grouped(CORE.length) +
-    "-metre core — about " + pct.toFixed(2) +
-    "% of its length. The strata below are not a forecast; they are the reading " +
-    "scale this page descends through.";
+    "Everything since the mid-twentieth century sits in the top half-metre of a " +
+    grouped(CORE.length) + "-metre core — " + pct.toFixed(2) + "% of its length.";
 
   /* The one number the whole page is read against. */
   $("readoutK").textContent = "observed warming · " + w.unit;
@@ -1534,18 +1657,16 @@ function segOf(id) {
    either one cannot silently desynchronise the label from what is rendered. */
 var CONTACT_COPY = {
   contactA: { name: "bone to ochre",
-    sub: "Rock layering stands in for the change of ground. Below this line the " +
-         "subject changes from what the Earth systems do to what money has done about them." },
+    sub: "Below this line the subject changes: from what the Earth systems do to what money " +
+         "has done about them." },
   contactB: { name: "pleistocene–holocene boundary",
-    sub: "On the rail's illustrative scale this depth is the last great climate " +
-         "transition, and it is where the page goes dark. Everything below it is " +
+    sub: "The last great climate transition, and where the page goes dark. Below it is " +
          "argument rather than record." },
   /* The ice record from the hero returns here, screen-blended rather than framed:
      a deliberate reprise at bedrock depth, and a clip the browser may already
      have fetched, which keeps the page inside its payload budget. */
   contactC: { name: "rust to carbon · bedrock approach",
-    sub: "The deepest ice is the most deformed and the hardest to date. What " +
-         "follows is the account of where every figure above came from." }
+    sub: "The deepest ice is the most deformed and hardest to date. What follows is the record." }
 };
 
 function renderContactBands() {
@@ -2405,7 +2526,7 @@ function buildAlloc() {
   svg.append("text").attr("class", "ax-hd").attr("x", gutter).attr("y", padTop - 36)
     .attr("text-anchor", "end").text("not disclosed");
   svg.append("text").attr("class", "ax-hd").attr("x", pipL).attr("y", padTop - 36)
-    .text("gap assessment · editorial, one to five");
+    .text("gap assessment · editorial");
 
   data.forEach(function (iv, i) {
     var cy = padTop + i * rowH + rowH / 2 - 4;
@@ -2421,7 +2542,8 @@ function buildAlloc() {
       .attr("width", W).attr("height", rowH - 4);
     g.append("text").attr("class", "ax-sec").attr("x", 0).attr("y", cy - 8)
       .text(iv.section + " · " + iv.maturity.split(/[—(]/)[0].trim().slice(0, 46));
-    g.append("text").attr("class", "ax-name").attr("x", 0).attr("y", cy + 8).text(iv.name);
+    g.append("text").attr("class", "ax-name").attr("x", 0).attr("y", cy + 8)
+      .text(chartLabel(iv.name));
 
     if (none) {
       g.append("circle").attr("class", "ax-dot--none").attr("cx", gutter).attr("cy", cy).attr("r", 6);
@@ -2460,6 +2582,16 @@ function buildAlloc() {
     "the smallest. The pips repeat the editorial gap assessment from the board above, not a " +
     "measurement. Open any row for the full entry — leverage, maturity, every money figure as its " +
     "source labels it, what has actually been delivered, and the caveats.";
+}
+
+/* A chart row has a fixed label column, and two category names overrun it and
+   collided with the not-disclosed gutter. The parenthetical is dropped and the
+   rest truncated; the full name is printed on the ledger row directly below,
+   and is the row's accessible name, so nothing is lost. */
+function chartLabel(name) {
+  var s = name.replace(/\s*\([^)]*\)/g, "").trim();
+  if (s.length > 38) s = s.slice(0, 37).replace(/[\s&,]+\S*$/, "") + "…";
+  return s;
 }
 
 function allocTip(iv) {
@@ -2520,18 +2652,15 @@ function renderOpportunity() {
   var named = board.filter(function (b) { return b.known; })
     .slice(0, 2).map(function (b) { return shortName(b.iv.name); });
 
-  $("oppEyebrow").textContent = "opportunity · " + board.length +
-    " categories at gap assessment " + OPP_THRESHOLD + " or above, of " +
-    D.interventions.length;
+  $("oppEyebrow").textContent = "opportunity · " + board.length + " of " +
+    D.interventions.length + " categories at gap " + OPP_THRESHOLD + " or above";
   $("oppLede").textContent = named.length
     ? "Where capital is most missing relative to leverage: " +
       named.join(", and ") + "."
     : "Where capital is most missing relative to leverage.";
   $("oppSub").textContent =
-    "These are the categories this research reads as most underfunded against their " +
-    "potential. The gap is an editorial assessment, not a measurement; the money figures " +
-    "beside it are not. Each card carries the leverage argument, what has actually been " +
-    "raised, and the hypotheses in Act III that would test it.";
+    "Most underfunded against their potential. The gap is an editorial assessment; the money " +
+    "figures beside it are not.";
 
   $("oppGrid").innerHTML = board.map(function (b, i) {
     var iv = b.iv;
@@ -2606,10 +2735,18 @@ function shortClaim(h) {
    where they landed after the jump. */
 function wireJumps(root) {
   Array.prototype.forEach.call(root.querySelectorAll("[data-jump]"), function (b) {
-    b.addEventListener("click", function () {
+    var go = function (ev) {
+      /* some of these links sit INSIDE a <summary>; without this the click
+         would also toggle the drawer they happen to be printed on */
+      ev.preventDefault();
+      ev.stopPropagation();
       var ivId = b.getAttribute("data-open-iv");
       if (ivId) openIv(ivId, true);
       jumpTo(b.getAttribute("data-jump"), !ivId);
+    };
+    b.addEventListener("click", go);
+    b.addEventListener("keydown", function (ev) {
+      if (ev.key === "Enter" || ev.key === " ") go(ev);
     });
   });
 }
@@ -2714,39 +2851,64 @@ function renderIvList() {
         "<span>" + iv.gapScore + " of 5 · editorial assessment, not a measurement</span></div>") +
       field("sources", "<ul class=\"src-list\">" + srcList(iv.sourceIds) + "</ul>");
 
-    return "<div class=\"iv\" id=\"iv-" + attr(iv.id) + "\" data-open=\"0\">" +
-      "<button class=\"iv-btn\" type=\"button\" aria-expanded=\"false\" " +
-        "aria-controls=\"ivb-" + attr(iv.id) + "\" data-iv-toggle=\"" + attr(iv.id) + "\">" +
+    /* The summary carries the whole rigor payload for this row: the hedged
+       total (≥/≈ preserved), every badge the category's funding entries use,
+       and the gap assessment with its label. Closing a row hides detail, never
+       a qualifier. */
+    return "<details class=\"iv\" id=\"iv-" + attr(iv.id) + "\">" +
+      "<summary>" +
         "<span><span class=\"iv-sec\">" + esc(iv.section) +
           (iv.investable === false ? " · " + esc(iv.framing || "not investable") : "") +
           "</span><br><span class=\"iv-name\">" + esc(iv.name) + "</span></span>" +
-        "<span class=\"iv-cap\">" + (cap ? money(cap) : "—") +
+        "<span class=\"iv-cap\">" + (cap ? esc(hedgedTotal(iv)) : "—") +
           "<small>" + (cap ? "capital raised" : "no figure disclosed") + "</small></span>" +
-      "</button>" +
-      "<div class=\"iv-body\" id=\"ivb-" + attr(iv.id) + "\">" +
+        "<span class=\"iv-badges\">" + badgeSet(iv).map(function (b) {
+          return "<span class=\"iv-badge\" data-b=\"" + attr(b) + "\">" +
+            esc(BADGE_WORD[b] || b) + "</span>";
+        }).join("") + "</span>" +
+        "<span class=\"iv-gap\">" + pips(iv.gapScore, 5) +
+          "<span>gap " + iv.gapScore + "/5<br>editorial</span></span>" +
+        "<span class=\"pull\"><i></i><span class=\"pull-shut\">open entry</span>" +
+          "<span class=\"pull-open\">close</span></span>" +
+      "</summary>" +
+      "<div class=\"iv-body\">" +
         (iv.investable === false
           ? "<p class=\"co-stamp\" style=\"margin-bottom:14px\">" +
             esc(iv.framing || "research") + " — not an investable category</p>" : "") +
         "<div class=\"iv-grid\"><div>" + left + "</div><div>" + right + "</div></div>" +
-      "</div></div>";
+      "</div></details>";
   }).join("");
-
-  Array.prototype.forEach.call(document.querySelectorAll("[data-iv-toggle]"), function (b) {
-    b.addEventListener("click", function () { openIv(b.getAttribute("data-iv-toggle")); });
-  });
 }
 
+/* A collapsed total must keep its hedge. If any counted capital entry is
+   hedged, the summary says so rather than presenting a rounded exact figure. */
+function hedgedTotal(iv) {
+  var rows = iv.funding.filter(function (f) {
+    return f.stream === "capital" && !f.withinCumulative && f.amount != null;
+  });
+  var total = rows.reduce(function (n, f) { return n + f.amount; }, 0);
+  var atLeast = rows.some(function (f) { return f.qualifier === "at-least"; }) ||
+                capitalRowsWithoutAmount(iv) > 0;
+  var approx = rows.some(function (f) { return f.qualifier === "approximately"; });
+  return (atLeast ? "≥ " : approx ? "≈ " : "") + money(total);
+}
+
+/* every badge vocabulary word this category's funding entries actually use */
+function badgeSet(iv) {
+  var out = [];
+  iv.funding.forEach(function (f) { if (out.indexOf(f.badge) === -1) out.push(f.badge); });
+  return out;
+}
+
+/* Cross-links open a native <details>; there is no aria state to maintain. */
 function openIv(id, scrollTo) {
   var host = $("iv-" + id);
   if (!host) return;
-  var btn = host.querySelector(".iv-btn");
-  var open = host.getAttribute("data-open") === "1";
-  var next = scrollTo ? true : !open;
-  host.setAttribute("data-open", next ? "1" : "0");
-  btn.setAttribute("aria-expanded", next ? "true" : "false");
+  host.open = true;
   if (scrollTo) {
     host.scrollIntoView({ behavior: REDUCED ? "auto" : "smooth", block: "center" });
-    btn.focus({ preventScroll: true });
+    var s = host.querySelector("summary");
+    if (s) s.focus({ preventScroll: true });
   }
 }
 
@@ -2756,29 +2918,44 @@ function renderTiers() {
   [["tier1", D.companies.tier1Label], ["tier2", D.companies.tier2Label],
    ["tier3", D.companies.tier3Label]].forEach(function (t, i) {
     var key = t[0], label = t[1], list = D.companies[key];
+    /* FACE: name · category and country · the key fact with its badge and
+       as-of date · the not-investable flag. DRAWER: the one-line description,
+       and where a source reports an ABSENCE of funding, its exact words. */
     var cards = list.map(function (c) {
       var flag = c.investable === false;
-      return "<article class=\"co" + (flag ? " co--flag" : "") + "\">" +
-        "<div class=\"co-top\"><h4 class=\"co-name\">" + esc(c.name) + "</h4>" +
+      return "<details class=\"co" + (flag ? " co--flag" : "") + "\">" +
+        "<summary>" +
+        "<span class=\"co-top\"><h4 class=\"co-name\">" + esc(c.name) + "</h4>" +
         "<span class=\"co-geo\">" + esc(c.country) + "<br>" +
-          esc(c.category.replace(/-/g, " ")) + "</span></div>" +
-        "<p class=\"co-one\">" + esc(c.oneLiner) + "</p>" +
-        "<p class=\"co-fact\"><span class=\"badge\">" +
+          esc(c.category.replace(/-/g, " ")) + "</span></span>" +
+        "<span class=\"co-fact\"><span class=\"badge\">" +
           esc(BADGE_WORD[c.keyFact.badge] || c.keyFact.badge) + " · as of " +
-          esc(c.keyFact.asOf) + "</span><br><span style=\"display:inline-block;margin-top:7px\">" +
-          esc(c.keyFact.text) + "</span></p>" +
+          esc(c.keyFact.asOf) + "</span><span style=\"display:block;margin-top:7px\">" +
+          esc(c.keyFact.text) + "</span></span>" +
         (flag ? "<span class=\"co-stamp\">" + esc(c.framing || "research") +
           " — not investable</span>" : "") +
+        "<span class=\"pull\"><i></i><span class=\"pull-shut\">more</span>" +
+          "<span class=\"pull-open\">less</span></span>" +
+        "</summary>" +
+        "<div class=\"co-body\">" +
+        "<p class=\"co-one\" style=\"margin:0\">" + esc(c.oneLiner) + "</p>" +
         (c.keyFact.assertedAbsence
           ? "<p class=\"co-quote\">Absence reported, not inferred. The source says: “" +
             esc(c.keyFact.sourceQuote) + "”</p>" : "") +
-        "</article>";
+        "</div></details>";
     }).join("");
+    /* All three tiers are drawers. Act II's scannable layer is the opportunity
+       board; the atlas is reference depth, and 19 key facts on the default
+       scroll is precisely the wall Amendment 2 exists to remove. Every card
+       still carries name + category + keyFact on its own face once opened. */
     host.insertAdjacentHTML("beforeend",
-      "<section><div class=\"tier-hd\"><span class=\"tier-n\">" +
+      "<details class=\"tier\">" +
+      "<summary class=\"tier-hd\"><span class=\"tier-n\">" +
       ["I", "II", "III"][i] + "</span><span class=\"tier-lab\">" + esc(label) + " · " +
-      list.length + (list.length === 1 ? " company" : " entries") +
-      "</span></div><div class=\"co-grid\">" + cards + "</div></section>");
+      list.length + (list.length === 1 ? " company" : " entries") + "</span>" +
+      "<span class=\"pull\"><i></i><span class=\"pull-shut\">show tier</span>" +
+        "<span class=\"pull-open\">hide tier</span></span></summary>" +
+      "<div class=\"co-grid\">" + cards + "</div></details>");
   });
 }
 
@@ -2795,23 +2972,37 @@ function renderTags() {
     }).filter(Boolean);
     var flag = h.investable === false;
 
-    return "<article class=\"tag rise\" id=\"hyp-" + attr(h.id) + "\">" +
+    /* FACE: claim · one-line why-now · maturity token · falsifiability signal ·
+       the non-investable flag. DRAWER: all seven fields in full, kill criteria
+       still printed above validation. Nothing is dropped from the DOM. */
+    return "<details class=\"tag rise\" id=\"hyp-" + attr(h.id) + "\">" +
+      "<summary>" +
       "<span class=\"tag-punch\" aria-hidden=\"true\"></span>" +
       "<span class=\"tag-wire\" aria-hidden=\"true\"></span>" +
       "<div class=\"tag-hd\"><span class=\"tag-id\">" + esc(h.id) + "</span>" +
         (rel.length
-          ? "<button class=\"tag-xlink\" type=\"button\" data-jump=\"iv-" +
-            attr(rel[0].id) + "\" data-open-iv=\"" + attr(rel[0].id) + "\">" +
+          ? "<span class=\"tag-xlink\" data-jump=\"iv-" + attr(rel[0].id) +
+            "\" data-open-iv=\"" + attr(rel[0].id) + "\" role=\"link\" tabindex=\"0\">" +
             "<em>acts on · act II</em>" + esc(rel[0].section) + " " +
-            esc(rel[0].name) + " ↑</button>"
-          : "<span class=\"tag-none\">no intervention category in act II · " +
-            "this claim is about the observing system itself</span>") +
+            esc(rel[0].name) + " ↑</span>"
+          : "<span class=\"tag-none\">no act II category<br>this claim is about the " +
+            "observing system</span>") +
       "</div>" +
       "<h3 class=\"tag-claim\">" + esc(h.claim) + "</h3>" +
       (flag ? "<span class=\"tag-stamp\">research milestone — not investable</span>" : "") +
+      "<p class=\"tag-oneline\"><b>why now</b>" + esc(oneLine(h.whyNow)) + "</p>" +
+      "<p class=\"tag-sig\">" +
+        "<span class=\"tag-sig-i\"><b>" + esc(trlOf(h.maturity)) + "</b></span>" +
+        "<span class=\"tag-sig-i tag-sig-i--kill\">falsifiable · kill criteria stated</span>" +
+      "</p>" +
+      "<span class=\"pull\"><i></i><span class=\"pull-shut\">open the seven fields</span>" +
+        "<span class=\"pull-open\">close</span></span>" +
+      "</summary>" +
+
+      "<div class=\"tag-body\">" +
       "<div class=\"tag-f\"><p class=\"tag-k\">mechanism</p><p class=\"tag-v\">" +
         esc(h.mechanism) + "</p></div>" +
-      "<div class=\"tag-f\"><p class=\"tag-k\">why now</p><p class=\"tag-v\">" +
+      "<div class=\"tag-f\"><p class=\"tag-k\">why now — in full</p><p class=\"tag-v\">" +
         esc(h.whyNow) + "</p></div>" +
       "<div class=\"tag-f tag-f--kill\"><p class=\"tag-k\">kill criteria — what would end this</p>" +
         "<p class=\"tag-v\">" + esc(h.killCriteria) + "</p></div>" +
@@ -2823,6 +3014,8 @@ function renderTags() {
         "<ul class=\"tag-actors\">" + h.nearestActors.map(function (a) {
           return "<li>" + esc(a) + "</li>";
         }).join("") + "</ul></div>" +
+      "<div class=\"tag-f\"><p class=\"tag-k\">claim — in full</p><p class=\"tag-v\">" +
+        esc(h.claim) + "</p></div>" +
       (rel.length > 1
         ? "<div class=\"tag-f\"><p class=\"tag-k\">also acts on</p><p class=\"tag-v\">" +
           esc(rel.slice(1).map(function (iv) { return iv.section + " " + iv.name; }).join(" · ")) +
@@ -2833,10 +3026,28 @@ function renderTags() {
         }).join(" · ") + "</p></div>" +
       "<p class=\"tag-order\">kill criteria are printed above validation criteria — " +
         "a claim that cannot be killed is not a hypothesis</p>" +
-      "</article>";
+      "</div></details>";
   }).join("");
 
   wireJumps($("tags"));
+}
+
+/* A one-line why-now for the card face. Cuts at a CLAUSE boundary, never mid
+   figure, so a range like "84–87×" can't be split across the fold; the full
+   paragraph sits in the drawer one interaction away. */
+function oneLine(text) {
+  var first = text.split(/(?<=\.)\s+(?=[A-Z(])/)[0] || text;
+  if (first.length <= 132) return first;
+  var cut = first.slice(0, 128);
+  var b = Math.max(cut.lastIndexOf(";"), cut.lastIndexOf(", "), cut.lastIndexOf(" — "));
+  if (b < 60) b = cut.lastIndexOf(" ");
+  return first.slice(0, b).replace(/[,;]$/, "") + " …";
+}
+
+/* the TRL token only — the full maturity string is a field in the drawer */
+function trlOf(maturity) {
+  var m = maturity.match(/TRL\s*[0-9]+(\s*[–/-]\s*[0-9]+)?/i);
+  return m ? m[0].replace(/\s+/g, " ") : maturity.split(/[(;]/)[0].trim();
 }
 
 /* ===========================================================================
@@ -2844,7 +3055,9 @@ function renderTags() {
    =========================================================================== */
 function renderMethods() {
   $("discData").textContent = D.meta.disclaimer + " Last updated " + D.meta.updated + ".";
-  $("srcEyebrow").textContent = "sources · " + D.meta.sources.length + " citations";
+  $("srcEyebrow").textContent = D.meta.sources.length + " citations, " +
+    D.meta.sources.filter(function (s) { return s.verify; }).length + " still to confirm";
+  $("creditsN").textContent = USED_MEDIA.length + " clips, credits and licences";
 
   $("srcs").innerHTML = D.meta.sources.map(function (s) {
     var body = s.url
