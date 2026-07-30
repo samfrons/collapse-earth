@@ -751,5 +751,151 @@ window.COLLAPSE_DATA = {
     }
   ],
 
-  media: {} /* filled by Task 2 */
+  /* ---------------------------------------------------------------------------
+     MEDIA
+     Every mp4/poster URL below was verified with a live HTTP request on
+     2026-07-30 (`curl -sIL` or a ranged GET where HEAD was blocked): HTTP 200,
+     a video/* or image/* content-type, and the recorded byte count. Nothing
+     over 8,000,000 bytes was kept. `license` records the source's own terms —
+     "Pexels License" is NOT CC0 (it permits use without attribution but is a
+     distinct, non-public-domain license); NASA SVS material is U.S.
+     Government work and carries no copyright.
+     --------------------------------------------------------------------------- */
+  media: {
+    "gris-mass-loss": {
+      mp4: "https://svs.gsfc.nasa.gov/vis/a030000/a031100/a031156/gris_200204-202503_black_1080p6.mp4",
+      poster: "https://svs.gsfc.nasa.gov/vis/a030000/a031100/a031156/gris_202503_black.jpg",
+      credit: "NASA/JPL-Caltech, NASA Scientific Visualization Studio — \"Greenland Ice Mass Loss 2002-2025\" (SVS #31156)",
+      license: "NASA public domain (U.S. Government work, no copyright)",
+      tags: ["ice", "satellite"],
+      bytes: 1766345,
+      verifiedAt: "2026-07-30"
+    },
+    "arctic-sea-ice-minimum": {
+      mp4: "https://svs.gsfc.nasa.gov/vis/a000000/a004400/a004435/4435_Annual_Sea_ice_Arctic_Graph-2015_large.mp4",
+      poster: "https://svs.gsfc.nasa.gov/vis/a000000/a004400/a004435/seaIceWgraph_HD.1079_print.jpg",
+      credit: "NASA Scientific Visualization Studio — \"Annual Arctic Sea Ice Minimum 1979-2015 with Area Graph\" (SVS #4435)",
+      license: "NASA public domain (U.S. Government work, no copyright)",
+      tags: ["ice", "satellite"],
+      bytes: 3990154,
+      verifiedAt: "2026-07-30"
+    },
+    "blue-marble-viirs": {
+      mp4: "https://svs.gsfc.nasa.gov/vis/a030000/a030700/a030763/R_earth_viirs_360p.mp4",
+      poster: "https://svs.gsfc.nasa.gov/vis/a030000/a030700/a030763/R_earth_viirs_1080p.00001_print.jpg",
+      credit: "NASA/Goddard Space Flight Center Scientific Visualization Studio — \"Blue Marble 2015\" rotating globe, Suomi NPP VIIRS imagery (SVS #30763)",
+      license: "NASA public domain (U.S. Government work, no copyright)",
+      tags: ["satellite"],
+      bytes: 3823126,
+      verifiedAt: "2026-07-30"
+    },
+    "medusa-blue-ocean": {
+      mp4: "https://videos.pexels.com/video-files/13693981/13693981-hd_1080_1920_30fps.mp4",
+      poster: "https://images.pexels.com/videos/13693981/blue-ocean-medusa-13693981.jpeg",
+      credit: "Olga Kobylko / Pexels",
+      license: "Pexels License",
+      tags: ["abyss"],
+      bytes: 5286292,
+      verifiedAt: "2026-07-30"
+    },
+    "underwater-creatures": {
+      mp4: "https://videos.pexels.com/video-files/1151272/1151272-hd_1920_1080_30fps.mp4",
+      poster: "https://images.pexels.com/videos/1151272/free-video-1151272.jpg",
+      credit: "Tom Fisk / Pexels",
+      license: "Pexels License",
+      tags: ["abyss"],
+      bytes: 5849051,
+      verifiedAt: "2026-07-30"
+    },
+    "jellyfish-floating": {
+      mp4: "https://videos.pexels.com/video-files/18558511/18558511-hd_1080_1920_60fps.mp4",
+      poster: "https://images.pexels.com/videos/18558511/pexels-photo-18558511.jpeg",
+      credit: "Cheng / Pexels",
+      license: "Pexels License",
+      tags: ["plankton"],
+      bytes: 2412833,
+      verifiedAt: "2026-07-30"
+    },
+    "jellyfish-swimming-group": {
+      mp4: "https://videos.pexels.com/video-files/5613843/5613843-hd_1080_1920_30fps.mp4",
+      poster: "https://images.pexels.com/videos/5613843/pexels-photo-5613843.jpeg",
+      credit: "Sathyaprabha Rakkimuthu / Pexels",
+      license: "Pexels License",
+      tags: ["plankton"],
+      bytes: 4582659,
+      verifiedAt: "2026-07-30"
+    },
+    "algae-rocks-top": {
+      mp4: "https://videos.pexels.com/video-files/15422486/15422486-hd_1920_1080_24fps.mp4",
+      poster: "https://images.pexels.com/videos/15422486/algae-algas-laguna-rocas-15422486.jpeg",
+      credit: "Ali Alcántara / Pexels",
+      license: "Pexels License",
+      tags: ["algae"],
+      bytes: 3088380,
+      verifiedAt: "2026-07-30"
+    },
+    "algae-rocks-shallow": {
+      mp4: "https://videos.pexels.com/video-files/15423864/15423864-hd_1920_1080_24fps.mp4",
+      poster: "https://images.pexels.com/videos/15423864/blue-water-free-video-mountain-stock-video-15423864.jpeg",
+      credit: "Viridiana Rivera / Pexels",
+      license: "Pexels License",
+      tags: ["algae"],
+      bytes: 2316096,
+      verifiedAt: "2026-07-30"
+    },
+    "leaf-veins-macro": {
+      mp4: "https://videos.pexels.com/video-files/32877718/14013001_1080_1920_30fps.mp4",
+      poster: "https://images.pexels.com/videos/32877718/pexels-photo-32877718.jpeg",
+      credit: "Pew Nguyen / Pexels",
+      license: "Pexels License",
+      tags: ["macro-plant"],
+      bytes: 5182583,
+      verifiedAt: "2026-07-30"
+    },
+    "crystals-and-leaf-macro": {
+      mp4: "https://videos.pexels.com/video-files/6208742/6208742-hd_1920_1080_24fps.mp4",
+      poster: "https://images.pexels.com/videos/6208742/pexels-photo-6208742.jpeg",
+      credit: "StefWithAnF / Pexels",
+      license: "Pexels License",
+      tags: ["macro-plant"],
+      bytes: 6795010,
+      verifiedAt: "2026-07-30"
+    },
+    "oyster-mushroom-trunk": {
+      mp4: "https://videos.pexels.com/video-files/5787544/5787544-uhd_2160_3686_25fps.mp4",
+      poster: "https://images.pexels.com/videos/5787544/pexels-photo-5787544.jpeg",
+      credit: "Konstantin Mishchenko / Pexels",
+      license: "Pexels License",
+      tags: ["fungi"],
+      bytes: 4553114,
+      verifiedAt: "2026-07-30"
+    },
+    "wild-mushrooms-forest": {
+      mp4: "https://videos.pexels.com/video-files/34297633/14530553_1920_1080_50fps.mp4",
+      poster: "https://images.pexels.com/videos/34297633/pexels-photo-34297633.jpeg",
+      credit: "Nikola Tomašić / Pexels",
+      license: "Pexels License",
+      tags: ["fungi"],
+      bytes: 4662617,
+      verifiedAt: "2026-07-30"
+    },
+    "waterfall-rock-layers": {
+      mp4: "https://videos.pexels.com/video-files/3788550/3788550-sd_960_540_30fps.mp4",
+      poster: "https://images.pexels.com/videos/3788550/pexels-photo-3788550.jpeg",
+      credit: "Dmitry Demidov / Pexels",
+      license: "Pexels License",
+      tags: ["strata"],
+      bytes: 3393586,
+      verifiedAt: "2026-07-30"
+    },
+    "grand-canyon-aerial": {
+      mp4: "https://videos.pexels.com/video-files/15254152/15254152-sd_960_540_30fps.mp4",
+      poster: "https://images.pexels.com/videos/15254152/drone-grand-canyon-15254152.jpeg",
+      credit: "Roger Holzberg / Pexels",
+      license: "Pexels License",
+      tags: ["strata"],
+      bytes: 3828796,
+      verifiedAt: "2026-07-30"
+    }
+  }
 };
