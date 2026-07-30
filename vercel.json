@@ -1,5 +1,5 @@
 {
   "rewrites": [
-    { "source": "/", "destination": "/collapse-tech.html" }
+    { "source": "/", "destination": "/collapse-v2-coresample.html" }
   ]
 }
