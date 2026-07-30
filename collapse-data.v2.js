@@ -345,6 +345,31 @@ window.COLLAPSE_DATA = {
      funding[] IS NOT SUMMABLE AS-IS — see the "HOW TO SUM funding[]" block in
      the file header. Filter on `stream === "capital"` and drop any entry with
      `withinCumulative` before adding anything up.
+
+     `leverageBand` AND `trlBand` — THE TWO ORDINALS. READ THIS BEFORE USING THEM.
+
+     Both are EDITORIAL ORDINALS. They are BANDS, not measurements, and they
+     must never be presented on a continuous numeric axis, averaged, summed,
+     differenced, or quoted as a quantity. A category in band 4 is not "twice"
+     one in band 2 and the interval between bands is not defined.
+
+     leverageBand — integer 1–5, a directional read of POTENTIAL CLIMATE
+     LEVERAGE. It carries no new evidence: each value is derived from the
+     `leverage` argument already written in this file for that category, and the
+     per-entry comment says which clause of it drove the value. It is a sibling
+     of `gapScore` (also editorial) and is scored on the same footing: the
+     argument is in the prose, the band is a handle for sorting and plotting it.
+     Where the prose hedges, the band goes DOWN, not up — ice-intervention sits
+     at 1 despite acting on a tipping element directly, because the published
+     assessments say it does not work.
+
+     trlBand — integer 1–9, the approximate TRL MIDPOINT of the `maturity`
+     string. Where maturity gives a range, the midpoint is used and a midpoint
+     falling on a half ROUNDS DOWN: this page never rounds readiness upward.
+     Four categories state a genuinely wide internal spread (methane-removal and
+     microbial-electro span lab bench to commercial); collapsing those to one
+     number LOSES REAL INFORMATION, so the per-entry comment records what was
+     collapsed and the full `maturity` string stays the authority.
      --------------------------------------------------------------------------- */
   interventions: [
     {
@@ -353,6 +378,15 @@ window.COLLAPSE_DATA = {
       section: "§1",
       leverage: "Methane is responsible for nearly 30% of the rise in global average temperature since the Industrial Revolution (IEA Global Methane Tracker); its 20-year global warming potential is ≈84–87× CO₂ (IPCC). Near-term methane action is among the highest-leverage climate moves available.",
       maturity: "TRL 1–3 (open-atmosphere) / TRL 4–5 pilot (point-source) / commercial (enteric additives in ration systems)",
+      /* leverage 5 — the top band, on the leverage clause's own terms: methane
+         carries nearly 30% of the warming rise and the argument closes "among the
+         highest-leverage climate moves available". Nothing in this list has a
+         larger near-term claim on peak warming.
+         trl 5 — a THREE-WAY spread collapsed: open-atmosphere 1–3, point-source
+         pilot 4–5, enteric additives already commercial. 5 is the midpoint of the
+         full 1–9 span the category actually occupies; the drawer keeps both ends. */
+      leverageBand: 5,
+      trlBand: 5,
       funding: [
         { amount: 8e6, qualifier: "at-least", stream: "grant", kind: "grants deployed TO third-party researchers, not capital received", holder: "Spark Climate Solutions (nonprofit funder/convener)", asOf: "2026-07", badge: "deployed-grants", note: "reported as more than $8M across more than 27 research grants; a 501(c)(3), not a company" },
         { amount: 37e6, stream: "capital", cumulative: true, kind: "venture (cumulative)", holder: "Windfall Bio", asOf: "2024-04", badge: "announced", note: "$9M seed (Mar 2023) + $28M Series A (Apr 2024, led by Prelude Ventures); the two rounds are not listed separately, so this total is the only capital row for Windfall" },
@@ -374,6 +408,13 @@ window.COLLAPSE_DATA = {
       section: "§2",
       leverage: "The ocean holds roughly 50× more carbon than the atmosphere and equilibrates with it; shifting seawater chemistry lets it absorb more, with storage as bicarbonate on a >10,000-year timescale. Some routes also relieve local acidification, which is the one intervention with a direct line to reef stress.",
       maturity: "TRL 4–5 — pilots operating, MRV and ecological effects unresolved",
+      /* leverage 4 — a reservoir 50× the atmosphere that equilibrates with it, and
+         the only route in this list with a direct line to reef stress. Held below 5
+         because the leverage runs through a chemistry whose MRV and ecological
+         effects the caveat says are unresolved.
+         trl 4 — maturity states 4–5; midpoint 4.5 rounds DOWN. */
+      leverageBand: 4,
+      trlBand: 4,
       funding: [
         { amount: 20e6, qualifier: "at-least", stream: "capital", kind: "venture (Series A)", holder: "Ebb Carbon", asOf: "2026-07", badge: "announced" },
         { amount: 45.3e6, stream: "capital", kind: "venture (Series A, expanded)", holder: "Captura", asOf: "2026-07", badge: "announced", note: "backers include Equinor, Aramco Ventures, Eni Next, Maersk Growth. Distinct from the Series B below — the source reports ~$45M+ raised before that round." },
@@ -393,6 +434,13 @@ window.COLLAPSE_DATA = {
       section: "§3",
       leverage: "Silicate rock dust reacts with CO₂ to form dissolved bicarbonate stored for 10,000+ years, while raising soil pH. It rides on infrastructure that already exists — quarry fines and farm spreading equipment — which is why it is one of the two CDR categories with credible near-term scale-up.",
       maturity: "TRL 5–6 — verified registry tonnes delivered; open-system MRV is the binding constraint",
+      /* leverage 3 — the middle band. The leverage argument here is about SCALE-UP
+         (existing quarry fines and farm equipment, 10,000+ year durability), not
+         about a large share of warming; and CarbonPlan's four-orders-of-magnitude
+         spread in the caveat caps how far the claim can be pushed.
+         trl 5 — maturity states 5–6; midpoint 5.5 rounds DOWN. */
+      leverageBand: 3,
+      trlBand: 5,
       funding: [
         { amount: 58.2e6, stream: "capital", cumulative: true, kind: "venture (cumulative at launch)", holder: "Terradot", asOf: "2024-12", badge: "announced", note: "investors include Google, Microsoft Climate Innovation Fund, John Doerr; acquired Eion (Feb 2026)" },
         { amount: 27e6, stream: "contract", kind: "Frontier purchase, 90,000 tonnes (customer commitment, not capital raised)", holder: "Terradot — Frontier purchase", asOf: "2024-12", badge: "announced" },
@@ -411,6 +459,13 @@ window.COLLAPSE_DATA = {
       section: "§4",
       leverage: "Coastal and wetland ecosystems sequester carbon at high per-area rates, and drained peatlands are a vast avoided-emissions store. The price signal is already there: the S&P Global blue carbon assessment hit a record $29.30/tCO₂e in Aug 2025 — high precisely because rigorous MRV is scarce and costly.",
       maturity: "TRL 6–7 — the ecology is well understood and the restoration methods are mature; credit-grade measurement is the bottleneck and the actual technology opportunity",
+      /* leverage 3 — drained peatland is a genuinely large avoided-emissions store
+         and per-area sequestration is high, which argues up; the caveat argues back
+         down just as hard ("high-integrity avoidance, not durable removal;
+         permanence is measured in decades"). Middle band, and it belongs there.
+         trl 6 — maturity states 6–7; midpoint 6.5 rounds DOWN. */
+      leverageBand: 3,
+      trlBand: 6,
       funding: [
         { amount: null, stream: "grant", kind: "grant plus carbon finance; no consolidated total published", holder: "UK IUCN Peatland Code (~361 projects / ~52,000 ha)", asOf: "2025-06", badge: "verified" },
         { amount: null, stream: "grant", kind: "public grant (Innovate UK)", holder: "Sylvera (satellite-based peatland MRV)", asOf: "2026-07", badge: "announced" },
@@ -428,6 +483,17 @@ window.COLLAPSE_DATA = {
       section: "§5",
       leverage: "The only removal route whose siting is independent of biology, geography and land competition: sorbents and solvents pull CO₂ from ambient air anywhere there is clean power and storage. That generality is why it attracts capital — and why its cost is the whole question.",
       maturity: "TRL 7 — commercially operating plants, but at ≈10× the target cost",
+      /* leverage 3 — the middle band, and this is the value most likely to be
+         argued with, so the reasoning is explicit. The leverage clause claims
+         GENERALITY (siting independent of biology, geography and land competition),
+         which is unbounded in principle. In practice the same clause says "its cost
+         is the whole question", and maturity puts it at ≈10× target cost against
+         ≈1,186 tonnes delivered. Generality that costs ten times too much is a
+         middling lever on peak warming, not a top-band one. Placing DAC mid-band
+         with the largest capital figure in the act is the whole contrast.
+         trl 7 — maturity states a single value. */
+      leverageBand: 3,
+      trlBand: 7,
       funding: [
         { amount: 2.3e9, qualifier: "approximately", stream: "aggregate", cumulative: true, kind: "sector-total private DAC investment tracked 2021–H1 2025", holder: "DAC sector", asOf: "2025-H1", badge: "verified", note: "a sector aggregate that already contains company rows — never add it to them" },
         { amount: 1.4e9, qualifier: "at-least", stream: "aggregate", withinCumulative: "DAC sector", kind: "share of the tracked sector total (≈60%)", holder: "Climeworks + 1PointFive combined", asOf: "2025-H1", badge: "verified", note: "a slice of the $2.3B above, not additional to it" },
@@ -447,6 +513,13 @@ window.COLLAPSE_DATA = {
       section: "§6",
       leverage: "Pyrolysis converts biomass into stable aromatic carbon that resists decomposition for centuries to millennia. It is the most-delivered durable CDR category by volume — the one place where verified tonnes, not forward contracts, are the headline number.",
       maturity: "TRL 8 — commercially operating at scale; permanence assurance is the maturing edge",
+      /* leverage 2 — centuries-to-millennia durability and the most delivered tonnes
+         of any durable route, but the caveat names a hard ceiling the others do not
+         have: "sustainable biomass availability is the ceiling on the category". A
+         lever with a supply cap cannot reach the top bands.
+         trl 8 — maturity states a single value. */
+      leverageBand: 2,
+      trlBand: 8,
       funding: [
         { amount: 130e6, qualifier: "approximately", stream: "capital", cumulative: true, kind: "venture (cumulative)", holder: "Charm Industrial", asOf: "2026-07", badge: "announced", note: "bio-oil injection plus biochar; Google deals including 100,000 tonnes biochar (2025)" },
         { amount: 15e6, stream: "prize", kind: "XPRIZE runner-up award", holder: "NetZero — XPRIZE", asOf: "2025-04", badge: "verified" },
@@ -465,6 +538,18 @@ window.COLLAPSE_DATA = {
       section: "§7",
       leverage: "Turns waste carbon into a saleable product rather than a stored liability, which is the only route in this list whose unit economics improve with the product price instead of depending on a credit price. Gas fermentation is already commercial; the electrochemical routes are not.",
       maturity: "Commercial (gas fermentation) / TRL 3–4 (microbial electrosynthesis) — a genuinely wide spread inside one category, and conflating them is the field's main honesty failure",
+      /* leverage 2 — the economics are the best in the list (unit economics improve
+         with a product price rather than a credit price), but the caveat is decisive
+         on climate leverage: gas fermentation "abates and recycles emissions; it is
+         not permanent CDR unless paired with sequestration". Recycling carbon is a
+         smaller lever on peak warming than removing or not emitting it.
+         trl 6 — a WIDE spread collapsed, and maturity itself warns that conflating
+         the two ends is "the field's main honesty failure": commercial gas
+         fermentation (9) against MES at 3–4. 6 is the midpoint of the 3–9 span; the
+         single number is the one place this category loses information, so the
+         maturity string, not this band, is the authority. */
+      leverageBand: 2,
+      trlBand: 6,
       funding: [
         { amount: null, stream: "capital", kind: "public listing via SPAC (≈$2B valuation at close — a valuation, not capital raised, so no amount is recorded)", holder: "LanzaTech", asOf: "2023-02", badge: "verified" },
         { amount: null, stream: "grant", kind: "academic research funding, not consolidated or publicly tracked", holder: "Microbial electrosynthesis field", asOf: "2026-07", badge: "verified", note: "assessed at TRL 3/4 — lab scale, requiring process optimisation before an industrial prototype (Trends in Biotechnology, 2024). No claim is made about total funding in the field: the sources describe its maturity, not its capital." },
@@ -481,6 +566,17 @@ window.COLLAPSE_DATA = {
       section: "§8",
       leverage: "In principle the only category that acts on a tipping element directly rather than through warming. In practice the published evidence currently says it does not work, which is why it appears here as a research question rather than a lever.",
       maturity: "TRL 1–2 — small field tests only; the two most recent independent assessments are negative",
+      /* leverage 1 — the bottom band, WITH THE CAVEAT THAT MATTERS. In principle this
+         is the only category that acts on a tipping element directly, which is a
+         top-band argument. The band follows the evidence instead: 42 glaciologists
+         called it infeasible and dangerous (2024) and a 2025 study found it not
+         viable and potentially harmful at ≥$10B each. Where the prose hedges, the
+         band goes down. This is a research question with a stated exit, and a low
+         band here is not a claim that the category is well funded — same refusal the
+         low gapScore makes.
+         trl 1 — maturity states 1–2; midpoint 1.5 rounds DOWN. */
+      leverageBand: 1,
+      trlBand: 1,
       investable: false,
       framing: "break-glass research",
       funding: [
@@ -504,6 +600,14 @@ window.COLLAPSE_DATA = {
       section: "§9",
       leverage: "Acts on the master lever — peak warming — by displacing the fossil generation that removal technologies are otherwise paid to clean up after. Firm, dispatchable, land-light, and the only category in this list that has cleared a conventional bankability test.",
       maturity: "TRL 8–9 — commercially operating, project-financeable, fully contracted offtake",
+      /* leverage 5 — the top band on the leverage clause's own words: it "acts on the
+         master lever — peak warming — by displacing the fossil generation that
+         removal technologies are otherwise paid to clean up after". Not emitting
+         outranks removing, and this is the only category here that has cleared a
+         conventional bankability test, so the lever is real rather than notional.
+         trl 8 — maturity states 8–9; midpoint 8.5 rounds DOWN. */
+      leverageBand: 5,
+      trlBand: 8,
       funding: [
         { amount: 1.5e9, qualifier: "approximately", stream: "capital", cumulative: true, kind: "cumulative private capital raised pre-IPO", holder: "Fervo Energy", asOf: "2025-12", badge: "announced", note: "contains the Series E below and earlier unitemised rounds" },
         { amount: 462e6, stream: "capital", withinCumulative: "Fervo Energy", kind: "venture (Series E)", holder: "Fervo Energy — Series E", asOf: "2025-12", badge: "announced", note: "led by B Capital with Google; included in the ≈$1.5B pre-IPO total above" },
@@ -521,6 +625,14 @@ window.COLLAPSE_DATA = {
       section: "§9",
       leverage: "Cement and steel are roughly 15% of global CO₂ between them, and the emissions are chemical rather than energetic — you cannot decarbonise them by changing the power source alone. Electrochemical routes attack the reaction itself.",
       maturity: "TRL 6–7 — pilot production demonstrated, first commercial plants pending finance",
+      /* leverage 4 — roughly 15% of global CO₂ with emissions that are chemical
+         rather than energetic, so no amount of clean power addresses them and the
+         electrochemical route is the only attack on the reaction itself. Held below 5
+         only because the binding constraint the caveat names is first-plant FINANCE
+         rather than the mechanism, and policy just removed a chunk of it.
+         trl 6 — maturity states 6–7; midpoint 6.5 rounds DOWN. */
+      leverageBand: 4,
+      trlBand: 6,
       funding: [
         { amount: 200e6, qualifier: "at-least", stream: "capital", cumulative: true, kind: "venture (cumulative)", holder: "Sublime Systems", asOf: "2026-07", badge: "announced", note: "strategic investors include Holcim, CRH, Siam Cement" },
         { amount: 500e6, qualifier: "at-least", stream: "capital", cumulative: true, kind: "venture (cumulative)", holder: "Boston Metal", asOf: "2026-07", badge: "announced", note: "backed by Breakthrough Energy Ventures and ArcelorMittal; contains the Tata Steel round below" },

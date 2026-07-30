@@ -563,28 +563,58 @@ input[type=range]::-moz-range-thumb{width:15px;height:22px;background:var(--carb
   text-transform:uppercase;color:var(--fg-2);font-weight:500}
 
 /* ===========================================================================
-   ACT II — misallocation
+   ACT II — misallocation. THE ASSAY FIELD.
+
+   This replaces the 1-D capital dot-plot and subsumes everything it carried:
+   the same log capital axis, the same hatched not-disclosed gutter for the two
+   categories whose sources give no figure, the same per-category value (now
+   with its ≥/≈ hedge, which the dot-plot dropped) and the same gap assessment.
+   What it adds is the second axis — the editorial leverage band.
+
+   The Y axis is BANDED ROWS, not gridlines, and the bands are numbered rather
+   than scaled. That is deliberate and it is the whole difference from the v1
+   scatter this rebuilds: v1 put a synthesised "potential climate impact" on a
+   continuous numeric axis, which reads as a measurement. Alternating plates and
+   a labelled ordinal cannot be read as a distance, so nothing here invites the
+   reader to measure the gap between band 4 and band 5.
+
+   Colours: discs are carbon on the ochre stratum so the numeral inside them is
+   light ink on a dark disc, never ink on ochre. Flagged discs restate the gap
+   assessment in a second channel (an outer ring) as well as fill, so the flag
+   survives colour-vision deficiency and greyscale printing.
    =========================================================================== */
-.alloc-scroll{overflow-x:auto}
-#allocSvg{display:block;min-width:700px;width:100%;height:auto}
-.ax-name{font-family:var(--serif);font-size:12.5px;fill:var(--ink)}
-.ax-sec{font-family:var(--mono);font-size:8.4px;letter-spacing:.12em;fill:var(--ink-o2)}
-.ax-lead{stroke:var(--ink);stroke-width:.8;opacity:.5;stroke-dasharray:2 2}
-.ax-dot{fill:var(--carbon);stroke:var(--ochre);stroke-width:1.6}
-.ax-dot--none{fill:var(--ochre);stroke:var(--carbon);stroke-width:1.4;stroke-dasharray:2.4 1.8}
-.ax-val{font-family:var(--mono);font-size:9.6px;font-weight:600;letter-spacing:-.01em;
-  fill:var(--ink);font-variant-numeric:tabular-nums}
-.ax-val--none{font-weight:400;fill:var(--ink-o2)}
-.ax-axis line{stroke:var(--ink);stroke-width:.7;opacity:.32}
-.ax-axis text{font-family:var(--mono);font-size:8.4px;letter-spacing:.06em;fill:var(--ink-o2)}
-.ax-grid{stroke:var(--ink);stroke-width:.5;opacity:.16}
-.ax-pip{stroke:var(--ink);stroke-width:.9;fill:none}
-.ax-pip--on{fill:var(--ink)}
-.ax-hd{font-family:var(--mono);font-size:8px;font-weight:600;letter-spacing:.15em;
+.field-scroll{overflow-x:auto}
+#fieldSvg{display:block;min-width:780px;width:100%;height:auto}
+.fd-hd{font-family:var(--mono);font-size:8px;font-weight:600;letter-spacing:.15em;
   text-transform:uppercase;fill:var(--ink-o2)}
-.ax-row{cursor:pointer}
-.ax-row:hover .ax-hit,.ax-row:focus-visible .ax-hit{fill:rgba(23,19,14,.075)}
-.ax-hit{fill:transparent}
+.fd-axis line{stroke:var(--ink);stroke-width:.7;opacity:.32}
+.fd-axis text{font-family:var(--mono);font-size:8.4px;letter-spacing:.06em;fill:var(--ink-o2)}
+.fd-band{fill:rgba(23,19,14,.05)}
+.fd-bandnum{font-family:var(--mono);font-size:11px;font-weight:600;
+  letter-spacing:-.01em;fill:var(--ink);font-variant-numeric:tabular-nums}
+.fd-break{stroke:var(--ink);stroke-width:.8;opacity:.42;stroke-dasharray:3 3}
+/* the gutter is a REGION, not a position: a hatch, so no reader can mistake the
+   marker inside it for a value on the axis */
+.fd-gutter{fill:url(#hatchGutter);stroke:var(--ink);stroke-width:.7;
+  stroke-opacity:.42;stroke-dasharray:2.4 2.4}
+.fd-sweet{fill:rgba(247,244,238,.34);stroke:var(--ink);stroke-width:1;
+  stroke-opacity:.5;stroke-dasharray:3 4}
+.fd-disc{fill:var(--carbon);stroke:var(--kraft-hi);stroke-width:1.4}
+.fd-disc--flag{fill:var(--kraft-stamp)}
+.fd-ring{fill:none;stroke:var(--kraft-stamp);stroke-width:1.2;stroke-opacity:.85}
+.fd-disc--none{stroke-dasharray:2.6 2}
+.fd-num{font-family:var(--mono);font-size:9.5px;font-weight:600;fill:var(--inv);
+  letter-spacing:0}
+.fd-name{font-family:var(--serif);font-size:11.5px;fill:var(--ink)}
+.fd-val{font-family:var(--mono);font-size:9.2px;font-weight:600;letter-spacing:-.01em;
+  fill:var(--ink);font-variant-numeric:tabular-nums}
+.fd-mk{cursor:pointer}
+.fd-mk:hover .fd-hit,.fd-mk:focus-visible .fd-hit{fill:rgba(23,19,14,.075)}
+.fd-mk:focus-visible{outline:none}
+.fd-mk:focus-visible .fd-disc{stroke:#1F4152;stroke-width:3}
+.fd-hit{fill:transparent}
+.fd-callout{margin:14px 0 0;font-size:.8125rem;line-height:1.5;max-width:76ch;
+  border-left:3px solid var(--ink);padding-left:12px}
 
 /* ===========================================================================
    OPPORTUNITY BOARD — Act II leads with it. In core-sample language these are
@@ -1223,15 +1253,17 @@ html[data-tray="1"]{overflow:hidden}
         </details>
       </section>
 
-      <p class="eyebrow" id="ledgerEyebrow"></p>
-      <h3 style="margin:8px 0 16px">The full ledger</h3>
-      <div class="alloc-scroll"><svg id="allocSvg" role="group"></svg></div>
+      <p class="eyebrow" id="fieldEyebrow"></p>
+      <h3 style="margin:8px 0 16px">The assay field</h3>
+      <div class="field-scroll"><svg id="fieldSvg" role="group"></svg></div>
+      <p class="note fd-callout" id="fieldCallout"></p>
       <details class="fn">
-        <summary><span class="pull-shut">how to read the ledger</span>
+        <summary><span class="pull-shut">how to read the assay field</span>
           <span class="pull-open">close</span></summary>
-        <div class="fn-body"><p class="note" id="allocFoot" style="margin:0;color:var(--fg-2)"></p></div>
+        <div class="fn-body"><p class="note" id="fieldFoot" style="margin:0;color:var(--fg-2)"></p></div>
       </details>
 
+      <h3 style="margin:clamp(34px,5vh,54px) 0 4px">The full ledger</h3>
       <div class="iv-list" id="ivList"></div>
 
       <div class="tiers" id="tiers">
@@ -2516,124 +2548,461 @@ function streamSum(iv, stream) {
     .reduce(function (n, f) { return n + (f.amount || 0); }, 0);
 }
 
-function buildAlloc() {
-  /* The board above is ordered by gap; the ledger is ordered by money, most
-     first, so the two read as a pair: where the gap is, then where the capital
-     actually went. Categories with no disclosed figure sit at the foot, marked,
-     rather than being sorted as if they were zero. */
-  var data = D.interventions.slice().sort(function (a, b) {
-    var ca = capitalRaised(a), cb = capitalRaised(b);
-    if ((ca > 0) !== (cb > 0)) return ca > 0 ? -1 : 1;
-    return cb - ca;
-  });
-  var W = 900, rowH = 44, padTop = 58, padBot = 40;
-  var H = padTop + padBot + data.length * rowH;
-  var plotL = 292, plotR = 700, gutter = 268, pipL = 726;
+/* ===========================================================================
+   THE ASSAY FIELD — Act II's chart. Two axes: disclosed capital and leverage.
 
-  var svg = d3.select("#allocSvg");
+   This is the v1 site's funding-versus-impact scatter rebuilt, and it exists to
+   fix the two things v1's own source comments admitted were wrong with it:
+
+     · v1 plotted a SYNTHESISED "potential climate impact" number on a
+       continuous numeric axis, which reads as a measurement. Here the vertical
+       is `leverageBand`, an editorial ORDINAL, drawn as five numbered bands
+       with no scale — you cannot measure a distance on it, which is the point.
+     · v1's red "neglected" flag was never sourced per technology. Here the flag
+       is `gapScore >= OPP_THRESHOLD` — the very same derivation the opportunity
+       board above uses, so there is one flagged set on this page, not two, and
+       no hardcoded list anywhere.
+
+   It also REPLACES the 1-D capital dot-plot that used to sit here and carries
+   everything that chart carried: the same log capital axis with the same ticks,
+   the same hatched gutter for categories whose sources disclose no figure, the
+   per-category total — now WITH its ≥/≈ hedge, which the dot-plot dropped — and
+   the gap assessment (on the flag, in the tooltip, and in the accessible name).
+
+   No value below is typed: capital, leverage, readiness, the flag threshold and
+   the shaded region's ceiling all come out of COLLAPSE_DATA.
+   =========================================================================== */
+
+/* The leverage SCALE's definition — a property of the scale, not of the data.
+   "High leverage" is the top two bands, written as a subtraction so that
+   widening the scale in the data layer moves the shaded region with it. */
+var LEV_MAX = 5;
+var LEV_HI = LEV_MAX - 1;
+
+/* Marker size steps. `trlBand` is 1–9 and the marker takes one of three radii:
+   the reader is asked to tell small from large, never to read a radius as a
+   number. The legend prints these same three ranges, derived from this table. */
+var TRL_STEPS = [{ hi: 3, r: 7 }, { hi: 6, r: 10 }, { hi: 9, r: 13 }];
+function trlRadius(band) {
+  for (var i = 0; i < TRL_STEPS.length; i++) if (band <= TRL_STEPS[i].hi) return TRL_STEPS[i].r;
+  return TRL_STEPS[TRL_STEPS.length - 1].r;
+}
+function trlStepLabel() {
+  var lo = 1;
+  return TRL_STEPS.map(function (s) {
+    var t = lo + "–" + s.hi; lo = s.hi + 1; return t;
+  }).join(" · ");
+}
+
+/* The shaded region's capital ceiling is the MEDIAN DISCLOSED capital across the
+   categories, so the region follows the data instead of a chosen dollar figure.
+   Undisclosed categories are excluded from the median: a blank is not a zero and
+   must not drag the ceiling down. */
+function medianDisclosedCapital() {
+  var v = D.interventions.map(capitalRaised)
+    .filter(function (n) { return n > 0; })
+    .sort(function (a, b) { return a - b; });
+  if (!v.length) return 0;
+  var m = Math.floor(v.length / 2);
+  return v.length % 2 ? v[m] : (v[m - 1] + v[m]) / 2;
+}
+
+/* A category with no disclosed figure can never be in the shaded region — it has
+   no position on the capital axis at all, which is what the gutter says. */
+function inSweetSpot(iv, ceiling) {
+  var cap = capitalRaised(iv);
+  return iv.leverageBand >= LEV_HI && cap > 0 && cap < ceiling;
+}
+
+/* The marker IS the category's section sigil: the numeral out of `section`, so a
+   marker and its ledger row below carry the same mark. */
+function sectionGlyph(iv) {
+  var m = String(iv.section || "").match(/\d+/);
+  return m ? m[0] : "·";
+}
+
+/* Marker captions sit beside a disc at most 26px across, so the name is
+   shortened by DERIVATION and never restated: shortName() drops anything after
+   the first "&" or "(", and a trailing comma-clause goes with it ("Microbial,
+   bioelectrochemical" → "Microbial"). The unabridged name is the marker's
+   accessible name, its tooltip heading, and is printed in full on the ledger
+   row below, so nothing is lost by the shortening. */
+function fieldLabel(iv) {
+  return cap1(shortName(iv.name).replace(/,\s*[^,]*$/, ""));
+}
+
+/* Real advance width at the rendered font — the captions are already in the
+   document, so they can be measured rather than estimated from character
+   counts. Collision resolution below is only as good as this number. */
+function textW(sel) {
+  var n = sel.node();
+  try { return n.getComputedTextLength(); }
+  catch (e) { return String(n.textContent || "").length * 5.6; }
+}
+
+/* Caption placement needs REAL text widths, and the webfonts are loaded with
+   `display:swap` — so at first paint the captions are measured in a fallback
+   face and every one of them gets wider when Source Serif 4 and IBM Plex Mono
+   arrive. Measuring once at boot placed two band-5 captions 1.5 units apart,
+   which rendered as a single run of text. So the marker geometry is kept here
+   and the placement pass is re-run when the fonts are actually ready. Nothing
+   else about the chart depends on text metrics, so nothing else is redone. */
+var FIELD = { marks: [], W: 900, plotL: 0, plotR: 0 };
+
+function buildField() {
+  var svg = d3.select("#fieldSvg");
   svg.selectAll("*").remove();
+
+  var W = FIELD.W;
+  var padTop = 34, bandH = 62;
+  var plotTop = padTop, plotBot = plotTop + LEV_MAX * bandH;
+  var axisY = plotBot + 8, tickY = axisY + 18, titleY = axisY + 40;
+  var legendCY = axisY + 70, H = legendCY + 24;
+  var bandNumX = 40, gutterL = 58, gutterR = 142, gutterCX = (gutterL + gutterR) / 2;
+  var breakX = 160, plotL = 178, plotR = 812;
+
   svg.attr("viewBox", "0 0 " + W + " " + H).attr("width", "100%").attr("height", H)
-     .attr("aria-label", "Capital raised per intervention category against an editorial " +
-       "assessment of how far potential runs ahead of funding.");
+     .attr("aria-label", "Assay field: all " + D.interventions.length +
+       " intervention categories placed by disclosed capital raised on a horizontal " +
+       "log axis against an editorial leverage band on the vertical, with marker size " +
+       "standing for readiness. Categories whose sources disclose no capital figure sit " +
+       "in a hatched gutter and carry no horizontal position.");
+
+  var defs = svg.append("defs");
+  var pat = defs.append("pattern").attr("id", "hatchGutter")
+    .attr("width", 5).attr("height", 5).attr("patternUnits", "userSpaceOnUse")
+    .attr("patternTransform", "rotate(135)");
+  pat.append("rect").attr("width", 5).attr("height", 5).attr("fill", "rgba(23,19,14,.04)");
+  pat.append("line").attr("x1", 0).attr("y1", 0).attr("x2", 0).attr("y2", 5)
+    .attr("stroke", "#17130E").attr("stroke-width", .6).attr("opacity", .3);
 
   var x = d3.scaleLog().domain([1e6, 5e9]).range([plotL, plotR]).clamp(true);
   var ticks = [1e6, 1e7, 1e8, 1e9, 5e9];
+  var bandY = function (b) { return plotTop + (LEV_MAX - b) * bandH + bandH / 2; };
+  var ceiling = medianDisclosedCapital();
 
-  var ax = svg.append("g").attr("class", "ax-axis");
+  /* --- grounds: banded rows, then the shaded region, then the gutter ------- */
+  /* Band plates stop where the plotting area stops — they are a reading aid for
+     the rows, not a frame, and running them to the edge of the canvas would
+     imply the field extends past the axis. */
+  var plateL = gutterL - 8, plateR = plotR + 20;
+  for (var b = LEV_MAX; b >= 1; b--) {
+    if ((LEV_MAX - b) % 2 === 0) continue;   /* alternate, so rows read as bands */
+    svg.append("rect").attr("class", "fd-band").attr("x", plateL)
+      .attr("y", plotTop + (LEV_MAX - b) * bandH).attr("width", plateR - plateL)
+      .attr("height", bandH);
+  }
+
+  if (ceiling > 0) {
+    svg.append("rect").attr("class", "fd-sweet").attr("x", plotL)
+      .attr("y", plotTop).attr("width", Math.max(2, x(ceiling) - plotL))
+      .attr("height", (LEV_MAX - LEV_HI + 1) * bandH);
+  }
+
+  svg.append("rect").attr("class", "fd-gutter").attr("x", gutterL).attr("y", plotTop)
+    .attr("width", gutterR - gutterL).attr("height", plotBot - plotTop);
+  svg.append("line").attr("class", "fd-break").attr("x1", breakX).attr("x2", breakX)
+    .attr("y1", plotTop).attr("y2", plotBot);
+  svg.append("text").attr("class", "fd-hd").attr("x", gutterCX).attr("y", plotTop - 12)
+    .attr("text-anchor", "middle").text("no figure disclosed");
+
+  /* --- axes ---------------------------------------------------------------- */
+  var ax = svg.append("g").attr("class", "fd-axis");
+  ax.append("line").attr("x1", plotL).attr("x2", plotR).attr("y1", axisY).attr("y2", axisY);
   ticks.forEach(function (t) {
-    ax.append("line").attr("class", "ax-grid").attr("x1", x(t)).attr("x2", x(t))
-      .attr("y1", padTop - 14).attr("y2", H - padBot + 6);
-    ax.append("text").attr("x", x(t)).attr("y", padTop - 20).attr("text-anchor", "middle")
-      .text(money(t));
-    ax.append("text").attr("x", x(t)).attr("y", H - padBot + 18).attr("text-anchor", "middle")
-      .text(money(t));
+    ax.append("line").attr("x1", x(t)).attr("x2", x(t)).attr("y1", axisY).attr("y2", axisY + 5);
+    ax.append("text").attr("x", x(t)).attr("y", tickY).attr("text-anchor", "middle").text(money(t));
   });
-  ax.append("line").attr("x1", plotL).attr("x2", plotR)
-    .attr("y1", H - padBot + 2).attr("y2", H - padBot + 2);
+  svg.append("text").attr("class", "fd-hd").attr("x", plotL).attr("y", titleY)
+    .text("capital raised · equity and debt closed · log scale →");
 
-  svg.append("text").attr("class", "ax-hd").attr("x", plotL).attr("y", padTop - 36)
-    .text("capital raised · equity and debt closed · log scale");
-  svg.append("text").attr("class", "ax-hd").attr("x", gutter).attr("y", padTop - 36)
-    .attr("text-anchor", "end").text("not disclosed");
-  svg.append("text").attr("class", "ax-hd").attr("x", pipL).attr("y", padTop - 36)
-    .text("gap assessment · editorial");
+  /* The vertical carries its own disclaimer, because a reader who looks at
+     nothing else will still look at the axis they are reading a position from. */
+  svg.append("text").attr("class", "fd-hd")
+    .attr("transform", "translate(12," + ((plotTop + plotBot) / 2) + ") rotate(-90)")
+    .attr("text-anchor", "middle")
+    .text("leverage band ↑ · editorial assessment, not a measurement");
+  for (var n = LEV_MAX; n >= 1; n--) {
+    svg.append("text").attr("class", "fd-bandnum").attr("x", bandNumX)
+      .attr("y", bandY(n) + 4).attr("text-anchor", "end").text(String(n));
+  }
 
-  data.forEach(function (iv, i) {
-    var cy = padTop + i * rowH + rowH / 2 - 4;
+  /* --- markers ------------------------------------------------------------- */
+  /* Paint and tab order: highest band first, and inside a band left to right, so
+     the tab sequence is the walk the eye makes — most leverage first, and within
+     a band from least capital to most, gutter cases ahead of the axis. */
+  var ordered = D.interventions.slice().sort(function (p, q) {
+    if (q.leverageBand !== p.leverageBand) return q.leverageBand - p.leverageBand;
+    var cp = capitalRaised(p), cq = capitalRaised(q);
+    if ((cp > 0) !== (cq > 0)) return cp > 0 ? 1 : -1;
+    return cp - cq;
+  });
+
+  var mkG = svg.append("g").attr("id", "fdMarks");
+  var laid = [];
+
+  ordered.forEach(function (iv) {
     var cap = capitalRaised(iv);
     var none = cap === 0;
-    var g = svg.append("g").attr("class", "ax-row").attr("tabindex", 0)
+    var cx = none ? gutterCX : x(cap);
+    var cy = bandY(iv.leverageBand);
+    var r = trlRadius(iv.trlBand);
+    var flag = iv.gapScore >= OPP_THRESHOLD;
+
+    var g = mkG.append("g").attr("class", "fd-mk").attr("tabindex", 0)
       .attr("role", "button").attr("data-iv", iv.id)
-      .attr("aria-label", iv.name + " — " +
-        (none ? "no dollar figure for capital raised disclosed in the sources"
-              : "capital raised " + money(cap)) +
-        ", gap assessment " + iv.gapScore + " of 5. Opens the full entry.");
-    g.append("rect").attr("class", "ax-hit").attr("x", 0).attr("y", cy - rowH / 2 + 2)
-      .attr("width", W).attr("height", rowH - 4);
-    g.append("text").attr("class", "ax-sec").attr("x", 0).attr("y", cy - 8)
-      .text(iv.section + " · " + iv.maturity.split(/[—(]/)[0].trim().slice(0, 46));
-    g.append("text").attr("class", "ax-name").attr("x", 0).attr("y", cy + 8)
-      .text(chartLabel(iv.name));
+      .attr("aria-label", fieldAria(iv));
+    var hit = g.append("rect").attr("class", "fd-hit");
+    /* the flag is carried twice — fill AND an outer ring — so it survives
+       colour-vision deficiency and a greyscale print */
+    if (flag) g.append("circle").attr("class", "fd-ring")
+      .attr("cx", cx).attr("cy", cy).attr("r", r + 4);
+    g.append("circle")
+      .attr("class", "fd-disc" + (flag ? " fd-disc--flag" : "") + (none ? " fd-disc--none" : ""))
+      .attr("cx", cx).attr("cy", cy).attr("r", r);
+    g.append("text").attr("class", "fd-num").attr("x", cx).attr("y", cy + 3.4)
+      .attr("text-anchor", "middle").text(sectionGlyph(iv));
 
-    if (none) {
-      g.append("circle").attr("class", "ax-dot--none").attr("cx", gutter).attr("cy", cy).attr("r", 6);
-      g.append("text").attr("class", "ax-val ax-val--none").attr("x", gutter - 12)
-        .attr("y", cy + 3.4).attr("text-anchor", "end").text("no figure");
-    } else {
-      g.append("line").attr("class", "ax-lead").attr("x1", plotL).attr("x2", x(cap))
-        .attr("y1", cy).attr("y2", cy);
-      g.append("circle").attr("class", "ax-dot").attr("cx", x(cap)).attr("cy", cy).attr("r", 6.2);
-      var right = x(cap) > plotR - 60;
-      g.append("text").attr("class", "ax-val").attr("x", x(cap) + (right ? -11 : 11))
-        .attr("y", cy + 3.4).attr("text-anchor", right ? "end" : "start").text(money(cap));
-    }
-
-    for (var p = 0; p < 5; p++) {
-      g.append("rect").attr("class", "ax-pip" + (p < iv.gapScore ? " ax-pip--on" : ""))
-        .attr("x", pipL + p * 11).attr("y", cy - 6).attr("width", 7).attr("height", 12);
-    }
+    var nameT = g.append("text").attr("class", "fd-name").text(fieldLabel(iv));
+    /* no value line in the gutter: the gutter's own header already says it, and
+       printing "no figure" twice would state an absence as if it were a reading */
+    var valT = none ? null
+      : g.append("text").attr("class", "fd-val").text(hedgedTotal(iv));
 
     g.on("click", function () { openIv(iv.id, true); })
      .on("keydown", function (ev) {
         if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); openIv(iv.id, true); }
       })
-     .on("mouseenter", function (ev) { showTip(ev, allocTip(iv)); })
-     .on("mousemove", function (ev) { showTip(ev, allocTip(iv)); })
+     .on("mouseenter", function (ev) { showTip(ev, fieldTip(iv)); })
+     .on("mousemove", function (ev) { showTip(ev, fieldTip(iv)); })
      .on("mouseleave", hideTip)
-     .on("focus", function () { showTipAt(this, allocTip(iv)); })
+     .on("focus", function () { showTipAt(this, fieldTip(iv)); })
      .on("blur", hideTip);
+
+    laid.push({ iv: iv, hit: hit, cx: cx, cy: cy, r: r, nameT: nameT, valT: valT });
   });
 
-  $("allocFoot").innerHTML =
-    "Ordered by capital raised, most first. Dots sit on a log axis, so a dot four times " +
-    "further right is a hundred times more money — read the labels, not the distance. A hollow " +
-    "marker in the left gutter means <strong>no dollar figure is disclosed in the sources</strong>; " +
-    "it does not mean zero, which is why those rows are placed at the foot rather than sorted as " +
-    "the smallest. The pips repeat the editorial gap assessment from the board above, not a " +
-    "measurement. Open any row for the full entry — leverage, maturity, every money figure as its " +
-    "source labels it, what has actually been delivered, and the caveats.";
+  FIELD.marks = laid;
+  FIELD.plotL = plotL;
+  FIELD.plotR = plotR;
+  placeFieldCaptions();
+
+  /* --- legend, in v1's spirit: what size and what colour mean -------------- */
+  var lg = svg.append("g");
+  var sx = 6;
+  TRL_STEPS.forEach(function (st) {
+    lg.append("circle").attr("class", "fd-disc").attr("cx", sx + st.r)
+      .attr("cy", legendCY).attr("r", st.r);
+    sx += st.r * 2 + 6;
+  });
+  lg.append("text").attr("class", "fd-hd").attr("x", sx + 4).attr("y", legendCY + 3)
+    .text("readiness TRL " + trlStepLabel());
+  lg.append("circle").attr("class", "fd-ring").attr("cx", 300).attr("cy", legendCY).attr("r", 14);
+  lg.append("circle").attr("class", "fd-disc fd-disc--flag").attr("cx", 300)
+    .attr("cy", legendCY).attr("r", 10);
+  lg.append("text").attr("class", "fd-hd").attr("x", 322).attr("y", legendCY + 3)
+    .text("flagged · gap ≥ " + OPP_THRESHOLD);
+  lg.append("text").attr("class", "fd-hd").attr("x", 452).attr("y", legendCY + 3)
+    .text("numeral · ledger section");
+
+  $("fieldCallout").textContent = fieldCallout(ceiling);
+
+  $("fieldFoot").innerHTML =
+    "<strong>Horizontal — capital raised.</strong> The same log axis and the same summing " +
+    "rule as the ledger below: only entries the sources record as equity or debt actually " +
+    "closed, never a row already inside another row's cumulative total. A marker four times " +
+    "further right sits on a hundred times more money, so read the printed figure and not the " +
+    "distance; each one keeps the ≥ or ≈ its underlying entries carry. Offtakes, prizes, " +
+    "grants, capital being sought and sector roll-ups are different kinds of money and are " +
+    "not on this axis at all — they are in the tooltip and in the entry. " +
+    "<strong>The hatched gutter</strong> holds the categories whose sources disclose no dollar " +
+    "figure. They have a leverage band, so they have a height, but they have no horizontal " +
+    "position and are never given a placeholder one: a blank is not a zero, and it is not the " +
+    "smallest number either. " +
+    "<strong>Vertical — leverage band.</strong> An editorial assessment, ordinal, five bands, " +
+    "and deliberately not a scale: band " + LEV_MAX + " is higher than band " + (LEV_MAX - 1) +
+    " but not by any stated amount, and the interval between bands is undefined. Each band is " +
+    "derived from the leverage argument already written for that category in the data layer — " +
+    "the argument is the evidence, the band is only a handle for plotting it — and where that " +
+    "argument is hedged the band goes down rather than up. " +
+    "<strong>Marker size — readiness.</strong> Three steps (TRL " + trlStepLabel() +
+    ") taken from the approximate midpoint of each category's maturity, rounded down where a " +
+    "midpoint fell on a half. Two categories span from lab bench to commercial inside one " +
+    "heading; collapsing those to a single step loses real information, so the maturity line " +
+    "in the entry, not the marker, is the authority. " +
+    "<strong>The ring and dark fill</strong> mark every category the gap assessment puts at " +
+    OPP_THRESHOLD + " of 5 or above — the same derivation as the opportunity board above, not " +
+    "a second list. <strong>The shaded corner</strong> is the top " + (LEV_MAX - LEV_HI + 1) +
+    " leverage bands left of the median disclosed capital figure, so it moves if the money " +
+    "does. <strong>The numeral</strong> in each disc is the category's section in the ledger " +
+    "below. Click or press Enter on any marker to open that entry — leverage, maturity, every " +
+    "money figure as its source labels it, what has actually been delivered, and the caveats.";
 }
 
-/* A chart row has a fixed label column, and two category names overrun it and
-   collided with the not-disclosed gutter. The parenthetical is dropped and the
-   rest truncated; the full name is printed on the ledger row directly below,
-   and is the row's accessible name, so nothing is lost. */
-function chartLabel(name) {
-  var s = name.replace(/\s*\([^)]*\)/g, "").trim();
-  if (s.length > 38) s = s.slice(0, 37).replace(/[\s&,]+\S*$/, "") + "…";
-  return s;
+/* Caption layout. Widths are MEASURED, and the sides are SOLVED, not chosen
+   greedily one marker at a time — which was the bug this replaced. Greedy placed
+   §1's long caption to the right because nothing was there yet, and §9 arriving
+   afterwards had nowhere left to go: the two rendered 1.5 units apart and read as
+   one run of text, "…methane removalClean firm power". Both fit comfortably once
+   §1 goes left instead, but no marker can see that on its own.
+
+   So each band's side assignment is solved over the whole band. A band holds at
+   most a handful of markers, so every combination can simply be tried: keep the
+   collision-free ones, and among those prefer the fewest markers pushed off their
+   natural side, breaking ties on the largest minimum clearance.
+
+   CAP_CLEAR is why this is not a plain overlap test. Two captions that merely
+   fail to overlap still read as continuous text, so a caption reserves this much
+   clear space on each side and a neighbour inside that margin counts as a
+   collision. A marker is exempt from its own disc, since its caption is
+   deliberately tucked against it.
+
+   If a band cannot be solved at all — captions genuinely wider than the space —
+   it falls back to placing each caption on its natural side and stepping the
+   later ones down inside the band, which is v1's own nudge and degrades legibly.
+
+   Idempotent: every position is recomputed from the marker geometry, so this can
+   be called again at any time (after a webfont swaps in, say) and simply
+   produces a better answer. */
+var CAP_CLEAR = 13;
+
+function capSpan(g, right) {
+  var x0 = right ? g.m.cx + g.gap : g.m.cx - g.gap - g.w;
+  return { x0: x0, x1: x0 + g.w, owner: g.m.iv.id, right: right };
+}
+/* clear distance between two spans; negative means they collide */
+function spanGap(a, b) {
+  return a.x0 > b.x1 ? a.x0 - b.x1 : b.x0 > a.x1 ? b.x0 - a.x1 : -1;
 }
 
-function allocTip(iv) {
+function placeFieldCaptions() {
+  var W = FIELD.W;
+  var flipX = FIELD.plotL + (FIELD.plotR - FIELD.plotL) * 0.55;
+
+  var bands = {};
+  FIELD.marks.forEach(function (m) {
+    (bands[m.iv.leverageBand] || (bands[m.iv.leverageBand] = [])).push(m);
+  });
+
+  Object.keys(bands).forEach(function (key) {
+    var group = bands[key];
+    var geom = group.map(function (m) {
+      return {
+        m: m, gap: m.r + 6, pref: m.cx < flipX,
+        w: Math.max(textW(m.nameT), m.valT ? textW(m.valT) : 0),
+        disc: { x0: m.cx - m.r - 3, x1: m.cx + m.r + 3, owner: m.iv.id }
+      };
+    });
+    var discs = geom.map(function (g) { return g.disc; });
+
+    /* solve the band: 2^n side assignments, n small by construction */
+    var best = null;
+    if (geom.length <= 8) {
+      for (var mask = 0; mask < (1 << geom.length); mask++) {
+        var spans = [], cost = 0, minGap = Infinity, ok = true;
+        for (var i = 0; i < geom.length && ok; i++) {
+          var g = geom[i], sp = capSpan(g, !!(mask & (1 << i)));
+          if (sp.right !== g.pref) cost++;
+          if (sp.x0 < 4 || sp.x1 > W - 4) { ok = false; break; }
+          for (var d = 0; d < discs.length && ok; d++) {
+            if (discs[d].owner === sp.owner) continue;
+            var gd = spanGap(sp, discs[d]);
+            if (gd < CAP_CLEAR) ok = false; else minGap = Math.min(minGap, gd);
+          }
+          for (var p = 0; p < spans.length && ok; p++) {
+            var gc = spanGap(sp, spans[p]);
+            if (gc < CAP_CLEAR) ok = false; else minGap = Math.min(minGap, gc);
+          }
+          if (ok) spans.push(sp);
+        }
+        if (!ok) continue;
+        var score = cost * 1000 - Math.min(minGap, 999);
+        if (!best || score < best.score) best = { spans: spans, score: score };
+      }
+    }
+
+    geom.forEach(function (g, i) {
+      var right, dy = 0;
+      if (best) {
+        right = best.spans[i].right;
+      } else {
+        /* unsolvable band — natural side, and step later captions down */
+        right = g.pref;
+        dy = i * 15;
+      }
+      var tx = right ? g.m.cx + g.gap : g.m.cx - g.gap;
+      var cy2 = g.m.cy + dy;
+      var anchor = right ? "start" : "end";
+      g.m.nameT.attr("x", tx).attr("y", cy2 + (g.m.valT ? -1 : 3.6)).attr("text-anchor", anchor);
+      if (g.m.valT) g.m.valT.attr("x", tx).attr("y", cy2 + 11).attr("text-anchor", anchor);
+
+      /* the hit area is the union of disc and caption, so the whole marker — not
+         just the 20px disc — is a click and hover target */
+      var lx = right ? tx : tx - g.w, rx = right ? tx + g.w : tx;
+      var hx0 = Math.min(g.m.cx - g.m.r, lx) - 4, hx1 = Math.max(g.m.cx + g.m.r, rx) + 4;
+      var hy0 = Math.min(g.m.cy - g.m.r, cy2 - 11) - 3;
+      var hy1 = Math.max(g.m.cy + g.m.r, cy2 + (g.m.valT ? 15 : 7)) + 3;
+      g.m.hit.attr("x", hx0).attr("y", hy0).attr("width", hx1 - hx0).attr("height", hy1 - hy0);
+    });
+  });
+}
+
+/* Spoken name for a marker. It carries the hedge, and it states the gutter case
+   as an absence of information rather than as a position. */
+function fieldAria(iv) {
+  var cap = capitalRaised(iv);
+  return iv.name + " — " +
+    (cap ? "capital raised " + hedgedTotal(iv)
+         : "no dollar figure for capital raised is disclosed in the sources, so this marker " +
+           "sits in the gutter and has no position on the capital axis") +
+    ", leverage band " + iv.leverageBand + " of " + LEV_MAX +
+    ", an editorial assessment and not a measurement" +
+    ", readiness approximately TRL " + iv.trlBand + " of 9" +
+    ", gap assessment " + iv.gapScore + " of 5. Opens the full entry.";
+}
+
+function fieldTip(iv) {
   var cap = capitalRaised(iv);
   var extra = ["contract", "prize", "grant", "target", "aggregate"].map(function (s) {
     var v = streamSum(iv, s);
     return v ? STREAM_WORD[s].split(" —")[0] + " " + money(v) : null;
   }).filter(Boolean);
-  return "<b>" + esc(iv.name) + "</b>" +
-    (cap ? "capital raised " + money(cap) : "capital raised: no figure disclosed") +
+  return "<b>" + esc(iv.section + " · " + iv.name) + "</b>" +
+    (cap ? "capital raised " + esc(hedgedTotal(iv)) : "capital raised: no figure disclosed") +
     (extra.length ? "<br>separately: " + esc(extra.join(" · ")) : "") +
-    "<br>gap assessment " + iv.gapScore + "/5 (editorial)";
+    "<br>leverage band " + iv.leverageBand + "/" + LEV_MAX +
+      " · readiness ≈ TRL " + iv.trlBand + "/9" +
+    "<br>gap " + pips(iv.gapScore, 5) + " " + iv.gapScore + "/5 · editorial";
+}
+
+/* The standing takeaway, in the spirit of v1's sweetNote and computed the same
+   way it should have been. v1 named its sweet spot off a hand-set flag; this
+   names the flagged set from `gapScore >= OPP_THRESHOLD` — the board's own
+   derivation — and then says which of them the shaded corner actually holds and
+   which cannot be placed at all, so the region and the flag are never conflated.
+   Every category is named by its ledger section, so the reader can find it. */
+function fieldCallout(ceiling) {
+  var flagged = D.interventions.filter(function (iv) { return iv.gapScore >= OPP_THRESHOLD; });
+  if (!flagged.length) return "";
+  var sweet = flagged.filter(function (iv) { return inSweetSpot(iv, ceiling); });
+  var noFig = flagged.filter(function (iv) { return capitalRaised(iv) === 0; });
+  var rest = flagged.filter(function (iv) {
+    return sweet.indexOf(iv) === -1 && noFig.indexOf(iv) === -1;
+  });
+  var out = sweet.length
+    ? "Shaded corner — high leverage, least capital: " + fieldNames(sweet) + "."
+    : "Nothing sits in the shaded corner.";
+  if (noFig.length) out += " " + fieldNames(noFig) + (noFig.length > 1 ? " carry" : " carries") +
+    " the same flag with no capital figure disclosed, so " +
+    (noFig.length > 1 ? "they sit" : "it sits") + " in the gutter.";
+  if (rest.length) out += " " + fieldNames(rest) +
+    (rest.length > 1 ? " carry" : " carries") + " it from further right.";
+  return out;
+}
+function fieldNames(list) {
+  var names = list.map(function (iv) { return iv.section + " " + fieldLabel(iv); });
+  if (names.length === 1) return names[0];
+  return names.slice(0, -1).join(", ") + " and " + names[names.length - 1];
 }
 
 /* ===========================================================================
@@ -3218,8 +3587,8 @@ function renderEyebrows() {
   $("act3Eyebrow").innerHTML = segEyebrow("act3", "vi") + " · " +
     D.hypotheses.length + " hypotheses";
   $("methEyebrow").innerHTML = segEyebrow("methods", "viii") + " · bedrock";
-  $("ledgerEyebrow").textContent = "ledger · all " + D.interventions.length +
-    " intervention categories, best-funded to least";
+  $("fieldEyebrow").textContent = "assay · " + D.interventions.length +
+    " categories · leverage against disclosed capital";
   $("bandsEyebrow").textContent = "all " + D.tippingSystems.length +
     " elements · Armstrong McKay et al. (2022), Table 1";
   $("atlasEyebrow").textContent = "companies · " +
@@ -3293,7 +3662,7 @@ function boot() {
   updateTrayTab();
 
   renderOpportunity();
-  buildAlloc();
+  buildField();
   renderIvList();
   renderTiers();
   renderTags();
@@ -3306,6 +3675,12 @@ function boot() {
   wireLazyVideo();
   wireReveal();
   wireScroll();
+
+  /* Fonts are loaded with display:swap, so every caption in the assay field gets
+     wider once the real faces arrive. Re-place them then, against real metrics. */
+  if (document.fonts && document.fonts.ready && document.fonts.ready.then) {
+    document.fonts.ready.then(placeFieldCaptions);
+  }
 }
 
 if (document.readyState === "loading") {
