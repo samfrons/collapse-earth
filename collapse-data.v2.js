@@ -13,6 +13,31 @@
        deployed-grants) and an asOf date. "Announced" is never rendered as
        "delivered". Where a source hedges ("more than", "approximately",
        "unresolved conflict"), the hedge is preserved in `qualifier` / `note`.
+     · An entry that claims an ABSENCE of funding must carry
+       `assertedAbsence: true` and a `sourceQuote` giving the words the source
+       actually used. A source being silent about a company's funding is not
+       the same as a source reporting that the company has none.
+
+   HOW TO SUM funding[] — READ THIS BEFORE WRITING A RENDERER.
+   A naive `funding.reduce((n, f) => n + f.amount, 0)` produces a WRONG number.
+   The array deliberately holds several non-additive kinds of money, tagged by
+   `stream`:
+       capital    equity or debt actually raised by a company
+       target     capital being sought, not closed — never counts as raised
+       contract   offtake / purchase commitments (customer revenue, not capital)
+       prize      prize awards
+       grant      public or philanthropic grants (given to, or deployed by)
+       aggregate  sector-level roll-ups that already contain company rows
+   Two further flags handle roll-ups within a stream:
+       cumulative: true        this entry is a total that supersedes its parts
+       withinCumulative: "<holder>"  this entry is INSIDE the cumulative entry
+                                     belonging to that holder — exclude it
+   Therefore: total capital raised for an intervention is
+       funding.filter(f => f.stream === "capital" && !f.withinCumulative)
+              .reduce((n, f) => n + (f.amount ?? 0), 0)
+   Never add across streams. Never add an `aggregate` row to company rows.
+   The scratchpad validator asserts the resulting per-intervention totals
+   against a hardcoded table, so reintroducing a double-count will fail it.
      · Every hypothesis states falsifiable kill criteria and an honest TRL.
      · Earnest register throughout. This file is research and opinion, not
        investment advice, and not satire.
@@ -316,6 +341,10 @@ window.COLLAPSE_DATA = {
      delivery evidence lives in `delivered` so that money and matter are never
      silently interchanged. `gapScore` 1–5 is a directional read of how far
      potential impact runs ahead of capital, not a measured quantity.
+
+     funding[] IS NOT SUMMABLE AS-IS — see the "HOW TO SUM funding[]" block in
+     the file header. Filter on `stream === "capital"` and drop any entry with
+     `withinCumulative` before adding anything up.
      --------------------------------------------------------------------------- */
   interventions: [
     {
@@ -325,11 +354,13 @@ window.COLLAPSE_DATA = {
       leverage: "Methane is responsible for nearly 30% of the rise in global average temperature since the Industrial Revolution (IEA Global Methane Tracker); its 20-year global warming potential is ≈84–87× CO₂ (IPCC). Near-term methane action is among the highest-leverage climate moves available.",
       maturity: "TRL 1–3 (open-atmosphere) / TRL 4–5 pilot (point-source) / commercial (enteric additives in ration systems)",
       funding: [
-        { amount: 8e6, qualifier: "at-least", kind: "deployed-grants", holder: "Spark Climate Solutions (nonprofit funder/convener)", asOf: "2026-07", badge: "deployed-grants", note: "reported as more than $8M across more than 27 research grants; a 501(c)(3), not a company" },
-        { amount: 37e6, kind: "venture", holder: "Windfall Bio", asOf: "2024-04", badge: "announced", note: "$9M seed (Mar 2023) + $28M Series A (Apr 2024, led by Prelude Ventures)" },
-        { amount: null, kind: "grants-only", holder: "Ambient Carbon", asOf: "2026-07", badge: "verified", note: "no disclosed venture or equity funding; grant-funded via Innovation Fund Denmark (AgriFoodTure / PERMA), partners include Arla Foods" },
-        { amount: 30.8e6, kind: "venture", holder: "Rumin8 (enteric methane)", asOf: "2026-07", badge: "announced", note: "backers include Breakthrough Energy Ventures and Andrew Forrest" },
-        { amount: null, kind: "shareholder-funded plus undisclosed loan", holder: "Atmospheric Methane Removal AG (open atmosphere)", asOf: "2024-10", badge: "announced", note: "voted to become non-profit-oriented in Oct 2024; nothing delivered in the field" }
+        { amount: 8e6, qualifier: "at-least", stream: "grant", kind: "grants deployed TO third-party researchers, not capital received", holder: "Spark Climate Solutions (nonprofit funder/convener)", asOf: "2026-07", badge: "deployed-grants", note: "reported as more than $8M across more than 27 research grants; a 501(c)(3), not a company" },
+        { amount: 37e6, stream: "capital", cumulative: true, kind: "venture (cumulative)", holder: "Windfall Bio", asOf: "2024-04", badge: "announced", note: "$9M seed (Mar 2023) + $28M Series A (Apr 2024, led by Prelude Ventures); the two rounds are not listed separately, so this total is the only capital row for Windfall" },
+        { amount: null, stream: "grant", assertedAbsence: true, kind: "grant-funded only", holder: "Ambient Carbon", asOf: "2026-07", badge: "verified",
+          sourceQuote: "No disclosed venture/equity funding — grant-funded only (Innovation Fund Denmark via AgriFoodTure/PERMA project; partners include Arla Foods)",
+          note: "the absence of a venture round is explicitly reported, not inferred from silence" },
+        { amount: 30.8e6, qualifier: "approximately", stream: "capital", cumulative: true, kind: "venture (cumulative)", holder: "Rumin8 (enteric methane)", asOf: "2026-07", badge: "announced", note: "backers include Breakthrough Energy Ventures and Andrew Forrest" },
+        { amount: null, stream: "capital", kind: "shareholder-funded plus an undisclosed loan", holder: "Atmospheric Methane Removal AG (open atmosphere)", asOf: "2024-10", badge: "announced", note: "voted to become non-profit-oriented in Oct 2024; nothing delivered in the field" }
       ],
       delivered: "Ambient Carbon MEPS pilot: a 40-ft container system treated ventilation air from a 250-cow dairy barn at Hofmansgave Foundation farm, removing up to 90% of the methane (2025). Rumin8 trials show up to ≈86–95% enteric methane reduction with regulatory approval secured in Brazil; DSM-firmenich's Bovaer (3-NOP) is the EU-approved incumbent at ≈30% reduction. Bennu ran an at-sea ship-based UV methane-destruction pilot on a Lomar Shipping vessel (2024–25).",
       announcedNotDelivered: "A Danone-funded ≈30× MEPS scale-up is planned for a 4,000+ head dairy in Indiana, US — announced, not built.",
@@ -344,12 +375,12 @@ window.COLLAPSE_DATA = {
       leverage: "The ocean holds roughly 50× more carbon than the atmosphere and equilibrates with it; shifting seawater chemistry lets it absorb more, with storage as bicarbonate on a >10,000-year timescale. Some routes also relieve local acidification, which is the one intervention with a direct line to reef stress.",
       maturity: "TRL 4–5 — pilots operating, MRV and ecological effects unresolved",
       funding: [
-        { amount: 20e6, qualifier: "at-least", kind: "venture (Series A)", holder: "Ebb Carbon", asOf: "2026-07", badge: "announced" },
-        { amount: 45.3e6, kind: "venture (Series A, expanded)", holder: "Captura", asOf: "2026-07", badge: "announced", note: "backers include Equinor, Aramco Ventures, Eni Next, Maersk Growth" },
-        { amount: 12.5e6, kind: "venture (Series B, first close)", holder: "Captura", asOf: "2026-06", badge: "announced", note: "led by Equinor Ventures" },
-        { amount: 14.6e6, kind: "venture", holder: "Planetary Technologies", asOf: "2026-07", badge: "announced" },
-        { amount: 31e6, kind: "offtake-contracted", holder: "Planetary Technologies (Frontier-facilitated)", asOf: "2026-07", badge: "announced" },
-        { amount: 1e6, kind: "prize", holder: "Planetary Technologies (XPRIZE XFACTOR award)", asOf: "2025", badge: "verified" }
+        { amount: 20e6, qualifier: "at-least", stream: "capital", kind: "venture (Series A)", holder: "Ebb Carbon", asOf: "2026-07", badge: "announced" },
+        { amount: 45.3e6, stream: "capital", kind: "venture (Series A, expanded)", holder: "Captura", asOf: "2026-07", badge: "announced", note: "backers include Equinor, Aramco Ventures, Eni Next, Maersk Growth. Distinct from the Series B below — the source reports ~$45M+ raised before that round." },
+        { amount: 12.5e6, stream: "capital", kind: "venture (Series B, first close)", holder: "Captura — Series B", asOf: "2026-06", badge: "announced", note: "led by Equinor Ventures; additional to the Series A, not a restatement of it" },
+        { amount: 14.6e6, qualifier: "approximately", stream: "capital", cumulative: true, kind: "venture (cumulative)", holder: "Planetary Technologies", asOf: "2026-07", badge: "announced" },
+        { amount: 31e6, stream: "contract", kind: "offtake, Frontier-facilitated (customer commitment, not capital raised)", holder: "Planetary Technologies — Frontier offtake", asOf: "2026-07", badge: "announced" },
+        { amount: 1e6, stream: "prize", kind: "XPRIZE XFACTOR award", holder: "Planetary Technologies — XPRIZE", asOf: "2025", badge: "verified" }
       ],
       delivered: "Ebb Carbon delivered an initial 1,333 tonnes under its Microsoft agreement (up to 350,000 tonnes over 10 years, Oct 2024 — the largest marine CDR commitment to date). Planetary Technologies delivered the first net OAE credits: 138 tonnes to Shopify and Stripe (Nov 2024). Ebb's Project Macoma pilot (Port Angeles) began operations in 2025, alongside a 100 t/yr system at PNNL Sequim; Equatic-1 in Singapore has ≈3,650 t/yr design capacity; Vesta holds the first US federal permit for a standalone ocean CDR pilot (North Carolina, 2024).",
       caveat: "Ocean scientists have called for caution or halts on some open-ocean projects; MRV and ecological effects are unresolved. The frequently quoted <$100/t by ~2028 figure is a projection, not an observation. Running Tide — an early kelp-sinking and alkalinity-buoy pioneer — wound down its ocean CDR operations, which is the category's cautionary case.",
@@ -363,11 +394,11 @@ window.COLLAPSE_DATA = {
       leverage: "Silicate rock dust reacts with CO₂ to form dissolved bicarbonate stored for 10,000+ years, while raising soil pH. It rides on infrastructure that already exists — quarry fines and farm spreading equipment — which is why it is one of the two CDR categories with credible near-term scale-up.",
       maturity: "TRL 5–6 — verified registry tonnes delivered; open-system MRV is the binding constraint",
       funding: [
-        { amount: 58.2e6, kind: "venture", holder: "Terradot", asOf: "2024-12", badge: "announced", note: "investors include Google, Microsoft Climate Innovation Fund, John Doerr; acquired Eion (Feb 2026)" },
-        { amount: 27e6, kind: "offtake-contracted", holder: "Terradot (Frontier purchase, 90,000 tonnes)", asOf: "2024-12", badge: "announced" },
-        { amount: 63.4e6, kind: "venture", holder: "Lithos Carbon", asOf: "2026-07", badge: "announced", note: "Greylock, Union Square Ventures, Bain Capital Ventures" },
-        { amount: 50e6, kind: "prize", holder: "Mati Carbon (XPRIZE Carbon Removal grand prize)", asOf: "2025-04", badge: "verified", note: "nonprofit-controlled via Swaniti Initiative" },
-        { amount: 5e6, kind: "prize", holder: "UNDO (XPRIZE runner-up)", asOf: "2025-04", badge: "verified" }
+        { amount: 58.2e6, stream: "capital", cumulative: true, kind: "venture (cumulative at launch)", holder: "Terradot", asOf: "2024-12", badge: "announced", note: "investors include Google, Microsoft Climate Innovation Fund, John Doerr; acquired Eion (Feb 2026)" },
+        { amount: 27e6, stream: "contract", kind: "Frontier purchase, 90,000 tonnes (customer commitment, not capital raised)", holder: "Terradot — Frontier purchase", asOf: "2024-12", badge: "announced" },
+        { amount: 63.4e6, qualifier: "approximately", stream: "capital", cumulative: true, kind: "venture (cumulative)", holder: "Lithos Carbon", asOf: "2026-07", badge: "announced", note: "Greylock, Union Square Ventures, Bain Capital Ventures" },
+        { amount: 50e6, stream: "prize", kind: "XPRIZE Carbon Removal grand prize", holder: "Mati Carbon — XPRIZE", asOf: "2025-04", badge: "verified", note: "nonprofit-controlled via Swaniti Initiative" },
+        { amount: 5e6, stream: "prize", kind: "XPRIZE runner-up award", holder: "UNDO — XPRIZE", asOf: "2025-04", badge: "verified" }
       ],
       delivered: "Lithos Carbon delivered 5,160 registry-certified tonnes in Dec 2025, described as the largest ERW issuance to date, against an 11,400-tonne Microsoft deal. Terradot has spread 48,000+ tonnes of rock over 1,800 hectares and holds ≈300,000 tonnes of contracted removals, including Google's 200,000-tonne purchase — its largest single CDR purchase. UNDO signed a 28,900-tonne Microsoft deal, the first CDR deal structured with debt capital. InPlanet signed a Microsoft ERW deal (Dec 2025).",
       caveat: "CarbonPlan notes that experimental CO₂-removal estimates for enhanced weathering vary by four orders of magnitude. MRV is improving but not settled, and contracted volume still exceeds delivered volume by roughly an order of magnitude.",
@@ -381,10 +412,10 @@ window.COLLAPSE_DATA = {
       leverage: "Coastal and wetland ecosystems sequester carbon at high per-area rates, and drained peatlands are a vast avoided-emissions store. The price signal is already there: the S&P Global blue carbon assessment hit a record $29.30/tCO₂e in Aug 2025 — high precisely because rigorous MRV is scarce and costly.",
       maturity: "TRL 6–7 — the ecology is well understood and the restoration methods are mature; credit-grade measurement is the bottleneck and the actual technology opportunity",
       funding: [
-        { amount: null, kind: "grant + carbon-finance", holder: "UK IUCN Peatland Code (~361 projects / ~52,000 ha)", asOf: "2025-06", badge: "verified" },
-        { amount: null, kind: "public grant", holder: "Sylvera (satellite-based peatland MRV, Innovate UK funding)", asOf: "2026-07", badge: "announced" },
-        { amount: null, kind: "venture (early)", holder: "aeco (European agricultural peatland rewetting with continuous water-level MRV)", asOf: "2026-07", badge: "announced" },
-        { amount: null, kind: "corporate-backed project", holder: "Pantheon Regeneration (US peatland restoration, Microsoft-backed)", asOf: "2026-07", badge: "announced" }
+        { amount: null, stream: "grant", kind: "grant plus carbon finance; no consolidated total published", holder: "UK IUCN Peatland Code (~361 projects / ~52,000 ha)", asOf: "2025-06", badge: "verified" },
+        { amount: null, stream: "grant", kind: "public grant (Innovate UK)", holder: "Sylvera (satellite-based peatland MRV)", asOf: "2026-07", badge: "announced" },
+        { amount: null, stream: "capital", kind: "venture (early; amount not disclosed in source)", holder: "aeco (European agricultural peatland rewetting with continuous water-level MRV)", asOf: "2026-07", badge: "announced" },
+        { amount: null, stream: "grant", kind: "corporate-backed project funding; structure not disclosed in source", holder: "Pantheon Regeneration (US peatland restoration, Microsoft-backed)", asOf: "2026-07", badge: "announced" }
       ],
       delivered: "As of Oct 2025 roughly 81 blue-carbon projects existed but only about 10 were actively issuing credits; the market is under 1% of voluntary carbon credits and mangroves account for ≈99% of claimed removals. Germany's MoorFutures and the UK Peatland Code are the working precedents for peatland carbon finance.",
       caveat: "Most of this is high-integrity avoidance, not durable removal; permanence is measured in decades with long monitoring tails. Kelp and macroalgae remain methodologically uncreditable because permanence is unproven — Running Tide's wind-down is the object lesson.",
@@ -398,11 +429,11 @@ window.COLLAPSE_DATA = {
       leverage: "The only removal route whose siting is independent of biology, geography and land competition: sorbents and solvents pull CO₂ from ambient air anywhere there is clean power and storage. That generality is why it attracts capital — and why its cost is the whole question.",
       maturity: "TRL 7 — commercially operating plants, but at ≈10× the target cost",
       funding: [
-        { amount: 2.3e9, kind: "sector-total private investment tracked 2021–H1 2025", holder: "DAC sector", asOf: "2025-H1", badge: "verified" },
-        { amount: 1.4e9, qualifier: "at-least", kind: "share of tracked private DAC investment", holder: "Climeworks + 1PointFive combined (≈60% of sector total)", asOf: "2025-H1", badge: "verified" },
-        { amount: 162e6, kind: "venture (late-stage round)", holder: "Climeworks", asOf: "2025-Q3", badge: "announced" },
-        { amount: 150e6, kind: "venture (Series B)", holder: "Heirloom Carbon", asOf: "2024-12", badge: "announced", note: "co-led by Future Positive and Lowercarbon Capital" },
-        { amount: 200e6, qualifier: "at-least", kind: "cumulative venture", holder: "Heirloom Carbon", asOf: "2026-07", badge: "announced" }
+        { amount: 2.3e9, qualifier: "approximately", stream: "aggregate", cumulative: true, kind: "sector-total private DAC investment tracked 2021–H1 2025", holder: "DAC sector", asOf: "2025-H1", badge: "verified", note: "a sector aggregate that already contains company rows — never add it to them" },
+        { amount: 1.4e9, qualifier: "at-least", stream: "aggregate", withinCumulative: "DAC sector", kind: "share of the tracked sector total (≈60%)", holder: "Climeworks + 1PointFive combined", asOf: "2025-H1", badge: "verified", note: "a slice of the $2.3B above, not additional to it" },
+        { amount: 162e6, stream: "capital", kind: "venture (late-stage round)", holder: "Climeworks", asOf: "2025-Q3", badge: "announced", note: "falls after the 2021–H1 2025 window covered by the sector aggregates above, so it is not contained in them" },
+        { amount: 150e6, stream: "capital", withinCumulative: "Heirloom Carbon", kind: "venture (Series B)", holder: "Heirloom Carbon — Series B", asOf: "2024-12", badge: "announced", note: "co-led by Future Positive and Lowercarbon Capital; included in the >$200M cumulative below" },
+        { amount: 200e6, qualifier: "at-least", stream: "capital", cumulative: true, kind: "venture (cumulative)", holder: "Heirloom Carbon", asOf: "2026-07", badge: "announced" }
       ],
       delivered: "Only ≈1,186 tonnes have been delivered by six DAC suppliers since 2023 — about 0.05% of all contracted volume. Climeworks leads deliveries (≈81% of all DAC delivered) and operates Orca and Mammoth in Iceland (Mammoth design capacity 36,000 t/yr); 1PointFive leads credits sold (≈52%) and is building Stratos in West Texas, designed for 500,000 t/yr. Costs remain ≈$600–1,000/t against a ≈$100/t target. The top three suppliers account for over 80% of DAC tonnes contracted 2020–H1 2025.",
       policyRisk: "US DOE terminated initial ≈$50M tranches for Project Cypress (Climeworks/Heirloom) and the South Texas hub (1PointFive) in Oct 2025, though some DAC funding was later preserved in 2026. Climeworks laid off more than 10% of staff in 2025.",
@@ -417,10 +448,10 @@ window.COLLAPSE_DATA = {
       leverage: "Pyrolysis converts biomass into stable aromatic carbon that resists decomposition for centuries to millennia. It is the most-delivered durable CDR category by volume — the one place where verified tonnes, not forward contracts, are the headline number.",
       maturity: "TRL 8 — commercially operating at scale; permanence assurance is the maturing edge",
       funding: [
-        { amount: 130e6, qualifier: "approximately", kind: "venture", holder: "Charm Industrial", asOf: "2026-07", badge: "announced", note: "bio-oil injection plus biochar; Google deals including 100,000 tonnes biochar (2025)" },
-        { amount: 15e6, kind: "prize", holder: "NetZero (XPRIZE runner-up)", asOf: "2025-04", badge: "verified" },
-        { amount: 8e6, kind: "prize", holder: "Vaulted Deep (XPRIZE runner-up)", asOf: "2025-04", badge: "verified" },
-        { amount: null, kind: "no disclosed equity round", holder: "Exomad Green", asOf: "2026-07", badge: "verified", note: "the category leader by delivered volume has no publicly disclosed venture round — the money is in offtakes, not equity" }
+        { amount: 130e6, qualifier: "approximately", stream: "capital", cumulative: true, kind: "venture (cumulative)", holder: "Charm Industrial", asOf: "2026-07", badge: "announced", note: "bio-oil injection plus biochar; Google deals including 100,000 tonnes biochar (2025)" },
+        { amount: 15e6, stream: "prize", kind: "XPRIZE runner-up award", holder: "NetZero — XPRIZE", asOf: "2025-04", badge: "verified" },
+        { amount: 8e6, stream: "prize", kind: "XPRIZE runner-up award", holder: "Vaulted Deep — XPRIZE", asOf: "2025-04", badge: "verified" },
+        { amount: null, stream: "contract", kind: "offtake, ≥1.24M tonnes over 10 years; no contract value disclosed", holder: "Exomad Green — Microsoft offtake", asOf: "2025-05", badge: "announced", note: "the source reports the volume and term but no dollar value, and says nothing about Exomad's equity funding either way — so no funding row is asserted for the company" }
       ],
       delivered: "Exomad Green has delivered over 320,000 tonnes cumulatively (≈84% carbon content, >1,000-year stability, Puro.earth certified) and signed the largest biochar carbon-removal deal in history by volume with Microsoft: at least 1.24M tonnes over 10 years (May 2025). Varaha converts invasive Prosopis juliflora to biochar with a Google offtake and digital MRV.",
       unresolvedConflict: "Exomad Green's annual run-rate is unresolved: the company self-reports ≈260,000 t/yr from two facilities (targeting 1M t/yr by 2027 across five sites), while S&P Global cites ≈120,000 mtCO₂e/yr currently. Flagged as an open conflict, not averaged.",
@@ -435,9 +466,9 @@ window.COLLAPSE_DATA = {
       leverage: "Turns waste carbon into a saleable product rather than a stored liability, which is the only route in this list whose unit economics improve with the product price instead of depending on a credit price. Gas fermentation is already commercial; the electrochemical routes are not.",
       maturity: "Commercial (gas fermentation) / TRL 3–4 (microbial electrosynthesis) — a genuinely wide spread inside one category, and conflating them is the field's main honesty failure",
       funding: [
-        { amount: null, kind: "public listing (SPAC, ≈$2B valuation at close — a valuation, not capital raised)", holder: "LanzaTech", asOf: "2023-02", badge: "verified" },
-        { amount: null, kind: "academic grants; no disclosed commercial funding at scale", holder: "Microbial electrosynthesis field", asOf: "2026-07", badge: "verified", note: "an established academic field with tens of $M cumulative across many groups; the CO₂-valorisation frontier specifically remains thinly funded" },
-        { amount: null, kind: "venture (undisclosed cumulative)", holder: "Twelve, Dioxide Materials (electro-CO₂ conversion)", asOf: "2026-07", badge: "announced" }
+        { amount: null, stream: "capital", kind: "public listing via SPAC (≈$2B valuation at close — a valuation, not capital raised, so no amount is recorded)", holder: "LanzaTech", asOf: "2023-02", badge: "verified" },
+        { amount: null, stream: "grant", kind: "academic research funding, not consolidated or publicly tracked", holder: "Microbial electrosynthesis field", asOf: "2026-07", badge: "verified", note: "assessed at TRL 3/4 — lab scale, requiring process optimisation before an industrial prototype (Trends in Biotechnology, 2024). No claim is made about total funding in the field: the sources describe its maturity, not its capital." },
+        { amount: null, stream: "capital", kind: "venture (amount not disclosed in source)", holder: "Twelve, Dioxide Materials (electro-CO₂ conversion)", asOf: "2026-07", badge: "announced" }
       ],
       delivered: "LanzaTech operates six commercial facilities and has produced 30M+ gallons of ethanol since 2021, with ArcelorMittal, Lululemon, Zara and Coty as partners, and has spun out LanzaJet (SAF) and LanzaX (chemicals). Microbial electrosynthesis sits at TRL 3/4 per peer-reviewed assessment (Trends in Biotechnology, 2024) — lab scale, needing process optimisation before an industrial prototype.",
       caveat: "Gas fermentation abates and recycles emissions; it is not permanent CDR unless paired with sequestration. MES and electro-conversion economics remain unproven at scale. This is the category where the temptation to overstate is highest, because the commercial leader and the research frontier share a section heading.",
@@ -453,12 +484,16 @@ window.COLLAPSE_DATA = {
       investable: false,
       framing: "break-glass research",
       funding: [
-        { amount: 5e6, qualifier: "approximately", kind: "founder/director commitment", holder: "Real Ice", asOf: "2026-07", badge: "announced" },
-        { amount: 13e6, qualifier: "approximately", kind: "public research grant (largest single award in the UK's ≈$75M geoengineering programme)", holder: "Real Ice research consortium", asOf: "2025", badge: "deployed-grants" },
-        { amount: 1.1e6, qualifier: "approximately", kind: "venture", holder: "Arctic Reflections", asOf: "2026-07", badge: "announced" },
-        { amount: null, kind: "nonprofit research fund", holder: "Ocean Visions (Arctic Sea Ice research fund and road maps)", asOf: "2026-07", badge: "verified" }
+        { amount: 5e6, qualifier: "approximately", stream: "capital", kind: "founder/director commitment", holder: "Real Ice", asOf: "2026-07", badge: "announced" },
+        { amount: 13e6, qualifier: "approximately", stream: "grant", kind: "public research grant to a consortium — the largest single award in the UK's ≈$75M geoengineering programme", holder: "Real Ice research consortium", asOf: "2025", badge: "deployed-grants", note: "awarded to a research group Real Ice belongs to, not to the company alone" },
+        { amount: 1.1e6, qualifier: "approximately", stream: "capital", cumulative: true, kind: "venture (cumulative)", holder: "Arctic Reflections", asOf: "2026-07", badge: "announced" },
+        { amount: null, stream: "grant", kind: "nonprofit research fund", holder: "Ocean Visions (Arctic Sea Ice research fund and road maps)", asOf: "2026-07", badge: "verified" }
       ],
-      delivered: "Field trials at Cambridge Bay, Nunavut (Real Ice) and in Svalbard and Newfoundland (Arctic Reflections). Sea-ice thickening added roughly 30 cm of ice, but the gains did not last through the melt season. Real Ice's stated aspiration is to refreeze ≈1M km², and it envisions \"cooling credits.\"",
+      /* v1 quoted a specific thickness gain (in cm) here, attributed to "Science 2024". That
+         figure could not be traced to a citation we are confident in, so the result is stated
+         qualitatively instead of carrying an unsourced number. Do not reinstate a figure here
+         without adding a real dated source to meta.sources. */
+      delivered: "Field trials have been run at Cambridge Bay, Nunavut (Real Ice) and in Svalbard and Newfoundland (Arctic Reflections). Real Ice's stated aspiration is to refreeze ≈1M km², and it envisions \"cooling credits.\" No trial has yet demonstrated a winter thickness gain that survives the following melt season — that remains the open question, and it is what the negative assessments below turn on.",
       caveat: "In Oct 2024 a preprint by 42 glaciologists condemned ice-thickening and polar geoengineering as infeasible and dangerous; a Sept 2025 study concluded that high-profile interventions are not viable and may cause harm, each costing ≥$10B. Present this as break-glass research with a stated exit, never as an investable commercial category. The low gapScore here is not a claim that the category is well funded — it is a refusal to score a funding gap on an intervention whose feasibility is currently being falsified.",
       gapScore: 2,
       sourceIds: ["research-doc", "ice-negative2024", "ice-negative2025"]
@@ -470,10 +505,10 @@ window.COLLAPSE_DATA = {
       leverage: "Acts on the master lever — peak warming — by displacing the fossil generation that removal technologies are otherwise paid to clean up after. Firm, dispatchable, land-light, and the only category in this list that has cleared a conventional bankability test.",
       maturity: "TRL 8–9 — commercially operating, project-financeable, fully contracted offtake",
       funding: [
-        { amount: 1.5e9, qualifier: "approximately", kind: "cumulative private capital pre-IPO", holder: "Fervo Energy", asOf: "2025-12", badge: "announced" },
-        { amount: 462e6, kind: "venture (Series E)", holder: "Fervo Energy", asOf: "2025-12", badge: "announced", note: "led by B Capital with Google" },
-        { amount: 2.2e9, qualifier: "approximately", kind: "IPO gross proceeds (Nasdaq: FRVO, $27.00/share)", holder: "Fervo Energy", asOf: "2026-05", badge: "verified" },
-        { amount: 421e6, qualifier: "approximately", kind: "non-recourse project debt (closed)", holder: "Fervo Energy — Cape Station Phase I", asOf: "2026-05", badge: "verified", note: "led by Barclays, BBVA, HSBC, MUFG, Société Générale; the first non-recourse project financing for an enhanced-geothermal project globally" }
+        { amount: 1.5e9, qualifier: "approximately", stream: "capital", cumulative: true, kind: "cumulative private capital raised pre-IPO", holder: "Fervo Energy", asOf: "2025-12", badge: "announced", note: "contains the Series E below and earlier unitemised rounds" },
+        { amount: 462e6, stream: "capital", withinCumulative: "Fervo Energy", kind: "venture (Series E)", holder: "Fervo Energy — Series E", asOf: "2025-12", badge: "announced", note: "led by B Capital with Google; included in the ≈$1.5B pre-IPO total above" },
+        { amount: 2.2e9, qualifier: "approximately", stream: "capital", kind: "IPO gross proceeds (Nasdaq: FRVO, $27.00/share)", holder: "Fervo Energy — IPO", asOf: "2026-05", badge: "verified", note: "additional to the pre-IPO private total, not contained in it" },
+        { amount: 421e6, qualifier: "approximately", stream: "capital", kind: "non-recourse project debt (closed)", holder: "Fervo Energy — Cape Station Phase I debt", asOf: "2026-05", badge: "verified", note: "led by Barclays, BBVA, HSBC, MUFG, Société Générale; the first non-recourse project financing for an enhanced-geothermal project globally. Project-level debt, additional to corporate equity." }
       ],
       delivered: "Cape Station (Utah): first 100 MW in 2026, scaling to 500 MW by 2028, permitted to 2 GW, with fully contracted PPAs to Southern California Edison and Shell Energy. Technology is horizontal drilling plus fibre-optic sensing borrowed from shale.",
       caveat: "Well capitalised — included as the counterexample that proves frontier climate technology can become bankable, not as an underfunded case. Adjacent categories (long-duration storage, industrial heat, fusion) are earlier and thinner.",
@@ -487,10 +522,10 @@ window.COLLAPSE_DATA = {
       leverage: "Cement and steel are roughly 15% of global CO₂ between them, and the emissions are chemical rather than energetic — you cannot decarbonise them by changing the power source alone. Electrochemical routes attack the reaction itself.",
       maturity: "TRL 6–7 — pilot production demonstrated, first commercial plants pending finance",
       funding: [
-        { amount: 200e6, qualifier: "at-least", kind: "cumulative venture", holder: "Sublime Systems", asOf: "2026-07", badge: "announced", note: "strategic investors include Holcim, CRH, Siam Cement" },
-        { amount: 500e6, qualifier: "at-least", kind: "cumulative venture", holder: "Boston Metal", asOf: "2026-07", badge: "announced", note: "backed by Breakthrough Energy Ventures and ArcelorMittal" },
-        { amount: 75e6, kind: "venture (strategic)", holder: "Boston Metal (with Tata Steel)", asOf: "2026", badge: "announced" },
-        { amount: 378e6, kind: "demo-plant capital being raised (target, not closed)", holder: "Brimstone", asOf: "2026-07", badge: "announced" }
+        { amount: 200e6, qualifier: "at-least", stream: "capital", cumulative: true, kind: "venture (cumulative)", holder: "Sublime Systems", asOf: "2026-07", badge: "announced", note: "strategic investors include Holcim, CRH, Siam Cement" },
+        { amount: 500e6, qualifier: "at-least", stream: "capital", cumulative: true, kind: "venture (cumulative)", holder: "Boston Metal", asOf: "2026-07", badge: "announced", note: "backed by Breakthrough Energy Ventures and ArcelorMittal; contains the Tata Steel round below" },
+        { amount: 75e6, stream: "capital", withinCumulative: "Boston Metal", kind: "venture (strategic, Tata Steel)", holder: "Boston Metal — Tata Steel round", asOf: "2026", badge: "announced", note: "included in the >$500M cumulative above" },
+        { amount: 378e6, stream: "target", kind: "demo-plant capital being sought — a target, not money raised", holder: "Brimstone — demo plant", asOf: "2026-07", badge: "announced", note: "never counts toward capital raised; the source says Brimstone is raising for a $378M demo plant, not that it has closed it" }
       ],
       delivered: "Boston Metal produced 1+ ton of steel/iron at pilot scale via Molten Oxide Electrolysis (2025), with a commercial plant in Brazil focused on critical metals. Sublime Systems holds a Microsoft offtake of up to 622,500 tonnes; Brimstone holds an Amazon offtake and co-produces alumina and critical minerals.",
       policyRisk: "DOE rescinded Sublime's $87M grant in 2025, pausing the Holyoke plant and forcing a 10% layoff; Brimstone lost a $189M DOE award the same year. Strong technology, real and current policy risk — these companies de-risk if awards are restored or private offtakes cover the financing gap.",
@@ -564,7 +599,9 @@ window.COLLAPSE_DATA = {
     tier3: [
       { name: "Ambient Carbon", category: "methane-removal", country: "Denmark",
         oneLiner: "\"MEPS\" — UV plus chlorine photochemistry destroying dilute methane at point sources; a University of Copenhagen spin-out.",
-        keyFact: { text: "No disclosed venture or equity funding — grant-funded only. Delivered a 40-ft container pilot on a 250-cow dairy barn removing up to 90% of methane (2025); a Danone-funded ≈30× scale-up in Indiana is announced, not built.", badge: "delivered", asOf: "2025" } },
+        keyFact: { text: "No disclosed venture or equity funding — grant-funded only. Delivered a 40-ft container pilot on a 250-cow dairy barn removing up to 90% of methane (2025); a Danone-funded ≈30× scale-up in Indiana is announced, not built.", badge: "delivered", asOf: "2025",
+          assertedAbsence: true,
+          sourceQuote: "No disclosed venture/equity funding — grant-funded only (Innovation Fund Denmark via AgriFoodTure/PERMA project; partners include Arla Foods)" } },
       { name: "Planetary Technologies", category: "ocean-cdr", country: "Canada",
         oneLiner: "Magnesium-hydroxide ocean alkalinity enhancement out of Nova Scotia.",
         keyFact: { text: "Delivered the first net OAE credits — 138 tonnes to Shopify and Stripe (Nov 2024) — against ≈$14.6M raised and a $31M Frontier-facilitated offtake; won a $1M XPRIZE XFACTOR award in 2025.", badge: "delivered", asOf: "2024-11" } },
@@ -703,7 +740,7 @@ window.COLLAPSE_DATA = {
       investable: false,
       framing: "research milestone",
       claim: "Arctic ice intervention should be treated as a hypothesis the published evidence is currently falsifying, not as an emerging category. The honest research milestone is a pre-registered attempt to reproduce a durable thickening effect, carrying an explicit commitment to abandon the approach if the negative results hold.",
-      mechanism: "Sea-ice thickening pumps winter seawater onto the surface to freeze, adding mass before the melt season. The physics working against it is that added surface ice insulates the ice beneath and suppresses basal growth, and that thicker, snow-loaded ice can flood and change its own albedo — so a winter gain need not survive the summer. Field tests so far added roughly 30 cm of ice whose gains did not last, which is what that compensation would look like.",
+      mechanism: "Sea-ice thickening pumps winter seawater onto the surface to freeze, adding mass before the melt season. The physics working against it is that added surface ice insulates the ice beneath and suppresses basal growth, and that thicker, snow-loaded ice can flood and change its own albedo — so a winter gain need not survive the summer. Whether any winter mass gain does survive is exactly what the field trials have not yet demonstrated, and it is the measurement this milestone turns on.",
       whyNow: "Real Ice's directors have committed ≈$5M and its research group received the largest grant — about $13M — in the UK's roughly $75M geoengineering programme (2025), with field trials at Cambridge Bay; Arctic Reflections has raised ≈$1.1M. Against that, an Oct 2024 preprint by 42 glaciologists condemned ice-thickening and polar geoengineering as infeasible and dangerous, and a Sept 2025 study concluded that high-profile interventions are not viable and may cause harm, each costing $10B or more. Money is arriving while the evidence moves the other way, which is exactly when the framing has to be a research milestone with a stated exit.",
       killCriteria: "Two independent field seasons show no statistically significant end-of-melt-season ice-mass difference between treated and control areas; OR measured cost per km² sustained, extrapolated to a climatically meaningful area, exceeds the ≥$10B-per-intervention figures already published — at which point the approach should be publicly retired rather than rebranded as \"cooling credits\".",
       validation: "A pre-registered multi-season trial with treated and control plots, end-of-melt-season mass balance published either way, and an ecological monitoring record. Success means a durable, replicated, positive net effect — not a winter-only thickness gain.",
