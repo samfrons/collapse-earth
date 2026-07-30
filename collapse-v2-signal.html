@@ -466,6 +466,8 @@ main{ position:relative;z-index:1;padding-left:var(--rail);padding-top:var(--bar
 }
 .hero-warm .hw-val sup{ font-size:.34em;top:-.9em;letter-spacing:.02em; }
 .hero-warm .hw-band{ padding:16px 22px;display:flex;flex-direction:column;gap:8px;justify-content:center;min-width:150px; }
+/* I2 — the headline figure's citations live with the figure, not only in Methods. */
+.hero-warm .hw-src{ grid-column:1/-1;padding:12px 22px 14px;border-top:1px solid var(--hair-soft); }
 .hero-warm .hw-track{
   position:relative;height:12px;
   background:linear-gradient(90deg,rgba(111,211,255,.16),rgba(255,180,84,.16));
@@ -756,7 +758,7 @@ main{ position:relative;z-index:1;padding-left:var(--rail);padding-top:var(--bar
 /* ======================= ACT I — THRESHOLD BANDS ======================== */
 
 .bands{
-  --cols:32px minmax(108px,1.05fr) minmax(0,3.4fr) 124px 146px;
+  --cols:32px minmax(104px,1fr) minmax(0,3.25fr) 124px 158px;
   position:relative;
   border:1px solid var(--hair-soft);background:var(--panel);
 }
@@ -793,7 +795,8 @@ main{ position:relative;z-index:1;padding-left:var(--rail);padding-top:var(--bar
 }
 .rl-limit{ position:absolute;top:16px;bottom:3px;width:1px;background:rgba(232,234,237,.22); }
 .rl-limit::after{
-  content:attr(data-l);position:absolute;left:4px;top:0;white-space:nowrap;
+  content:attr(data-l);position:absolute;right:calc(100% + 5px);top:0;white-space:nowrap;
+  text-align:right;
   font-family:var(--mono);font-size:.5625rem;letter-spacing:.13em;color:var(--ink-3);text-transform:uppercase;
 }
 .rl-head{
@@ -902,12 +905,35 @@ main{ position:relative;z-index:1;padding-left:var(--rail);padding-top:var(--bar
   font-family:var(--mono);font-size:.5625rem;font-weight:500;letter-spacing:.11em;text-transform:uppercase;
   border:1px solid var(--hair);border-left-width:2px;padding:.28em .45em;white-space:nowrap;
 }
-.b-st.st-below{ color:var(--cold);border-left-color:var(--cold); }
-.b-st.st-within{ color:var(--warn);border-left-color:var(--warn);background:rgba(255,180,84,.08); }
-.b-st.st-above{ color:var(--crit);border-left-color:var(--crit);background:rgba(255,71,71,.08); }
+.b-st.st-below{ color:var(--cold);border-left-color:var(--cold);background:#1A2027; }
+.b-st.st-within{ color:var(--warn);border-left-color:var(--warn);background:#1F1F20; }
+.b-st.st-above{ color:var(--crit);border-left-color:var(--crit);background:#1F1B20; }
 .b-f{
   font-family:var(--mono);font-size:.5625rem;letter-spacing:.06em;color:var(--ink-3);
   font-variant-numeric:tabular-nums;white-space:nowrap;
+}
+.b-f.is-past{ color:var(--ink); }
+.band:hover .b-idx,.band:focus-visible .b-idx,.band.is-sel .b-idx,
+.band:hover .b-f,.band:focus-visible .b-f,.band.is-sel .b-f,
+.band:hover .b-nums .n-s,.band:focus-visible .b-nums .n-s,.band.is-sel .b-nums .n-s{
+  color:var(--ink-2);
+}
+/* I4 — the region the dial physically cannot reach, so an unlit bar there reads as
+   "out of the control's range" rather than "not crossed". */
+.b-dead{
+  position:absolute;top:0;bottom:0;pointer-events:none;
+  background:repeating-linear-gradient(135deg, rgba(232,234,237,.07) 0 1px, transparent 1px 5px);
+  border-left:1px dashed rgba(232,234,237,.26);
+}
+.b-lim{
+  font-family:var(--mono);font-size:.5625rem;letter-spacing:.06em;color:var(--ink-3);
+  font-variant-numeric:tabular-nums;white-space:nowrap;
+  border-left:1px dashed var(--hair);padding-left:5px;
+}
+.b-lim.is-hard{ color:var(--ink-2); }
+.rl-dead{
+  position:absolute;top:16px;bottom:3px;pointer-events:none;
+  background:repeating-linear-gradient(135deg, rgba(232,234,237,.07) 0 1px, transparent 1px 5px);
 }
 
 .bands-foot{
@@ -930,7 +956,7 @@ main{ position:relative;z-index:1;padding-left:var(--rail);padding-top:var(--bar
 .dossier-veil.is-open{ opacity:1;pointer-events:auto; }
 .dossier{
   position:fixed;top:0;right:0;bottom:0;z-index:80;
-  width:min(560px,100%);
+  width:min(560px,92vw);
   display:flex;flex-direction:column;
   background:var(--panel);border-left:1px solid var(--hair);
   box-shadow:-30px 0 70px rgba(0,0,0,.6);
@@ -981,6 +1007,79 @@ main{ position:relative;z-index:1;padding-left:var(--rail);padding-top:var(--bar
 </style>
 <style>
 /* ==================== ACT II — MISALLOCATION LEDGER ===================== */
+
+/* ---------------- ACT II — PRIORITY CHANNELS (opportunity board) --------------- */
+
+.board{ margin-bottom:clamp(26px,4vw,44px); }
+.board-lede{
+  position:relative;border:1px solid var(--hair);background:var(--panel);
+  border-left-width:3px;border-left-color:var(--warn);
+  padding:clamp(16px,2.2vw,26px);
+  display:grid;gap:clamp(16px,2.4vw,30px);grid-template-columns:1fr;
+  margin-bottom:1px;
+}
+@media (min-width:900px){ .board-lede{ grid-template-columns:minmax(0,1.55fr) minmax(230px,1fr); } }
+.board-lede p{
+  margin:.6em 0 0;font-size:clamp(.9375rem,1.35vw,1.1rem);line-height:1.52;color:var(--ink);
+}
+.board-lede p strong{ color:var(--warn);font-weight:600; }
+.board-lede .board-caveat{
+  margin-top:1em;font-family:var(--mono);font-size:.625rem;line-height:1.62;
+  letter-spacing:.02em;color:var(--ink-3);
+}
+.board-stats{
+  display:grid;gap:14px 18px;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));
+  align-content:start;border-left:1px solid var(--hair);padding-left:18px;
+}
+
+.channels{ display:grid;gap:1px;background:var(--hair-soft);grid-template-columns:1fr; }
+@media (min-width:880px){ .channels{ grid-template-columns:repeat(2,1fr); } }
+.chan{
+  position:relative;background:var(--panel);
+  padding:clamp(17px,2.1vw,24px);
+  display:flex;flex-direction:column;gap:13px;
+}
+.chan-head{ display:flex;align-items:baseline;gap:10px;flex-wrap:wrap; }
+.chan-id{
+  font-family:var(--mono);font-size:.625rem;font-weight:500;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--warn);
+}
+.chan-sec{ font-family:var(--mono);font-size:.625rem;color:var(--ink-3);letter-spacing:.06em; }
+.chan-gap{ margin-left:auto; }
+.chan-name{
+  font-family:var(--sans);font-stretch:114%;font-weight:600;
+  font-size:clamp(1rem,1.7vw,1.2rem);line-height:1.2;text-transform:uppercase;
+  letter-spacing:-.014em;margin:0;color:var(--ink);
+}
+.chan-metric{
+  display:grid;gap:3px 16px;grid-template-columns:auto 1fr;align-items:baseline;
+  border-top:1px solid var(--hair-soft);border-bottom:1px solid var(--hair-soft);
+  padding:13px 0;
+}
+.chan-big{
+  font-family:var(--mono);font-variant-numeric:tabular-nums;font-weight:500;
+  font-size:clamp(1.6rem,3.4vw,2.15rem);line-height:1;color:var(--warn);
+  grid-row:span 2;
+}
+.chan-big.is-zero{ color:var(--ink-2);font-size:clamp(1.15rem,2.4vw,1.5rem); }
+.chan-metric .cm-k{
+  font-family:var(--mono);font-size:.5625rem;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--ink-3);align-self:end;
+}
+.chan-metric .cm-v{ font-family:var(--mono);font-size:.6875rem;color:var(--ink-2);line-height:1.5; }
+.chan-cap{ display:flex;flex-direction:column;gap:6px; }
+.chan-lev{
+  margin:0;font-size:.8125rem;line-height:1.6;color:var(--ink-2);
+  border-left:2px solid var(--hair);padding-left:13px;
+}
+.chan-lev .lbl{ margin-bottom:5px; }
+.chan-hyp{ margin-top:auto;border-top:1px solid var(--hair-soft);padding-top:12px; }
+.chan-hyp .lbl{ margin-bottom:8px; }
+.chan-note{
+  font-family:var(--mono);font-size:.5625rem;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-3);
+}
+.chan.is-nocap .chan-id{ color:var(--ink-2); }
 
 .census{
   display:grid;gap:1px;background:var(--hair-soft);
@@ -1433,7 +1532,7 @@ details.caveats > summary:hover{ color:var(--ink); }
       </div>
 
       <h1 class="hero-title">Collapse<span class="l2">Earth</span></h1>
-      <p class="hero-sub">Sixteen thresholds, read against their error bars</p>
+      <p class="hero-sub"><span id="hSubN">—</span> thresholds, read against their error bars</p>
 
       <p class="hero-thesis" id="heroThesis">
         <span class="v" id="tSysCount">—</span> systems in the Earth system have a
@@ -1459,6 +1558,10 @@ details.caveats > summary:hover{ color:var(--ink); }
           </div>
           <span class="ro-note" id="hwRangeTxt">—</span>
         </div>
+        <div class="hw-src">
+          <span class="lbl">Source</span>
+          <div class="chiprow" id="hwSrc" style="margin-top:7px"></div>
+        </div>
       </div>
 
       <p class="hero-note" id="hwNote">—</p>
@@ -1471,7 +1574,7 @@ details.caveats > summary:hover{ color:var(--ink); }
       <div class="wrap">
         <div class="hero-strip-inner">
           <div class="hs-cell"><div class="ro"><span class="ro-k">Systems tracked</span><span class="ro-v" id="sSys">—</span><span class="ro-note">Armstrong McKay et al. 2022, Table 1</span></div></div>
-          <div class="hs-cell"><div class="ro"><span class="ro-k">Intervention categories</span><span class="ro-v" id="sInt">—</span><span class="ro-note">§1–§9, internal research synthesis</span></div></div>
+          <div class="hs-cell"><div class="ro"><span class="ro-k">Intervention categories</span><span class="ro-v" id="sInt">—</span><span class="ro-note" id="sIntNote">—</span></div></div>
           <div class="hs-cell"><div class="ro"><span class="ro-k">Funding rows · announced</span><span class="ro-v is-warn" id="sAnn">—</span><span class="ro-note" id="sAnnNote">—</span></div></div>
           <div class="hs-cell"><div class="ro"><span class="ro-k">Hypotheses registered</span><span class="ro-v" id="sHyp">—</span><span class="ro-note" id="sHypNote">—</span></div></div>
         </div>
@@ -1523,7 +1626,11 @@ details.caveats > summary:hover{ color:var(--ink); }
             <tr><td>Boreal forest northward expansion</td><td>Regional impact</td><td>Biosphere</td><td>Boreal permafrost collapse</td></tr>
           </tbody>
         </table>
-        <p style="margin-top:16px">This is a research position, not investment advice.</p>
+        <p style="margin-top:16px">This is a research position, not investment advice.
+        The data layer behind this page records its own last-updated date in
+        <code style="font-family:var(--mono);color:var(--cold)">COLLAPSE_DATA.meta.updated</code>,
+        which the interactive page prints in its status bar, its Methods section and its
+        colophon.</p>
       </div>
     </div>
   </noscript>
@@ -1607,7 +1714,7 @@ details.caveats > summary:hover{ color:var(--ink); }
       <header class="sect-head reveal">
         <div>
           <p class="eyebrow">Act I · Record 01 <b>The thresholds</b></p>
-          <h2 class="sect-title">Sixteen systems,<br><span class="dim">read against the dial</span></h2>
+          <h2 class="sect-title"><span id="a1TitleN">—</span> systems,<br><span class="dim">read against the dial</span></h2>
           <p class="sect-lede">Move the forcing dial. Each system is drawn by how far the
           dial has travelled into its own published uncertainty range — the honest
           reading of a threshold that is an interval, not a date. Select any system for
@@ -1648,6 +1755,7 @@ details.caveats > summary:hover{ color:var(--ink); }
             <div class="detents" id="detents" role="group" aria-label="Dial presets"></div>
             <span class="dial-hint" id="dialHint">Arrow keys step · Home / End for limits</span>
           </div>
+          <p class="sr" id="dialLive" role="status" aria-live="polite"></p>
         </div>
 
         <!-- --------------------------- STAGE --------------------------- -->
@@ -1661,7 +1769,7 @@ details.caveats > summary:hover{ color:var(--ink); }
             <div class="globe-canvas">
               <svg id="globe" viewBox="0 0 660 660" role="img" aria-labelledby="globeTitle globeDesc">
                 <title id="globeTitle">Globe of tipping-system locations</title>
-                <desc id="globeDesc">Each marker is one tipping system. The ring is its
+                <desc id="globeDesc">Each marker is a single tipping system. The ring is its
                 published uncertainty range; the lit arc is the fraction of that range
                 the forcing dial has entered; the pale radial notch marks the central
                 estimate. Marker shape encodes category. The same data is available as a
@@ -1736,9 +1844,8 @@ details.caveats > summary:hover{ color:var(--ink); }
         <div>
           <p class="eyebrow">Act II · Record 02 <b>The misallocation</b></p>
           <h2 class="sect-title">Where the money<br><span class="dim">is not</span></h2>
-          <p class="sect-lede">Nine intervention categories, ordered by how far the capital
-          in them falls short of their leverage. Capital raised is the only figure drawn
-          as a bar, and it counts equity and debt actually raised — never contracts,
+          <p class="sect-lede"><span id="a2Lede">—</span> Capital raised is the only figure
+          drawn as a bar, and it counts equity and debt actually raised — never contracts,
           prizes, grants or sector roll-ups, which are shown beside it as what they are.
           Announced money and delivered outcomes are kept in separate columns because
           they are separate things.</p>
@@ -1750,6 +1857,24 @@ details.caveats > summary:hover{ color:var(--ink); }
           <div class="ro"><span class="ro-k">Capital raised · all categories</span><span class="ro-v is-cold" id="a2Cap">—</span></div>
         </div>
       </header>
+
+      <section class="board reveal" id="board" aria-labelledby="boardHead">
+        <div class="board-lede">
+          <div class="corners" aria-hidden="true"></div>
+          <div>
+            <p class="eyebrow" id="boardHead">Priority channels <b>Where capital is missing</b></p>
+            <p id="boardLede">—</p>
+            <p class="board-caveat" id="boardCaveat">—</p>
+          </div>
+          <div class="board-stats">
+            <div class="ro"><span class="ro-k">Channels flagged</span><span class="ro-v is-warn" id="bdN">—</span><span class="ro-note" id="bdNNote">—</span></div>
+            <div class="ro"><span class="ro-k">Capital across them</span><span class="ro-v is-cold" id="bdCap">—</span><span class="ro-note">equity and debt raised</span></div>
+            <div class="ro"><span class="ro-k">Best-funded category</span><span class="ro-v" id="bdMax">—</span><span class="ro-note" id="bdMaxNote">—</span></div>
+            <div class="ro"><span class="ro-k">Share of that one</span><span class="ro-v is-warn" id="bdPct">—</span><span class="ro-note">all flagged channels combined</span></div>
+          </div>
+        </div>
+        <div class="channels" id="channels"></div>
+      </section>
 
       <div class="census reveal">
         <div class="census-cell">
@@ -1790,7 +1915,7 @@ details.caveats > summary:hover{ color:var(--ink); }
           <div>
             <p class="eyebrow">Act II · Annex <b>Company atlas</b></p>
             <h2 class="sect-title" style="font-size:clamp(1.5rem,3.2vw,2.3rem)">The named actors</h2>
-            <p class="sect-lede">Three tiers, using the research synthesis's own labels. Each
+            <p class="sect-lede"><span id="atTierN">—</span> tiers, using the research synthesis's own labels. Each
             entry carries one load-bearing fact with the badge and date it was published
             with. Where a source explicitly reports the <em>absence</em> of funding, the
             source's own wording is quoted — silence about a company's funding is not the
@@ -1813,11 +1938,11 @@ details.caveats > summary:hover{ color:var(--ink); }
       <header class="sect-head reveal">
         <div>
           <p class="eyebrow">Act III · Record 03 <b>The hypothesis engine</b></p>
-          <h2 class="sect-title">Ten entries<br><span class="dim">in the log</span></h2>
+          <h2 class="sect-title"><span id="a3TitleN">—</span> entries<br><span class="dim">in the log</span></h2>
           <p class="sect-lede">Each entry states a claim, the mechanism it rests on, and why
           it is live now. Then it states what would kill it — before it states what would
-          confirm it, because a hypothesis you cannot lose is not a hypothesis. Two entries
-          are research milestones rather than investments, and are marked as such.</p>
+          confirm it, because a hypothesis you cannot lose is not a hypothesis.
+          <span id="a3LedeTail">—</span></p>
         </div>
         <div class="sect-meta">
           <div class="ro"><span class="ro-k">Entries</span><span class="ro-v" id="a3N">—</span></div>
@@ -1862,8 +1987,12 @@ details.caveats > summary:hover{ color:var(--ink); }
           <code>ƒ = (T − min) / (max − min)</code>, clamped to 0…1, is a position inside
           the published interval — not a likelihood, and not a forecast.</p>
           <p>The band chart's axis spans the full extent of the table, so no range is
-          clipped. The dial stops short of that extent; two systems have central estimates
-          beyond the dial's ceiling and are labelled where that is the case.</p>
+          clipped — clipping a published maximum would misstate the uncertainty, which is
+          the one thing this page must not do. The dial, however, stops short of that
+          extent, so part of every affected row lies outside what the control can reach.
+          <span id="mDial">—</span> That region is hatched on the chart, and each affected
+          row states the highest crossing fraction the dial can produce for it, so an
+          unlit bar there reads as beyond the control's range rather than as not crossed.</p>
         </div>
         <div class="method">
           <h3>How money is counted</h3>
@@ -1894,9 +2023,7 @@ details.caveats > summary:hover{ color:var(--ink); }
         <div class="method">
           <h3>What this page is not</h3>
           <p>It is not a forecast. No date on which any system tips appears anywhere,
-          because the source table does not provide one and the one system with published
-          dated estimates has four mutually incompatible ones — all four are shown in its
-          dossier rather than reconciled.</p>
+          because the source table does not provide one. <span id="mContested">—</span></p>
           <p>It is not a screen, a ranking, or a portfolio. The company atlas reproduces
           the research synthesis's tiers and one fact each; it does not score them.</p>
           <p>It is not advice.</p>
@@ -1985,6 +2112,14 @@ details.caveats > summary:hover{ color:var(--ink); }
     return '$' + n.toLocaleString('en-US');
   }
   function degC(v, dp) { return Number(v).toFixed(dp == null ? 1 : dp); }
+  /* Prose counts are rendered, never typed: a spelled-out number in markup is the one
+     class of hardcoded figure a digit-only audit cannot see. */
+  var NUM_WORDS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight',
+    'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen',
+    'seventeen', 'eighteen', 'nineteen', 'twenty'];
+  function numWord(n) { return NUM_WORDS[n] != null ? NUM_WORDS[n] : String(n); }
+  function cap1(str) { return String(str).charAt(0).toUpperCase() + String(str).slice(1); }
+  function plural(n, one, many) { return n === 1 ? one : (many || one + 's'); }
   function titleCase(s) { return String(s).replace(/-/g, ' '); }
   var RM = window.matchMedia('(prefers-reduced-motion: reduce)');
   function reduced() { return RM.matches; }
@@ -2050,6 +2185,22 @@ details.caveats > summary:hover{ color:var(--ink); }
   }
   var ST_LABEL = { below: 'below range', within: 'in range', above: 'above range' };
 
+  /* The dial's ceiling sits below the axis maximum, so for some systems the control
+     physically cannot reach ƒ = 1. reachOf() reports that limit per system, which is what
+     stops an out-of-reach bar from reading as an uncrossed one. */
+  function reachOf(s) {
+    var th = s.threshold;
+    var span = th.max - th.min;
+    var fMax = span > 0 ? (DIAL.max - th.min) / span : 1;
+    return {
+      fMax: Math.max(0, Math.min(1, fMax)),
+      limited: th.max > DIAL.max,
+      centralBeyond: th.central > DIAL.max
+    };
+  }
+  var LIMITED = SYS.filter(function (s) { return reachOf(s).limited; });
+  var CENTRAL_BEYOND = SYS.filter(function (s) { return reachOf(s).centralBeyond; });
+
   var CAT_GLYPH = {
     'cryosphere':        { d: 'M0,-4.2 L4.2,0 L0,4.2 L-4.2,0 Z', fill: true,  label: 'Cryosphere' },
     'ocean-circulation': { d: 'M-3.1,0 A3.1,3.1 0 1,0 3.1,0 A3.1,3.1 0 1,0 -3.1,0 Z', fill: false, label: 'Ocean circulation' },
@@ -2065,8 +2216,8 @@ details.caveats > summary:hover{ color:var(--ink); }
   }
 
   var TIER_META = [
-    { key: 'global-core', name: 'Global core', note: 'Nine elements whose tipping would materially change global mean surface temperature.' },
-    { key: 'regional',    name: 'Regional impact', note: 'Seven elements whose tipping is regionally severe without a large global temperature effect.' }
+    { key: 'global-core', name: 'Global core', note: 'Elements whose tipping would materially change global mean surface temperature.' },
+    { key: 'regional',    name: 'Regional impact', note: 'Elements whose tipping is regionally severe without a large global temperature effect.' }
   ];
 
   var sysById = {};
@@ -2229,6 +2380,55 @@ details.caveats > summary:hover{ color:var(--ink); }
 
     $('cSrc').textContent = D.meta.sources.length;
 
+    /* ---- prose counts, all derived (see C1: a typed count drifts and lies) ---- */
+    var nRes = D.hypotheses.filter(function (h) { return h.investable === false; }).length;
+    var sections = [];
+    IVS.forEach(function (iv) { if (sections.indexOf(iv.section) === -1) sections.push(iv.section); });
+    var doubled = sections.filter(function (sec) {
+      return IVS.filter(function (iv) { return iv.section === sec; }).length > 1;
+    });
+
+    $('hSubN').textContent = cap1(numWord(SYS.length));
+    $('a1TitleN').textContent = cap1(numWord(SYS.length));
+    $('atTierN').textContent = cap1(numWord(COMPANIES.length));
+    $('a3TitleN').textContent = cap1(numWord(D.hypotheses.length));
+    $('a3LedeTail').textContent = cap1(numWord(nRes)) + ' ' + plural(nRes, 'entry', 'entries') +
+      ' ' + plural(nRes, 'is', 'are') + ' ' +
+      (nRes === 1 ? 'a research milestone rather than an investment'
+                  : 'research milestones rather than investments') +
+      ', and ' + plural(nRes, 'is', 'are') + ' marked as such.';
+
+    $('sIntNote').textContent = 'sections ' + sections[0] + '–' + sections[sections.length - 1] +
+      ' of the internal research synthesis';
+
+    var shareNote = doubled.map(function (sec) {
+      var k = IVS.filter(function (iv) { return iv.section === sec; }).length;
+      return sec + ' ' + numWord(k) + ' ' + plural(k, 'entry', 'entries');
+    }).join(' and ');
+    $('a2Lede').textContent = cap1(numWord(IVS.length)) + ' intervention categories, ordered by how far ' +
+      'the capital in them falls short of their leverage — numbered ' + sections[0] + '–' +
+      sections[sections.length - 1] + ' by the research synthesis' +
+      (shareNote ? ', which gives ' + shareNote : '') + '.';
+
+    /* I4 — say plainly how much of the chart the control cannot reach */
+    var reachPct = ((DIAL.max - AXIS.min) / (AXIS.max - AXIS.min) * 100);
+    $('mDial').textContent = 'The dial covers ' + reachPct.toFixed(0) + '% of the axis, so ' +
+      LIMITED.length + ' of ' + SYS.length + ' systems have a published maximum above its ceiling of ' +
+      degC(DIAL.max) + ' °C, and ' + CENTRAL_BEYOND.length + ' of those have a central estimate above it too.';
+
+    var contested = SYS.filter(function (x) { return x.contested; });
+    var positions = contested.length && contested[0].contestedNote
+      ? contested[0].contestedNote.split(';').length : 0;
+    $('mContested').textContent = contested.length
+      ? 'The ' + numWord(contested.length) + ' ' + plural(contested.length, 'system') +
+        ' with published dated estimates ' + plural(contested.length, 'has', 'have') + ' ' +
+        numWord(positions) + ' mutually incompatible ones, and all ' + numWord(positions) +
+        ' are shown in its dossier rather than reconciled into one.'
+      : 'No system in this table carries a dated estimate.';
+
+    /* I2 — the headline figure carries its citations and their dates */
+    $('hwSrc').innerHTML = srcChipsDated(D.warming.sourceIds);
+
     $('a1Sys').textContent = SYS.length;
     $('a1Core').textContent = SYS.filter(function (s) { return s.tier === 'global-core'; }).length;
     $('a1Reg').textContent = SYS.filter(function (s) { return s.tier === 'regional'; }).length;
@@ -2257,6 +2457,9 @@ details.caveats > summary:hover{ color:var(--ink); }
       'the lit portion is the fraction of that range the dial has entered. Axis covers the full extent of the table (' +
       degC(AXIS.min) + '–' + degC(AXIS.max) + ' °C) so no range is clipped. Bars narrower than four pixels ' +
       'are drawn at four pixels; the minimum and maximum ticks remain at their exact positions. ' +
+      'The hatched region right of ' + degC(DIAL.max) + ' °C is beyond the dial\u2019s ceiling: ' +
+      LIMITED.length + ' of ' + SYS.length + ' systems extend into it, and each says how far the ' +
+      'control can drive it, because an unlit bar there means out of reach rather than not crossed. ' +
       'Confidence texture and all threshold values: Armstrong McKay et al. 2022, Table 1.';
   }
 
@@ -2338,10 +2541,26 @@ details.caveats > summary:hover{ color:var(--ink); }
     return c;
   }
 
+  /* I5 — the dial's *result* is what matters, and it was previously silent to assistive
+     tech. Announced on a trailing debounce so dragging the slider does not queue one
+     utterance per tick. */
+  var liveTimer = null;
+  function announce() {
+    if (liveTimer) window.clearTimeout(liveTimer);
+    liveTimer = window.setTimeout(function () {
+      var c = tallyCounts();
+      $('dialLive').textContent =
+        'Dial at ' + degC(T, 2) + ' degrees Celsius. Of ' + SYS.length + ' systems, ' +
+        c.below + ' below their published threshold range, ' + c.within + ' inside it, ' +
+        c.above + ' above it. ' + c.past + ' past the central estimate.';
+    }, 650);
+  }
+
   function setT(v) {
     T = Math.max(DIAL.min, Math.min(DIAL.max, Math.round(v / DIAL.step) * DIAL.step));
     dialInput.value = T;
     render();
+    announce();
   }
 
   /* ====================================================================== */
@@ -2398,7 +2617,11 @@ details.caveats > summary:hover{ color:var(--ink); }
     }
     html += '<span class="rl-tick maj" style="left:0"></span>' +
             '<span class="rl-num" style="left:0">' + degC(AXIS.min) + '</span>';
-    html += '<span class="rl-limit" data-l="Dial ceiling" style="left:' + axisPct(DIAL.max) + '%"></span>';
+    html += '<span class="rl-dead" style="left:' + axisPct(DIAL.max) + '%;right:0" ' +
+            'title="Beyond the dial\u2019s ceiling of ' + degC(DIAL.max) +
+            ' \u00B0C — the control cannot reach this region."></span>';
+    html += '<span class="rl-limit" data-l="Dial ceiling" style="left:' +
+            axisPct(DIAL.max) + '%"></span>';
     html += '<span class="rl-head" id="rulerHead" data-l="" style="left:' + axisPct(T) + '%"></span>';
     $('ruler').innerHTML = html;
   }
@@ -2422,7 +2645,7 @@ details.caveats > summary:hover{ color:var(--ink); }
         idx++;
         var th = s.threshold;
         var n = String(idx).padStart(2, '0');
-        var beyond = th.central > DIAL.max;
+        var rch = reachOf(s);
         html += '<button class="band" type="button" data-id="' + esc(s.id) + '" ' +
           'aria-label="' + esc(s.name) + ' — open dossier">' +
           '<span class="b-idx">' + n + '</span>' +
@@ -2437,6 +2660,9 @@ details.caveats > summary:hover{ color:var(--ink); }
             '<span class="b-head"></span>' +
             '<span class="b-bar c-' + esc(th.confidence) + '" style="left:' + axisPct(th.min) + '%;width:' +
               (axisPct(th.max) - axisPct(th.min)) + '%"><span class="b-fill"></span></span>' +
+            (rch.limited
+              ? '<span class="b-dead" style="left:' + axisPct(DIAL.max) + '%;right:0"></span>'
+              : '') +
             '<span class="b-tick t-edge" style="left:' + axisPct(th.min) + '%"></span>' +
             '<span class="b-tick t-cent" style="left:' + axisPct(th.central) + '%"></span>' +
             '<span class="b-tick t-edge" style="left:' + axisPct(th.max) + '%"></span>' +
@@ -2447,8 +2673,17 @@ details.caveats > summary:hover{ color:var(--ink); }
           '<span class="b-state">' +
             '<span class="b-st"></span>' +
             '<span class="b-f"></span>' +
-            '<span class="b-f" style="color:var(--ink-3)">conf ' + esc(th.confidence) +
-              (beyond ? ' · central beyond dial' : '') + '</span>' +
+            '<span class="b-conf b-f">conf ' + esc(th.confidence) + '</span>' +
+            (rch.limited
+              ? '<span class="b-lim' + (rch.centralBeyond ? ' is-hard' : '') + '" title="' +
+                (rch.centralBeyond
+                  ? 'This system\u2019s central estimate lies above the dial\u2019s ceiling of ' +
+                    degC(DIAL.max) + ' \u00B0C, so the control cannot reach it at all.'
+                  : 'The dial\u2019s ceiling of ' + degC(DIAL.max) + ' \u00B0C lies below this ' +
+                    'system\u2019s published maximum, so the control cannot drive it past this point.') +
+                '">' + (rch.centralBeyond ? 'central beyond dial · ' : 'dial reaches ') +
+                '\u0192 \u2264 ' + rch.fMax.toFixed(2) + '</span>'
+              : '') +
           '</span>' +
         '</button>';
       });
@@ -2481,7 +2716,7 @@ details.caveats > summary:hover{ color:var(--ink); }
 
       var f = row.querySelectorAll('.b-f')[0];
       f.textContent = 'ƒ ' + v.f.toFixed(2) + (v.pastCentral ? ' · past central' : '');
-      f.style.color = v.pastCentral ? 'var(--ink)' : 'var(--ink-3)';
+      f.classList.toggle('is-past', v.pastCentral);
     });
   }
 
@@ -2671,6 +2906,16 @@ details.caveats > summary:hover{ color:var(--ink); }
     }).join('');
   }
 
+  /* Dated variant, for figures that are not adjacent to the Methods list. */
+  function srcChipsDated(ids) {
+    return (ids || []).map(function (id) {
+      var s = srcById[id];
+      if (!s) return '';
+      return '<a class="chip is-quiet wrap" href="#src-' + esc(id) + '" style="text-decoration:none" ' +
+        'title="' + esc(s.label) + '">' + esc(id) + ' · ' + esc(s.date) + '</a>';
+    }).join('');
+  }
+
   function openDossier(id, trigger) {
     var s = sysById[id];
     if (!s) return;
@@ -2803,6 +3048,114 @@ details.caveats > summary:hover{ color:var(--ink); }
   /* ====================================================================== */
   /*  ACT II — CENSUS, LEDGER, ATLAS                                        */
   /* ====================================================================== */
+
+  /* ====================================================================== */
+  /*  ACT II — PRIORITY CHANNELS (opportunity board)                        */
+  /*  Membership is derived: any category whose editorial funding-gap        */
+  /*  assessment is at or above the threshold below. Nothing is listed by    */
+  /*  name in code, so the board follows the data if the assessments change. */
+  /* ====================================================================== */
+
+  var GAP_FLAG = 4;   /* on the data's own 1–5 editorial scale */
+
+  /* hypotheses indexed by the category they address, from relatedInterventions */
+  var HYP_BY_IV = {};
+  D.hypotheses.forEach(function (h, i) {
+    (h.relatedInterventions || []).forEach(function (id) {
+      (HYP_BY_IV[id] = HYP_BY_IV[id] || []).push({
+        id: h.id, n: 'H-' + String(i + 1).padStart(2, '0'),
+        research: h.investable === false, claim: h.claim
+      });
+    });
+  });
+
+  function buildBoard() {
+    var maxCap = d3.max(IVS, capitalOf) || 1;
+    var best = IVS.filter(function (iv) { return capitalOf(iv) === maxCap; })[0];
+    /* Widest gap first; among equal assessments, the category where capital has already
+       begun to move reads first, because that is the more actionable of the two. */
+    var flagged = IVS.filter(function (iv) { return iv.gapScore >= GAP_FLAG; })
+      .sort(function (a, b) {
+        return (b.gapScore - a.gapScore) || (capitalOf(b) - capitalOf(a));
+      });
+    var tierCap = flagged.reduce(function (n, iv) { return n + capitalOf(iv); }, 0);
+    var gapsSeen = flagged.map(function (iv) { return iv.gapScore; })
+      .filter(function (g, i, a) { return a.indexOf(g) === i; }).sort();
+
+    $('boardLede').innerHTML =
+      'The widest gaps between leverage and capital in this dataset are ' +
+      '<strong>' + esc(flagged[0].name) + '</strong> and <strong>' + esc(flagged[1].name) +
+      '</strong>. ' + cap1(numWord(flagged.length)) + ' of ' + IVS.length +
+      ' categories carry a funding-gap assessment of ' + gapsSeen.join(' or ') + ' out of 5; between them ' +
+      'they hold ' + money(tierCap) + ' in capital — ' + (tierCap / maxCap * 100).toFixed(1) +
+      '% of what ' + esc(best.name) + ' (' + esc(best.section) + ') has raised on its own.';
+
+    $('boardCaveat').textContent =
+      'The gap figure is an editorial assessment on a 1–5 scale, not a measurement, and it is ' +
+      'drawn dotted and unlit everywhere it appears. What is measured here is the capital: ' +
+      'equity and debt actually raised, excluding contracts, prizes, grants and sector roll-ups. ' +
+      'A category with no capital row is not unfunded — it is funded in a way that does not buy scale.';
+
+    $('bdN').textContent = flagged.length;
+    $('bdNNote').textContent = 'gap assessment ' + GAP_FLAG + ' or above, of ' + IVS.length + ' categories';
+    $('bdCap').textContent = money(tierCap);
+    $('bdMax').textContent = money(maxCap);
+    $('bdMaxNote').textContent = best.section + ' ' + best.name;
+    $('bdPct').textContent = (tierCap / maxCap * 100).toFixed(1) + '%';
+
+    $('channels').innerHTML = flagged.map(function (iv, i) {
+      var cap = capitalOf(iv);
+      var others = otherStreamCounts(iv);
+      var otherTxt = Object.keys(others).map(function (k) { return others[k] + ' ' + k; }).join(' · ');
+      var gm = '';
+      for (var g = 1; g <= 5; g++) gm += '<i class="' + (g <= iv.gapScore ? 'on' : '') + '"></i>';
+      var hyps = HYP_BY_IV[iv.id] || [];
+
+      return '<article class="chan' + (cap === 0 ? ' is-nocap' : '') + '">' +
+        '<div class="corners live" aria-hidden="true"></div>' +
+        '<header class="chan-head">' +
+          '<span class="chan-id">CH-' + String(i + 1).padStart(2, '0') + '</span>' +
+          '<span class="chan-sec">' + esc(iv.section) + '</span>' +
+          '<div class="chan-gap">' +
+            '<div class="gapmeter" role="img" aria-label="Funding-gap assessment ' + iv.gapScore +
+              ' of 5 — an editorial assessment, not a measurement">' + gm +
+              '<span class="gm-v">' + iv.gapScore + '/5</span></div>' +
+          '</div>' +
+        '</header>' +
+        '<h4 class="chan-name">' + esc(iv.name) + '</h4>' +
+        '<div class="chan-metric">' +
+          (cap > 0
+            ? '<span class="chan-big">' + (maxCap / cap).toFixed(cap / maxCap < 0.01 ? 0 : 1) + '×</span>' +
+              '<span class="cm-k">Less capital than ' + esc(best.section) + '</span>' +
+              '<span class="cm-v">' + money(cap) + ' raised against ' + money(maxCap) + '</span>'
+            : '<span class="chan-big is-zero">' + money(0) + '</span>' +
+              '<span class="cm-k">No capital row in the dataset</span>' +
+              '<span class="cm-v">' + (otherTxt ? esc(otherTxt) + ' — funded, but not with capital' : 'no funding rows') + '</span>') +
+        '</div>' +
+        '<div class="chan-cap">' +
+          '<div class="cap-track' + (cap === 0 ? ' is-zero' : '') + '">' +
+            (cap > 0 ? '<i style="width:' + Math.max(0.4, cap / maxCap * 100) + '%"></i>' : '') + '</div>' +
+          '<span class="chan-note">capital raised, against the best-funded category' +
+            (cap > 0 && otherTxt ? ' · plus ' + esc(otherTxt) : '') + '</span>' +
+        '</div>' +
+        '<p class="chan-lev"><span class="lbl">Leverage</span>' + esc(iv.leverage) + '</p>' +
+        '<div class="chan-hyp">' +
+          '<span class="lbl">Hypotheses that would test it</span>' +
+          '<div class="chiprow">' +
+            (hyps.length
+              ? hyps.map(function (h) {
+                  return '<a class="chip ' + (h.research ? 'is-quiet' : 'is-cold') + '" href="#hyp-' +
+                    esc(h.id) + '" style="text-decoration:none" title="' + esc(h.claim) + '">' +
+                    h.n + (h.research ? ' · research' : '') + '</a>';
+                }).join('')
+              : '<span class="chan-note">no hypothesis in the log addresses this category yet</span>') +
+            '<a class="chip is-quiet" href="#iv-' + esc(iv.id) + '" style="text-decoration:none">' +
+              'full ledger entry ↓</a>' +
+          '</div>' +
+        '</div>' +
+      '</article>';
+    }).join('');
+  }
 
   function buildCensus() {
     var total = FUND_ROWS.length;
@@ -3146,6 +3499,7 @@ details.caveats > summary:hover{ color:var(--ink); }
     buildTally();
     buildRuler();
     buildBands();
+    buildBoard();
     buildCensus();
     buildLedger();
     buildAtlas();
@@ -3158,7 +3512,13 @@ details.caveats > summary:hover{ color:var(--ink); }
     observeVideos();
     wireScroll();
     RM.addEventListener('change', function () {
-      if (reduced()) { stopAuto(); } else { startAuto(); }
+      if (reduced()) {
+        stopAuto();
+        qsa('.feed-video').forEach(function (v) { v.pause(); });
+      } else {
+        startAuto();
+        observeVideos();
+      }
     });
   }
 
