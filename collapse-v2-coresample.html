@@ -32,12 +32,38 @@
    PROGRESSIVE DISCLOSURE. The default scroll is a spine, not a document:
    headlines, key figures, visuals and one-line summaries. Depth lives in
    specimen drawers (native <details>) and arrives only when asked for.
-   Measured default state at 1440×900: 2,467 visible words over 11,649 px,
-   from 7,743 words over 19,658 px before. Fully expanded it is still 13,000+
-   words — nothing was deleted, and every figure is one interaction away.
-   A drawer summary may shorten prose but never a hedge or a badge: a
-   collapsed capital total keeps its ≥ or ≈ and lists every badge its
-   underlying entries use.
+   Fully expanded it is still 13,000+ words — nothing was deleted, and every
+   figure is one interaction away. A drawer summary may shorten prose but never
+   a hedge or a badge: a collapsed capital total keeps its ≥ or ≈ and lists
+   every badge its underlying entries use.
+
+   WORD BUDGET — STATE THE BASIS OR THE NUMBER MEANS NOTHING. Counters in use on
+   this project disagree by ~1,400 words on this same page, so any figure quoted
+   without its basis is unusable and "headroom" computed against the wrong one is
+   phantom. Measured at 1440×900 in the default state — nothing expanded, nothing
+   hovered, a closed <details> contributing only its <summary>, and a word being a
+   whitespace-separated token with at least one alphanumeric character:
+
+     basis                                          now    before the assay field
+     A. prose only, SVG text excluded             2,149                     2,110
+     B. all rendered text, SVG included           2,492                     2,468
+     C. final-check.mjs (looser element rule)     3,590              not measured
+     page height                              11,682 px                 11,649 px
+
+   B is the basis the ~2,500 target has been tracked against here, and B is what
+   a report should quote unless it says otherwise. It is also what v4-measure.mjs
+   reports. Note what C means, though: on the project's own end-to-end harness
+   this page has been ~1,100 words over ~2,500 since long before the assay field,
+   so C's "headroom" was never real and must not be spent. Scroll-reveal opacity
+   is NOT treated as hidden in any of these — that copy is read, just later — and
+   counting it out understates the page by ~1,100.
+
+   THE DELTA IS WHAT TRAVELS, not the absolute: an absolute is only comparable
+   against the identical script. The assay field cost +24 on B (+39 on A) while
+   REMOVING the 1-D chart it replaced, and its review round a further +2 on B.
+   Re-measure with `scratchpad/word-bases.mjs`, which defines all three, rather
+   than trusting a number in a report — two implementations of nominally the same
+   basis have already differed by ~215 words on this page.
 
    CONTRAST DISCIPLINE (WCAG 2.1; normal text needs 4.5:1, large text 3:1).
 
@@ -587,18 +613,32 @@ input[type=range]::-moz-range-thumb{width:15px;height:22px;background:var(--carb
 #fieldSvg{display:block;min-width:780px;width:100%;height:auto}
 .fd-hd{font-family:var(--mono);font-size:8px;font-weight:600;letter-spacing:.15em;
   text-transform:uppercase;fill:var(--ink-o2)}
-.fd-axis line{stroke:var(--ink);stroke-width:.7;opacity:.32}
+/* NON-TEXT CONTRAST (WCAG 1.4.11, 3:1) — and the arithmetic that decided how.
+   Sampled ochre is ≈rgb(189,142,62), relative luminance ≈0.305. A LIGHTER wash on
+   that ground tops out at (1.05)/(0.305+0.05) = 2.96:1 even at pure white, so no
+   light region fill can reach 3:1 here. Going dark enough to reach it (≈60% ink)
+   puts the ground at ≈0.064 and drops the ink captions that sit INSIDE the shaded
+   corner to ≈1.9:1 — trading a graphics failure for a text failure.
+   So each region is made perceivable by its BOUNDARY, which is what 1.4.11 asks
+   of a graphical object: solid full-strength ink outlines and hatch lines at
+   ≈6:1, with the fill left as a light secondary cue. Measured values are in the
+   review notes; the fills are reported honestly rather than claimed as passing. */
+.fd-axis line{stroke:var(--ink);stroke-width:.8}
 .fd-axis text{font-family:var(--mono);font-size:8.4px;letter-spacing:.06em;fill:var(--ink-o2)}
+/* The alternating plates are the one thing NOT raised to 3:1, by the same
+   arithmetic: a plate dark enough to clear it against bare ochre would fail AA
+   for every caption printed on it. They are a reading aid only — row identity is
+   carried by the band numbers at ≈6:1 and by each marker's own caption. */
 .fd-band{fill:rgba(23,19,14,.05)}
 .fd-bandnum{font-family:var(--mono);font-size:11px;font-weight:600;
   letter-spacing:-.01em;fill:var(--ink);font-variant-numeric:tabular-nums}
-.fd-break{stroke:var(--ink);stroke-width:.8;opacity:.42;stroke-dasharray:3 3}
+.fd-break{stroke:var(--ink);stroke-width:1;stroke-dasharray:3 3}
 /* the gutter is a REGION, not a position: a hatch, so no reader can mistake the
    marker inside it for a value on the axis */
-.fd-gutter{fill:url(#hatchGutter);stroke:var(--ink);stroke-width:.7;
-  stroke-opacity:.42;stroke-dasharray:2.4 2.4}
-.fd-sweet{fill:rgba(247,244,238,.34);stroke:var(--ink);stroke-width:1;
-  stroke-opacity:.5;stroke-dasharray:3 4}
+.fd-gutter{fill:url(#hatchGutter);stroke:var(--ink);stroke-width:1.4;
+  stroke-dasharray:4 2.6}
+.fd-sweet{fill:rgba(247,244,238,.34);stroke:var(--ink);stroke-width:1.6;
+  stroke-dasharray:7 4}
 .fd-disc{fill:var(--carbon);stroke:var(--kraft-hi);stroke-width:1.4}
 .fd-disc--flag{fill:var(--kraft-stamp)}
 .fd-ring{fill:none;stroke:var(--kraft-stamp);stroke-width:1.2;stroke-opacity:.85}
@@ -2621,14 +2661,48 @@ function sectionGlyph(iv) {
   return m ? m[0] : "·";
 }
 
-/* Marker captions sit beside a disc at most 26px across, so the name is
-   shortened by DERIVATION and never restated: shortName() drops anything after
-   the first "&" or "(", and a trailing comma-clause goes with it ("Microbial,
-   bioelectrochemical" → "Microbial"). The unabridged name is the marker's
-   accessible name, its tooltip heading, and is printed in full on the ledger
-   row below, so nothing is lost by the shortening. */
+/* Marker captions must be short, but an earlier version bought that by always
+   dropping everything after the "&" — which threw away load-bearing halves. Two
+   names carry their argument in BOTH halves: §9's leverage clause is about cement
+   AND steel being ≈15% of global CO₂ "between them", and §8 is an ice-sheet AND
+   Arctic proposition. "Low-carbon cement" and "Ice-sheet" quietly misdescribed
+   them.
+
+   So the shortening is progressive, and stops as soon as the label fits:
+     1. drop any parenthetical;
+     2. keep "head & tail" whole when it fits, trimming only a GENERIC noun off
+        the tail — "Ice-sheet & Arctic intervention" → "Ice-sheet & Arctic",
+        while "Low-carbon cement & steel" already fits and is left alone. Note
+        that "removal" is NOT generic here: it is the operative verb in "methane
+        removal", so trimming it would be the same error one level down;
+     3. otherwise fall back to the head alone;
+     4. and only if the head is still over budget, drop its trailing comma-clause
+        and then take the more specific half of a slash-pair.
+
+   THE GUTTER GETS A TIGHTER BUDGET, and for a substantive reason rather than
+   tidiness: a caption long enough to cross the axis break would reach into the
+   plotting area and imply the very horizontal position the gutter exists to
+   withhold. §4 and §7 stay short because of where they sit, not because their
+   second halves matter less.
+
+   The unabridged name is still the marker's accessible name, its tooltip
+   heading, and the ledger row below, so nothing is lost either way. */
+var LABEL_BUDGET = 26;
+var GUTTER_LABEL_BUDGET = 13;
+var GENERIC_TAIL = /\s+(intervention|restoration|enhancement|conversion)s?$/i;
+
 function fieldLabel(iv) {
-  return cap1(shortName(iv.name).replace(/,\s*[^,]*$/, ""));
+  var budget = capitalRaised(iv) === 0 ? GUTTER_LABEL_BUDGET : LABEL_BUDGET;
+  var full = iv.name.replace(/\s*\([^)]*\)/g, "").trim();
+  var amp = full.indexOf("&");
+  var head = (amp === -1 ? full : full.slice(0, amp)).trim();
+  if (amp !== -1) {
+    var joined = head + " & " + full.slice(amp + 1).trim().replace(GENERIC_TAIL, "");
+    if (joined.length <= budget) return cap1(joined);
+  }
+  if (head.length > budget) head = head.replace(/,\s*[^,]*$/, "");
+  if (head.length > budget && head.indexOf("/") !== -1) head = head.split("/").pop().trim();
+  return cap1(head);
 }
 
 /* Real advance width at the rendered font — the captions are already in the
@@ -2658,8 +2732,14 @@ function buildField() {
   var plotTop = padTop, plotBot = plotTop + LEV_MAX * bandH;
   var axisY = plotBot + 8, tickY = axisY + 18, titleY = axisY + 40;
   var legendCY = axisY + 70, H = legendCY + 24;
-  var bandNumX = 40, gutterL = 58, gutterR = 142, gutterCX = (gutterL + gutterR) / 2;
-  var breakX = 160, plotL = 178, plotR = 812;
+  /* Left to right: band numbers · the hatched gutter · an annotation lane for the
+     gutter's captions · the axis break · the plotting area. The lane exists so a
+     gutter caption never sits on the hatch (which is now at full strength) and
+     never crosses the break into the plot, where its position would read as a
+     value on the capital axis. */
+  var bandNumX = 40, gutterL = 56, gutterR = 120, gutterCX = (gutterL + gutterR) / 2;
+  var laneL = gutterR + 14;
+  var breakX = 212, plotL = 228, plotR = 812;
 
   svg.attr("viewBox", "0 0 " + W + " " + H).attr("width", "100%").attr("height", H)
      .attr("aria-label", "Assay field: all " + D.interventions.length +
@@ -2668,13 +2748,16 @@ function buildField() {
        "standing for readiness. Categories whose sources disclose no capital figure sit " +
        "in a hatched gutter and carry no horizontal position.");
 
+  /* Hatch lines at FULL ink strength (≈6:1) rather than the 30% that measured
+     1.42:1. They can be that strong because no text sits on them any more — the
+     gutter's captions were moved out to the annotation lane beside it. */
   var defs = svg.append("defs");
   var pat = defs.append("pattern").attr("id", "hatchGutter")
-    .attr("width", 5).attr("height", 5).attr("patternUnits", "userSpaceOnUse")
+    .attr("width", 6).attr("height", 6).attr("patternUnits", "userSpaceOnUse")
     .attr("patternTransform", "rotate(135)");
-  pat.append("rect").attr("width", 5).attr("height", 5).attr("fill", "rgba(23,19,14,.04)");
-  pat.append("line").attr("x1", 0).attr("y1", 0).attr("x2", 0).attr("y2", 5)
-    .attr("stroke", "#17130E").attr("stroke-width", .6).attr("opacity", .3);
+  pat.append("rect").attr("width", 6).attr("height", 6).attr("fill", "rgba(23,19,14,.05)");
+  pat.append("line").attr("x1", 0).attr("y1", 0).attr("x2", 0).attr("y2", 6)
+    .attr("stroke", "#17130E").attr("stroke-width", 1.1);
 
   var x = d3.scaleLog().domain([1e6, 5e9]).range([plotL, plotR]).clamp(true);
   var ticks = [1e6, 1e7, 1e8, 1e9, 5e9];
@@ -2779,7 +2862,13 @@ function buildField() {
      .on("focus", function () { showTipAt(this, fieldTip(iv)); })
      .on("blur", hideTip);
 
-    laid.push({ iv: iv, hit: hit, cx: cx, cy: cy, r: r, nameT: nameT, valT: valT });
+    /* A gutter marker's caption is anchored to the annotation LANE, not to the
+       disc, and it can only go right — there is nothing to its left but the band
+       numbers, and nothing to its right it may cross. */
+    laid.push({ iv: iv, hit: hit, cx: cx, cy: cy, r: r, nameT: nameT, valT: valT,
+                gapR: none ? laneL - cx : r + 6,
+                gapL: r + 6,
+                forceRight: none });
   });
 
   FIELD.marks = laid;
@@ -2867,7 +2956,7 @@ function buildField() {
 var CAP_CLEAR = 13;
 
 function capSpan(g, right) {
-  var x0 = right ? g.m.cx + g.gap : g.m.cx - g.gap - g.w;
+  var x0 = right ? g.m.cx + g.gapR : g.m.cx - g.gapL - g.w;
   return { x0: x0, x1: x0 + g.w, owner: g.m.iv.id, right: right };
 }
 /* clear distance between two spans; negative means they collide */
@@ -2888,7 +2977,8 @@ function placeFieldCaptions() {
     var group = bands[key];
     var geom = group.map(function (m) {
       return {
-        m: m, gap: m.r + 6, pref: m.cx < flipX,
+        m: m, gapR: m.gapR, gapL: m.gapL, forceRight: !!m.forceRight,
+        pref: m.forceRight ? true : m.cx < flipX,
         w: Math.max(textW(m.nameT), m.valT ? textW(m.valT) : 0),
         disc: { x0: m.cx - m.r - 3, x1: m.cx + m.r + 3, owner: m.iv.id }
       };
@@ -2902,6 +2992,7 @@ function placeFieldCaptions() {
         var spans = [], cost = 0, minGap = Infinity, ok = true;
         for (var i = 0; i < geom.length && ok; i++) {
           var g = geom[i], sp = capSpan(g, !!(mask & (1 << i)));
+          if (!sp.right && g.forceRight) { ok = false; break; }
           if (sp.right !== g.pref) cost++;
           if (sp.x0 < 4 || sp.x1 > W - 4) { ok = false; break; }
           for (var d = 0; d < discs.length && ok; d++) {
@@ -2927,10 +3018,10 @@ function placeFieldCaptions() {
         right = best.spans[i].right;
       } else {
         /* unsolvable band — natural side, and step later captions down */
-        right = g.pref;
+        right = g.forceRight ? true : g.pref;
         dy = i * 15;
       }
-      var tx = right ? g.m.cx + g.gap : g.m.cx - g.gap;
+      var tx = right ? g.m.cx + g.gapR : g.m.cx - g.gapL;
       var cy2 = g.m.cy + dy;
       var anchor = right ? "start" : "end";
       g.m.nameT.attr("x", tx).attr("y", cy2 + (g.m.valT ? -1 : 3.6)).attr("text-anchor", anchor);
@@ -2970,30 +3061,52 @@ function fieldTip(iv) {
   return "<b>" + esc(iv.section + " · " + iv.name) + "</b>" +
     (cap ? "capital raised " + esc(hedgedTotal(iv)) : "capital raised: no figure disclosed") +
     (extra.length ? "<br>separately: " + esc(extra.join(" · ")) : "") +
+    /* The two editorial ordinals each carry the house hedge IN FULL and ADJACENT
+       to the number. This is the highest-traffic surface for both of them — a
+       reader who hovers a marker may never read the axis title or open the
+       entry — so neither may appear here as a bare figure. Readiness is not
+       hedged the same way because it is read off the maturity statement rather
+       than assessed, and it is printed with a ≈ of its own. */
     "<br>leverage band " + iv.leverageBand + "/" + LEV_MAX +
-      " · readiness ≈ TRL " + iv.trlBand + "/9" +
-    "<br>gap " + pips(iv.gapScore, 5) + " " + iv.gapScore + "/5 · editorial";
+      " · editorial assessment, not a measurement" +
+    "<br>readiness ≈ TRL " + iv.trlBand + "/9" +
+    "<br>gap " + pips(iv.gapScore, 5) + " " + iv.gapScore + "/5" +
+      " · editorial assessment, not a measurement";
 }
 
-/* The standing takeaway, in the spirit of v1's sweetNote and computed the same
-   way it should have been. v1 named its sweet spot off a hand-set flag; this
-   names the flagged set from `gapScore >= OPP_THRESHOLD` — the board's own
-   derivation — and then says which of them the shaded corner actually holds and
-   which cannot be placed at all, so the region and the flag are never conflated.
-   Every category is named by its ledger section, so the reader can find it. */
+/* The standing takeaway, in the spirit of v1's sweetNote and computed the way it
+   should have been. v1 named its sweet spot off a hand-set flag; this names the
+   flagged set from `gapScore >= OPP_THRESHOLD` — the board's own derivation.
+
+   THE REGION IS DERIVED FROM THE REGION, not from the flag. An earlier version
+   computed the shaded corner's occupants as `flagged.filter(inSweetSpot)`, which
+   silently assumed the two sets coincide. They need not: raise any unflagged
+   category to a high leverage band with modest capital — erw at band 4 is the
+   worked example — and it appears inside the rect on screen while the sentence
+   underneath omits it, so the callout would contradict the chart it captions.
+   Occupancy now comes from every category, and an occupant that does NOT carry
+   the flag is named and marked as such rather than quietly folded in. */
 function fieldCallout(ceiling) {
-  var flagged = D.interventions.filter(function (iv) { return iv.gapScore >= OPP_THRESHOLD; });
-  if (!flagged.length) return "";
-  var sweet = flagged.filter(function (iv) { return inSweetSpot(iv, ceiling); });
+  var isFlagged = function (iv) { return iv.gapScore >= OPP_THRESHOLD; };
+  var flagged = D.interventions.filter(isFlagged);
+  /* inSweetSpot() already requires a disclosed figure: a category with no
+     capital figure has no horizontal position and so cannot be in the rect */
+  var inRegion = D.interventions.filter(function (iv) { return inSweetSpot(iv, ceiling); });
+  var unflaggedInRegion = inRegion.filter(function (iv) { return !isFlagged(iv); });
   var noFig = flagged.filter(function (iv) { return capitalRaised(iv) === 0; });
   var rest = flagged.filter(function (iv) {
-    return sweet.indexOf(iv) === -1 && noFig.indexOf(iv) === -1;
+    return inRegion.indexOf(iv) === -1 && noFig.indexOf(iv) === -1;
   });
-  var out = sweet.length
-    ? "Shaded corner — high leverage, least capital: " + fieldNames(sweet) + "."
+  if (!flagged.length && !inRegion.length) return "";
+
+  var out = inRegion.length
+    ? "Shaded corner — high leverage, least capital: " + fieldNames(inRegion) + "."
     : "Nothing sits in the shaded corner.";
+  if (unflaggedInRegion.length) out += " " + fieldNames(unflaggedInRegion) +
+    (unflaggedInRegion.length > 1 ? " sit" : " sits") +
+    " there without carrying the gap flag.";
   if (noFig.length) out += " " + fieldNames(noFig) + (noFig.length > 1 ? " carry" : " carries") +
-    " the same flag with no capital figure disclosed, so " +
+    " the flag with no capital figure disclosed, so " +
     (noFig.length > 1 ? "they sit" : "it sits") + " in the gutter.";
   if (rest.length) out += " " + fieldNames(rest) +
     (rest.length > 1 ? " carry" : " carries") + " it from further right.";
@@ -3588,7 +3701,7 @@ function renderEyebrows() {
     D.hypotheses.length + " hypotheses";
   $("methEyebrow").innerHTML = segEyebrow("methods", "viii") + " · bedrock";
   $("fieldEyebrow").textContent = "assay · " + D.interventions.length +
-    " categories · leverage against disclosed capital";
+    " categories · editorial leverage against disclosed capital";
   $("bandsEyebrow").textContent = "all " + D.tippingSystems.length +
     " elements · Armstrong McKay et al. (2022), Table 1";
   $("atlasEyebrow").textContent = "companies · " +

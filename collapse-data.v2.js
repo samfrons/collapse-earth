@@ -366,7 +366,7 @@ window.COLLAPSE_DATA = {
      trlBand — integer 1–9, the approximate TRL MIDPOINT of the `maturity`
      string. Where maturity gives a range, the midpoint is used and a midpoint
      falling on a half ROUNDS DOWN: this page never rounds readiness upward.
-     Four categories state a genuinely wide internal spread (methane-removal and
+     Two categories state a genuinely wide internal spread (methane-removal and
      microbial-electro span lab bench to commercial); collapsing those to one
      number LOSES REAL INFORMATION, so the per-entry comment records what was
      collapsed and the full `maturity` string stays the authority.
@@ -459,10 +459,11 @@ window.COLLAPSE_DATA = {
       section: "§4",
       leverage: "Coastal and wetland ecosystems sequester carbon at high per-area rates, and drained peatlands are a vast avoided-emissions store. The price signal is already there: the S&P Global blue carbon assessment hit a record $29.30/tCO₂e in Aug 2025 — high precisely because rigorous MRV is scarce and costly.",
       maturity: "TRL 6–7 — the ecology is well understood and the restoration methods are mature; credit-grade measurement is the bottleneck and the actual technology opportunity",
-      /* leverage 3 — drained peatland is a genuinely large avoided-emissions store
-         and per-area sequestration is high, which argues up; the caveat argues back
-         down just as hard ("high-integrity avoidance, not durable removal;
-         permanence is measured in decades"). Middle band, and it belongs there.
+      /* leverage 3 — this clause, unlike the lower-band ones, makes an explicit claim
+         about SCALE: drained peatlands are "a vast avoided-emissions store", on top of
+         high per-area sequestration. That is what argues it up. The caveat argues back
+         down just as hard ("high-integrity avoidance, not durable removal; permanence
+         is measured in decades"), so it settles in the middle rather than above it.
          trl 6 — maturity states 6–7; midpoint 6.5 rounds DOWN. */
       leverageBand: 3,
       trlBand: 6,
@@ -489,8 +490,7 @@ window.COLLAPSE_DATA = {
          which is unbounded in principle. In practice the same clause says "its cost
          is the whole question", and maturity puts it at ≈10× target cost against
          ≈1,186 tonnes delivered. Generality that costs ten times too much is a
-         middling lever on peak warming, not a top-band one. Placing DAC mid-band
-         with the largest capital figure in the act is the whole contrast.
+         middling lever on peak warming, not a top-band one.
          trl 7 — maturity states a single value. */
       leverageBand: 3,
       trlBand: 7,
@@ -513,10 +513,13 @@ window.COLLAPSE_DATA = {
       section: "§6",
       leverage: "Pyrolysis converts biomass into stable aromatic carbon that resists decomposition for centuries to millennia. It is the most-delivered durable CDR category by volume — the one place where verified tonnes, not forward contracts, are the headline number.",
       maturity: "TRL 8 — commercially operating at scale; permanence assurance is the maturing edge",
-      /* leverage 2 — centuries-to-millennia durability and the most delivered tonnes
-         of any durable route, but the caveat names a hard ceiling the others do not
-         have: "sustainable biomass availability is the ceiling on the category". A
-         lever with a supply cap cannot reach the top bands.
+      /* leverage 2 — read strictly off this category's own leverage clause, which
+         makes no claim about scale at all: it argues durability (centuries to
+         millennia) and delivery record ("the most-delivered durable CDR category by
+         volume"). Durability and track record are not leverage on peak warming. And
+         the caveat closes the question by naming a supply ceiling — "sustainable
+         biomass availability is the ceiling on the category" — so the clause offers
+         nothing that could carry this above the lower bands.
          trl 8 — maturity states a single value. */
       leverageBand: 2,
       trlBand: 8,
