@@ -23,26 +23,33 @@
    a fixed depth-gauge rail on the left is the instrument housing.
 
    CONTRAST DISCIPLINE (WCAG 2.1; normal text needs 4.5:1, large text 3:1).
-   Every pairing below is asserted by a headless audit that samples each
-   stratum's gradient END STOPS *and* the midpoints between them, so the
-   transition zones are tested too, not just the named colours:
-     firn  #F5F1E8 → #F0EADE  + ink #17130E ...... 15.6:1 … 14.5:1
-     bone  #EDE6DA → #E2D8C6  + ink #17130E ...... 15.1:1 … 13.3:1
-                              + ink-2 #5C4B37 ....  6.4:1 …  5.9:1
-     ochre #C8973F → #BC8637  + ink #17130E ......  7.1:1 …  5.9:1
-                              + ink-o2 #2E2317 ...  5.8:1 …  4.8:1
-     rust  #9C4A22 → #3A1C0E  + inv #F4EFE6 ......  5.4:1 … 13.6:1
-                              + inv-2 #EADDC9 ....  4.6:1 … 11.6:1
-     carbon#17130E → #0B0906  + inv #F4EFE6 ...... 16.4:1 … 17.9:1
-     kraft #E3D5B8 → #C9B693  + ink #2B2118 ...... 10.3:1 …  8.0:1
-                              + ink-2 #4E3B27 ....  6.8:1 …  5.4:1
+
+   HOW IT IS VERIFIED, and this matters more than the numbers: contrast is
+   measured from RENDERED SCREENSHOT PIXELS, not from modelled composites.
+   The audit blanks every glyph, screenshots each screenful, and takes the
+   modal pixel behind each text box. An earlier version composited declared
+   colours over modelled stratum grounds and reported zero failures while two
+   components were sitting at 2.6:1 — because a model never sees the plates
+   BETWEEN the stratum and the text (.co-grid's 28% gap plate, a chip's wash,
+   the two mix-blend-mode grain layers). Two rules follow from that:
+     · a component variant TINTS its base, it never REPLACES it — replacing
+       the light wash is what stacked .co--flag to 34.5% black over ochre;
+     · the kraft inks are darker than the stock alone would need, because the
+       multiply grain darkens the real ground behind them by roughly 15%.
+
    Ink is declared BY THE STRATUM, never by a scroll-driven attribute on
    <body> — otherwise Act III's text would render with light-ground ink
-   whenever the reader happened to be somewhere else on the page.
+   whenever the reader happened to be somewhere else on the page. `color` is
+   set on .stratum itself, since an inherited colour is a RESOLVED value and
+   would otherwise capture var(--fg) as it stood on <body>.
+
    The rail is a constant carbon bezel, so its ink never depends on the
-   stratum beside it. No body text sits on a stratum-to-stratum transition:
-   those happen inside the photographic contact bands, where every label
-   carries its own opaque plate (≥12.8:1 whatever frame is underneath).
+   stratum beside it. The dossier tray is opaque for the same reason. No body
+   text sits on a stratum-to-stratum transition: those happen inside the
+   photographic contact bands, where every label carries its own opaque plate
+   (≥12.8:1 whatever video frame is underneath). Page content behind the open
+   tray is dimmed by a modal scrim and is inert — scroll locked, focus
+   trapped — so it is deliberately excluded from measurement.
    =========================================================================== */
 
 *,*::before,*::after{box-sizing:border-box}
@@ -69,9 +76,12 @@ table{border-collapse:collapse}
 
   /* label stock + accents */
   --kraft:#D6C4A0; --kraft-hi:#E3D5B8; --kraft-lo:#C9B693; --kraft-edge:#A8906A;
-  --kraft-ink:#2B2118; --kraft-ink-2:#4E3B27;
-  --kraft-kill:#2E1409; --kraft-val:#244653; --kraft-stamp:#6B2010;
-  --ice:#3E6B7A;   --ice-lt:#8FB8C7;
+  --kraft-ink:#2B2118; --kraft-ink-2:#2F2113;
+  --kraft-kill:#2E1409; --kraft-val:#16303B; --kraft-stamp:#5A1A0C;
+  /* The kraft inks are darker than the stock alone would need: the fixed grain
+     layer multiplies over the tags, so the real ground behind this text is
+     ~15% darker than --kraft-lo. Pixel sampling found that; modelling missed it. */
+  --ice:#3E6B7A;   --ice-lt:#8FB8C7;  --ice-dk:#33596A;  /* small text on light */
   --ember:#D2653C; --ember-dk:#B8391A;   /* -dk is the light-ground variant */
 
   /* Defaults for anything outside a stratum. Each stratum RE-DECLARES these,
@@ -266,6 +276,19 @@ a:hover{text-decoration-color:currentColor}
 .plate video,.plate img{width:100%;height:100%;object-fit:cover;
   filter:grayscale(1) contrast(1.06) brightness(1.02)}
 .plate--hero{aspect-ratio:16/9}
+/* The hero clip is held on its poster until asked for: it is the only clip in
+   the first viewport, and fetching it on load put the page over budget. */
+.plate-play{position:absolute;left:12px;bottom:12px;display:flex;align-items:center;
+  gap:9px;background:rgba(11,9,8,.9);color:var(--inv);
+  border:1px solid rgba(244,239,230,.4);padding:8px 12px 8px 10px;
+  font-family:var(--mono);font-size:.5625rem;letter-spacing:.15em;
+  text-transform:uppercase;line-height:1.3;text-align:left}
+.plate-play:hover{background:var(--inv);color:var(--carbon);border-color:var(--inv)}
+.plate-play em{display:block;font-style:normal;font-size:.4375rem;letter-spacing:.13em;
+  color:var(--inv-2);margin-top:2px}
+.plate-play:hover em{color:var(--carbon)}
+.plate-play-ico{width:0;height:0;border-style:solid;flex:0 0 auto;
+  border-width:5px 0 5px 8px;border-color:transparent transparent transparent currentColor}
 .plate-cap{font-family:var(--mono);font-size:.5rem;letter-spacing:.13em;
   text-transform:uppercase;color:var(--fg-2);margin-top:8px;line-height:1.6}
 .hero-anthro{margin-top:clamp(22px,3vh,34px);padding-top:14px;
@@ -311,8 +334,13 @@ a:hover{text-decoration-color:currentColor}
 /* ===========================================================================
    ACT I — globe, dial, dossier, threshold bands
    =========================================================================== */
-.atlas{display:grid;gap:clamp(22px,3vw,40px);grid-template-columns:minmax(0,1fr)}
-@media(min-width:1000px){.atlas{grid-template-columns:minmax(0,1fr) minmax(0,.86fr)}}
+.atlas{display:grid;gap:clamp(22px,3vw,40px);grid-template-columns:minmax(0,1fr);
+  align-items:start}
+@media(min-width:1000px){.atlas{grid-template-columns:minmax(0,1.12fr) minmax(0,.88fr)}}
+.reading{border:1px solid var(--rule-hi);background:var(--plate);
+  padding:clamp(15px,2vw,20px);margin-top:clamp(16px,2.2vh,24px)}
+.reading h4{margin:0 0 8px}
+.reading p{font-size:.8125rem;line-height:1.5;color:var(--fg-2);max-width:52ch}
 
 .globe-cell{position:relative}
 .globe-frame{border:1px solid var(--rule-hi);background:rgba(255,255,255,.28);
@@ -380,18 +408,62 @@ input[type=range]::-moz-range-thumb{width:15px;height:22px;background:var(--carb
 .legend-row b{color:var(--ink);font-family:var(--mono);font-size:.5625rem;
   letter-spacing:.14em;text-transform:uppercase;display:block}
 
-/* dossier */
-.dossier{border:1px solid var(--rule-hi);background:rgba(255,255,255,.34);
-  padding:clamp(18px,2.4vw,28px);position:relative;min-height:360px}
-.dossier-hd{display:flex;justify-content:space-between;gap:14px;align-items:start;
-  padding-bottom:12px;border-bottom:1px solid var(--rule-hi)}
-.dossier-close{font-family:var(--mono);font-size:.5rem;letter-spacing:.14em;
-  text-transform:uppercase;border:1px solid var(--rule-hi);padding:5px 8px;
-  color:var(--fg-2);flex:0 0 auto}
-.dossier-close:hover{color:var(--ink);border-color:var(--ink)}
+/* ===========================================================================
+   DOSSIER — a specimen tray pulled from the right edge of the bench.
+   Opaque carbon ground with its own kraft-lined header, so its legibility is
+   independent of whichever stratum it happens to slide over. Everything inside
+   is measured against the tray, never against the page behind it.
+   =========================================================================== */
+.dos-scrim{position:fixed;inset:0;z-index:88;background:rgba(11,9,8,.62);
+  opacity:0;pointer-events:none;transition:opacity .32s var(--ease)}
+.dos-scrim[data-open="1"]{opacity:1;pointer-events:auto}
+
+.dossier{
+  position:fixed;top:0;right:0;bottom:0;z-index:90;
+  width:min(560px,92vw);
+  display:flex;flex-direction:column;
+  background:linear-gradient(180deg,#1C1712 0%,var(--carbon) 30%,var(--carbon-d) 100%);
+  color:var(--inv);
+  border-left:1px solid rgba(244,239,230,.28);
+  box-shadow:-24px 0 60px -20px rgba(11,9,8,.85);
+  transform:translateX(101%);
+  transition:transform .38s var(--ease);
+  overscroll-behavior:contain}
+.dossier[data-open="1"]{transform:none}
+/* the machined pull-handle on the tray's leading edge */
+.dossier::before{content:"";position:absolute;left:-1px;top:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,rgba(244,239,230,.42),rgba(244,239,230,.06))}
+.dos-grip{position:absolute;left:-16px;top:50%;transform:translateY(-50%);
+  width:14px;height:74px;background:var(--carbon);
+  border:1px solid rgba(244,239,230,.28);border-right:0;
+  display:grid;place-items:center;gap:3px;align-content:center;pointer-events:none}
+.dos-grip i{display:block;width:5px;height:1px;background:rgba(244,239,230,.5)}
+
+.dossier-hd{flex:0 0 auto;padding:clamp(16px,2.2vw,22px) clamp(18px,2.4vw,26px) 14px;
+  background:linear-gradient(168deg,var(--kraft-hi),var(--kraft) 60%,var(--kraft-lo));
+  color:var(--kraft-ink);border-bottom:2px solid var(--kraft-edge);
+  display:grid;gap:10px}
+.dossier-hd .dossier-top{display:flex;justify-content:space-between;
+  align-items:start;gap:14px}
 .dossier-tier{font-family:var(--mono);font-size:.5rem;letter-spacing:.16em;
-  text-transform:uppercase;color:var(--fg-2);margin:0 0 6px}
-.dossier-empty{color:var(--fg-2);font-size:.9375rem;line-height:1.55}
+  text-transform:uppercase;color:var(--kraft-ink-2);margin:0 0 5px}
+#dosName{color:var(--kraft-ink)}
+.dossier-close{font-family:var(--mono);font-size:.5rem;letter-spacing:.14em;
+  text-transform:uppercase;border:1px solid var(--kraft-ink);padding:6px 9px;
+  color:var(--kraft-ink);flex:0 0 auto;background:rgba(255,255,255,.34)}
+.dossier-close:hover{background:var(--kraft-ink);color:var(--kraft-hi)}
+.dossier-body{flex:1 1 auto;min-height:0;overflow-y:auto;
+  padding:clamp(14px,2vw,20px) clamp(18px,2.4vw,26px) clamp(28px,4vw,40px);
+  --fg:var(--inv); --fg-2:var(--inv-2);
+  --rule:rgba(244,239,230,.22); --rule-hi:rgba(244,239,230,.44);
+  --accent:var(--ice-lt); --alert:var(--ember)}
+.dossier-empty{color:var(--inv-2);font-size:.9375rem;line-height:1.55}
+/* the tray, closed: a labelled edge you can see is there */
+.dos-tab{display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--mono);font-size:.5rem;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--fg-2);
+  border:1px solid var(--rule-hi);padding:7px 11px}
+.dos-tab:hover{color:var(--fg);border-color:var(--fg)}
 .dl{margin:0}
 .dl-row{padding:11px 0;border-bottom:1px solid var(--rule);display:grid;gap:3px}
 .dl-row:last-child{border-bottom:0}
@@ -415,7 +487,9 @@ input[type=range]::-moz-range-thumb{width:15px;height:22px;background:var(--carb
 .cascade-links{display:flex;flex-wrap:wrap;gap:6px}
 .cascade-links button{font-family:var(--mono);font-size:.5625rem;letter-spacing:.09em;
   border:1px solid var(--rule-hi);padding:4px 8px;color:var(--fg-2)}
-.cascade-links button:hover{color:var(--ink);border-color:var(--ink)}
+/* --fg, not --ink: these buttons now live in the carbon tray, where a dark
+   hover colour would erase them. */
+.cascade-links button:hover{color:var(--fg);border-color:var(--fg)}
 .src-list{margin:0;padding:0;list-style:none;display:grid;gap:5px}
 .src-list li{font-size:.75rem;line-height:1.45;color:var(--fg-2);
   padding-left:14px;position:relative}
@@ -434,7 +508,9 @@ input[type=range]::-moz-range-thumb{width:15px;height:22px;background:var(--carb
 .bx-name--sel{font-weight:600}
 .bx-meta{font-family:var(--mono);font-size:8.4px;letter-spacing:.07em;fill:var(--ink-2)}
 .bx-track{fill:url(#hatchBand);stroke:var(--ink);stroke-width:.85}
-.bx-fill{fill:var(--rust);stroke:none}
+/* NO `fill` here on purpose: an author rule beats a presentation attribute, so
+   declaring it would freeze the state colour the JS sets per dial value. */
+.bx-fill{stroke:none}
 .bx-central{stroke:var(--ink);stroke-width:1.4}
 .bx-cdot{fill:var(--bone);stroke:var(--ink);stroke-width:1}
 .bx-row{cursor:pointer}
@@ -493,6 +569,69 @@ input[type=range]::-moz-range-thumb{width:15px;height:22px;background:var(--carb
 .ax-row:hover .ax-hit,.ax-row:focus-visible .ax-hit{fill:rgba(23,19,14,.075)}
 .ax-hit{fill:transparent}
 
+/* ===========================================================================
+   OPPORTUNITY BOARD — Act II leads with it. In core-sample language these are
+   the flagged intervals: the depths the assay says to go back and look at.
+   Membership is derived from the data (gap assessment at or above the board
+   threshold), never hardcoded.
+   =========================================================================== */
+.opp{margin-bottom:clamp(40px,6vh,68px);border-top:3px solid var(--ink);padding-top:16px}
+.opp-lede{font-family:var(--disp);font-weight:700;
+  font-size:clamp(1.25rem,1.05rem + 1.1vw,2rem);line-height:1.12;
+  letter-spacing:-.02em;margin:10px 0 0;max-width:34ch;text-wrap:balance}
+.opp-sub{margin:12px 0 0;font-size:.875rem;line-height:1.5;color:var(--fg-2);max-width:66ch}
+.opp-grid{display:grid;gap:1px;margin-top:clamp(20px,3vh,30px);
+  background:rgba(23,19,14,.3);
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,268px),1fr))}
+.opp-card{background:rgba(247,244,238,.5);padding:clamp(15px,1.8vw,20px);
+  display:flex;flex-direction:column;gap:11px}
+.opp-card--unranked{background:
+    repeating-linear-gradient(135deg,rgba(23,19,14,.055) 0 3px,transparent 3px 9px),
+    rgba(247,244,238,.5)}
+.opp-rank{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.opp-rank b{font-family:var(--mono);font-size:1.5rem;font-weight:600;
+  letter-spacing:-.03em;line-height:1}
+.opp-rank span{font-family:var(--mono);font-size:.4375rem;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--fg-2);text-align:right;line-height:1.5}
+/* three lines reserved: category names run 2–3 lines, and the comparison bars
+   below them only scan as a row if they start at the same height */
+.opp-name{font-family:var(--disp);font-weight:600;font-size:1.0625rem;line-height:1.16;
+  letter-spacing:-.012em;margin:0;min-height:3.48em}
+@media(max-width:620px){.opp-name{min-height:0}}
+.opp-gap{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.opp-gap .pips i{width:9px;height:15px}
+.opp-gap em{font-style:normal;font-family:var(--mono);font-size:.4375rem;
+  letter-spacing:.13em;text-transform:uppercase;color:var(--fg-2)}
+/* the leverage text absorbs the slack so the comparison bars line up ACROSS
+   cards — they are the point of the board and must be scannable in a row */
+.opp-lev{font-size:.8125rem;line-height:1.5;margin:0;flex:1 1 auto}
+.opp-bars{display:grid;gap:7px;padding-top:11px;border-top:1px solid rgba(23,19,14,.26)}
+.opp-bar{display:grid;gap:3px}
+.opp-bar-k{font-family:var(--mono);font-size:.4375rem;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--fg-2);display:flex;justify-content:space-between;gap:8px}
+.opp-bar-k b{font-size:.6875rem;letter-spacing:-.01em;color:var(--fg);
+  font-variant-numeric:tabular-nums}
+.opp-bar-t{height:9px;background:rgba(23,19,14,.13);position:relative;
+  box-shadow:inset 0 0 0 1px rgba(23,19,14,.28)}
+.opp-bar-f{position:absolute;inset:0 auto 0 0;background:var(--ink);min-width:2px}
+.opp-bar--ref .opp-bar-f{background:transparent;
+  background-image:repeating-linear-gradient(90deg,var(--ink) 0 2px,transparent 2px 4px)}
+.opp-bar-f--none{background:transparent;
+  background-image:repeating-linear-gradient(135deg,var(--ink) 0 2px,transparent 2px 5px);
+  width:100% !important}
+.opp-hyp{padding-top:11px;border-top:1px solid rgba(23,19,14,.26)}
+.opp-hyp-k{font-family:var(--mono);font-size:.4375rem;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--fg-2);margin:0 0 6px}
+.xlinks{display:flex;flex-wrap:wrap;gap:5px}
+.xlink{font-family:var(--mono);font-size:.5625rem;letter-spacing:.06em;
+  border:1px solid var(--rule-hi);padding:5px 8px;color:var(--fg);
+  background:rgba(255,255,255,.26);text-align:left;line-height:1.35}
+.xlink:hover{background:var(--ink);color:var(--firn);border-color:var(--ink)}
+.xlink b{font-weight:600}
+/* a jumped-to target announces itself briefly */
+@keyframes flagPulse{0%{box-shadow:0 0 0 3px var(--accent)}100%{box-shadow:0 0 0 0 transparent}}
+.jumped{animation:flagPulse 1.5s var(--ease) 1}
+
 /* funding chips */
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin:0}
 .chip{display:inline-grid;gap:1px;border:1px solid rgba(23,19,14,.5);
@@ -507,8 +646,16 @@ input[type=range]::-moz-range-thumb{width:15px;height:22px;background:var(--carb
 .chip[data-badge="delivered"]{border-left:3px solid var(--carbon)}
 .chip[data-badge="announced"]{border-left:3px dashed rgba(23,19,14,.75)}
 .chip[data-badge="deployed-grants"]{border-left:3px dotted var(--carbon)}
-.chip[data-stream="target"]{background:transparent;border-style:dashed}
-.chip[data-stream="aggregate"]{background:rgba(23,19,14,.1)}
+/* Stream variants LAYER over the light wash; they never replace it. Replacing
+   it put the aggregate chip's meta text at 4.29:1 on bare ochre. */
+.chip[data-stream="target"]{background:
+    repeating-linear-gradient(135deg,rgba(23,19,14,.05) 0 3px,transparent 3px 7px),
+    rgba(247,244,238,.5);
+  border-style:dashed}
+.chip[data-stream="aggregate"]{background:
+    repeating-linear-gradient(45deg,rgba(23,19,14,.07) 0 2px,transparent 2px 6px),
+    rgba(247,244,238,.5);
+  box-shadow:inset 0 0 0 1px rgba(23,19,14,.22)}
 .chip--absence{background:transparent;border-style:dotted}
 
 .iv-list{display:grid;gap:0;margin-top:clamp(34px,5vh,58px);
@@ -552,7 +699,16 @@ input[type=range]::-moz-range-thumb{width:15px;height:22px;background:var(--carb
 .co-grid{display:grid;gap:1px;background:rgba(23,19,14,.28);
   grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr))}
 .co{background:rgba(247,244,238,.44);padding:16px}
-.co--flag{background:rgba(23,19,14,.09)}
+/* A flagged card keeps the SAME light base as its siblings — an earlier version
+   replaced the wash with a dark tint, which stacked with .co-grid's 28% plate
+   and dropped the exact cards the contract wants clearly marked to 2.6–3.1:1.
+   The flag now reads through structure — hatched edge, heavier rule, stamp —
+   never through a background that fights the ink. */
+.co--flag{background:
+    repeating-linear-gradient(135deg,rgba(23,19,14,.07) 0 3px,transparent 3px 8px),
+    rgba(247,244,238,.44);
+  box-shadow:inset 4px 0 0 var(--ink),inset 0 0 0 1px rgba(23,19,14,.3)}
+.co--flag .co-name{padding-left:2px}
 .co-top{display:flex;justify-content:space-between;gap:10px;align-items:start}
 .co-name{font-family:var(--disp);font-weight:600;font-size:1rem;line-height:1.15;
   letter-spacing:-.01em;margin:0}
@@ -588,8 +744,19 @@ input[type=range]::-moz-range-thumb{width:15px;height:22px;background:var(--carb
 .tag-hd{padding:13px 18px 12px 42px;border-bottom:1px solid var(--kraft-edge);
   display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
 .tag-id{font-family:var(--mono);font-size:.9375rem;font-weight:600;letter-spacing:.06em}
-.tag-trl{font-family:var(--mono);font-size:.4375rem;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--kraft-ink-2);text-align:right;max-width:24ch;line-height:1.5}
+/* The header slot carries the cross-link back to the intervention category.
+   It used to repeat h.maturity, which the "maturity" field already prints. */
+.tag-xlink{font-family:var(--mono);font-size:.5rem;letter-spacing:.09em;
+  color:var(--kraft-ink);border:1px solid var(--kraft-edge);padding:5px 8px;
+  text-align:right;max-width:26ch;line-height:1.35;background:rgba(255,255,255,.3)}
+.tag-xlink:hover{background:var(--kraft-ink);color:var(--kraft-hi);
+  border-color:var(--kraft-ink)}
+.tag-xlink em{font-style:normal;display:block;font-size:.4375rem;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--kraft-ink-2)}
+.tag-xlink:hover em{color:var(--kraft-lo)}
+.tag-none{font-family:var(--mono);font-size:.4375rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--kraft-ink-2);text-align:right;
+  max-width:22ch;line-height:1.5}
 .tag-claim{margin:0;padding:16px 18px;font-family:var(--disp);font-weight:600;
   font-size:clamp(1rem,1.35vw,1.15rem);line-height:1.26;letter-spacing:-.012em;
   border-bottom:1px solid var(--kraft-edge)}
@@ -606,7 +773,7 @@ input[type=range]::-moz-range-thumb{width:15px;height:22px;background:var(--carb
   border-top:1px solid var(--rust);border-bottom:1px solid rgba(168,144,106,.5)}
 .tag-f--kill .tag-k{color:var(--kraft-kill)}
 .tag-f--kill .tag-k::before{content:"↑ ";font-family:var(--serif)}
-.tag-f--val{background:rgba(62,107,122,.1);padding-bottom:13px}
+.tag-f--val{background:rgba(62,107,122,.07);padding-bottom:13px}
 .tag-f--val .tag-k{color:var(--kraft-val)}
 .tag-order{font-family:var(--mono);font-size:.4375rem;letter-spacing:.13em;
   text-transform:uppercase;color:var(--kraft-ink-2);padding:9px 18px 0;margin:0}
@@ -652,6 +819,17 @@ footer{padding-block:clamp(40px,6vh,70px);border-top:1px solid var(--rule-hi);
   margin-top:clamp(40px,6vh,70px)}
 .foot-row{display:flex;flex-wrap:wrap;gap:10px 26px;font-family:var(--mono);
   font-size:.5rem;letter-spacing:.16em;text-transform:uppercase;color:var(--fg-2)}
+
+/* If the data layer fails to load, say so rather than showing a bare skeleton. */
+html[data-nodata] #dataFail{display:block}
+#dataFail{display:none;margin:0 auto;max-width:56ch;
+  padding:clamp(28px,6vh,64px) var(--gut);font-size:1rem;line-height:1.6}
+#dataFail b{display:block;font-family:var(--disp);font-weight:700;font-size:1.25rem;
+  letter-spacing:-.015em;margin-bottom:10px}
+html[data-nodata] #core > main > section:not(#dataFailHost){display:none}
+
+/* body scroll is locked while the dossier tray is out */
+html[data-tray="1"]{overflow:hidden}
 
 /* ===========================================================================
    SCROLL REVEAL (opt-in, disabled under reduced motion)
@@ -735,6 +913,11 @@ footer{padding-block:clamp(40px,6vh,70px);border-top:1px solid var(--rule-hi);
 <div id="core">
 <main>
 
+  <section id="dataFailHost"><p id="dataFail" role="alert"><b>The data layer did not
+    load.</b> Every figure on this page is read from <span class="mono">collapse-data.v2.js</span>
+    at runtime, so nothing is rendered from the markup itself. Reload, or check that the file is
+    being served alongside this page.</p></section>
+
   <!-- =====================================================================
        HERO — the sawn face of the core, laid on the bench
        ===================================================================== -->
@@ -799,14 +982,19 @@ footer{padding-block:clamp(40px,6vh,70px);border-top:1px solid var(--rule-hi);
 
       <div class="atlas">
         <div class="globe-cell">
-          <div class="globe-frame" id="globeFrame" tabindex="0" role="application"
-               aria-label="Rotatable globe of tipping elements. Drag or use arrow keys to turn; press Enter on an element to open its dossier.">
+          <div class="globe-frame" id="globeFrame" tabindex="0" role="group"
+               aria-describedby="globeHint"
+               aria-label="Globe of tipping elements">
             <svg id="globeSvg" aria-hidden="true"></svg>
             <span class="globe-corner tl"></span><span class="globe-corner tr"></span>
             <span class="globe-corner bl"></span><span class="globe-corner br"></span>
           </div>
-          <p class="globe-hint">Drag to turn · arrow keys to rotate · click an element for its dossier</p>
+          <p class="globe-hint" id="globeHint">Drag or use the arrow keys to turn the globe. Press Tab
+            to step onto the elements facing you, then the arrow keys to move between them and Enter
+            to pull its dossier.</p>
+        </div>
 
+        <div>
           <div class="dial">
             <div class="dial-top">
               <span class="dial-lab" id="dialLab"></span>
@@ -817,22 +1005,14 @@ footer{padding-block:clamp(40px,6vh,70px);border-top:1px solid var(--rule-hi);
             <div class="dial-count" id="dialCount" aria-live="polite"></div>
             <div class="legend" id="legend"></div>
           </div>
-        </div>
 
-        <div class="dossier" id="dossier" role="region" aria-live="polite"
-             aria-label="Tipping element dossier">
-          <div class="dossier-hd">
-            <div>
-              <p class="dossier-tier" id="dosTier"></p>
-              <h3 id="dosName">Select an element</h3>
-            </div>
-            <button class="dossier-close" id="dosClose" hidden>Close · esc</button>
-          </div>
-          <div id="dosBody">
-            <p class="dossier-empty" style="margin-top:14px">Pick an element on the globe or in the
-              band chart below. The dossier reports its threshold range and confidence rating, how
-              long the transition takes once triggered, what it does to the rest of the system, and
-              the sources the numbers come from.</p>
+          <div class="reading">
+            <h4>The dossier</h4>
+            <p>Every element has a full record — threshold range and confidence rating, how long the
+              transition takes once triggered, what it destabilises next, and the sources behind each
+              figure. It slides out from the right as a specimen tray. Choose an element on the globe
+              or any row of the band chart below.</p>
+            <button class="dos-tab" id="dosOpenLast" type="button">Open the last dossier</button>
           </div>
         </div>
       </div>
@@ -848,7 +1028,7 @@ footer{padding-block:clamp(40px,6vh,70px);border-top:1px solid var(--rule-hi);
             band the dial has already entered. Confidence is the paper's own rating, printed on every
             row — a wide bar with a low rating is the honest shape of most of this table.</p>
         </div>
-        <div class="bands-scroll"><svg id="bandsSvg" role="img"></svg></div>
+        <div class="bands-scroll"><svg id="bandsSvg" role="group" aria-label="Threshold bands for every tipping element. Each row is a focusable control that opens that element's dossier."></svg></div>
         <p class="note" id="bandsFoot" style="margin-top:14px"></p>
       </div>
 
@@ -923,8 +1103,19 @@ footer{padding-block:clamp(40px,6vh,70px);border-top:1px solid var(--rule-hi);
         </div>
       </header>
 
-      <div class="alloc-scroll"><svg id="allocSvg" role="img"></svg></div>
-      <p class="note" id="allocFoot" style="margin-top:16px;color:var(--ink-o2)"></p>
+      <!-- The board leads the act: the flagged intervals, before the full log. -->
+      <section class="opp" id="opp" aria-labelledby="oppLede">
+        <p class="eyebrow" id="oppEyebrow"></p>
+        <h3 class="opp-lede" id="oppLede"></h3>
+        <p class="opp-sub" id="oppSub"></p>
+        <div class="opp-grid" id="oppGrid"></div>
+        <p class="note" id="oppFoot" style="margin-top:16px;color:var(--fg-2)"></p>
+      </section>
+
+      <p class="eyebrow" id="ledgerEyebrow"></p>
+      <h3 style="margin:8px 0 16px">The full ledger</h3>
+      <div class="alloc-scroll"><svg id="allocSvg" role="group"></svg></div>
+      <p class="note" id="allocFoot" style="margin-top:16px;color:var(--fg-2)"></p>
 
       <div class="iv-list" id="ivList"></div>
 
@@ -978,7 +1169,7 @@ footer{padding-block:clamp(40px,6vh,70px);border-top:1px solid var(--rule-hi);
   <!-- CONTACT C ------------------------------------------------------------ -->
   <section class="contact contact--C" id="contactC" aria-labelledby="contactCName">
     <div class="contact-base"></div>
-    <div class="contact-media-slot" data-tags="ice" data-pick="second"></div>
+    <div class="contact-media-slot" data-tags="ice" data-pick="first"></div>
     <div class="contact-scrim"></div>
     <div class="contact-label">
       <span class="contact-chip" id="contactCChip"></span>
@@ -1035,6 +1226,32 @@ footer{padding-block:clamp(40px,6vh,70px);border-top:1px solid var(--rule-hi);
 
 </main>
 </div>
+
+<!-- =======================================================================
+     DOSSIER — a specimen tray that slides out of the right edge. Fixed and
+     opaque, so it is never confused with the section it was opened from and
+     its legibility never depends on the stratum behind it.
+     ======================================================================= -->
+<div class="dos-scrim" id="dosScrim" data-open="0" hidden></div>
+
+<aside class="dossier" id="dossier" data-open="0" role="dialog" aria-modal="true"
+       aria-labelledby="dosName" hidden>
+  <span class="dos-grip" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+  <div class="dossier-hd">
+    <div class="dossier-top">
+      <div>
+        <p class="dossier-tier" id="dosTier"></p>
+        <h3 id="dosName">Select an element</h3>
+      </div>
+      <button class="dossier-close" id="dosClose" type="button">Close · esc</button>
+    </div>
+  </div>
+  <div class="dossier-body" id="dosBody">
+    <p class="dossier-empty">Pick an element on the globe or in the band chart. The dossier
+      reports its threshold range and confidence rating, how long the transition takes once
+      triggered, what it does to the rest of the system, and the sources the numbers come from.</p>
+  </div>
+</aside>
 
 <div id="tip" role="status" aria-live="off"></div>
 
@@ -1213,11 +1430,37 @@ function renderHero() {
 
   drawReadoutStrip();
 
-  /* Hero plate: satellite ice footage, treated as a monochrome core photograph. */
+  /* Hero plate: satellite ice footage as a monochrome core photograph.
+     It is the only clip inside the first viewport, so the lazy-video observer
+     would fetch it on load and put the page over its 2.5 MB initial budget.
+     It is therefore held on its poster frame behind an explicit control —
+     data-autoplay="false" opts it out of the observer entirely. */
   var slug = byTag("ice")[0];
   var m = useMedia(slug);
-  $("heroPlate").innerHTML = mediaMarkup(slug, "");
+  $("heroPlate").innerHTML =
+    mediaMarkup(slug, "", { autoplay: false }) +
+    (REDUCED ? "" :
+      "<button class=\"plate-play\" id=\"heroPlay\" type=\"button\">" +
+      "<span class=\"plate-play-ico\" aria-hidden=\"true\"></span>" +
+      "<span>Play footage<em>" + esc(mediaWeight(slug)) + "</em></span></button>");
   $("heroPlateCap").textContent = m.credit + " · " + m.license;
+
+  var playBtn = $("heroPlay");
+  if (playBtn) {
+    playBtn.addEventListener("click", function () {
+      var v = $("heroPlate").querySelector("video");
+      if (!v) return;
+      v.preload = "auto";
+      var p = v.play();
+      if (p && p.catch) p.catch(function () { /* refused; the poster stands in */ });
+      playBtn.remove();
+    });
+  }
+}
+
+function mediaWeight(slug) {
+  var m = D.media[slug];
+  return m && m.bytes ? Math.round(m.bytes / 1e5) / 10 + " MB" : "";
 }
 
 /* A rug of every central threshold estimate under the dial's span, with the
@@ -1255,7 +1498,7 @@ function drawReadoutStrip() {
   });
   svg.append("text").attr("x", x(w.current)).attr("y", 5)
     .attr("text-anchor", "middle").style("font-family", "var(--mono)")
-    .style("font-size", "6.6px").style("letter-spacing", ".12em").attr("fill", "#3E6B7A")
+    .style("font-size", "6.6px").style("letter-spacing", ".12em").attr("fill", "#33596A")
     .text("NOW");
   svg.append("title").text(
     "Every central threshold estimate in the atlas, plotted on the dial's span; " +
@@ -1267,58 +1510,69 @@ function drawReadoutStrip() {
    MEDIA — lazy, tag-selected, credited. Under reduced motion the poster
    still frame is used and no video is created at all.
    =========================================================================== */
-function mediaMarkup(slug, cls) {
+function mediaMarkup(slug, cls, opts) {
   var m = D.media[slug];
   if (!m) return "";
   if (REDUCED) {
     return "<img class=\"" + cls + " contact-poster\" src=\"" + attr(m.poster) +
            "\" alt=\"\" loading=\"lazy\" decoding=\"async\">";
   }
+  var autoplay = !(opts && opts.autoplay === false);
   return "<video class=\"" + cls + "\" muted loop playsinline preload=\"none\" poster=\"" +
-         attr(m.poster) + "\" aria-hidden=\"true\"><source src=\"" + attr(m.mp4) +
+         attr(m.poster) + "\" data-autoplay=\"" + (autoplay ? "true" : "false") +
+         "\" aria-hidden=\"true\"><source src=\"" + attr(m.mp4) +
          "\" type=\"video/mp4\"></video>";
 }
 
+function segOf(id) {
+  for (var i = 0; i < LOG.length; i++) if (LOG[i].id === id) return LOG[i];
+  return null;
+}
+
+/* Copy is per-band; the clip and the depth are not. The clip comes from the
+   slot's own data-tags/data-pick attributes, and the depth from LOG, so editing
+   either one cannot silently desynchronise the label from what is rendered. */
+var CONTACT_COPY = {
+  contactA: { name: "bone to ochre",
+    sub: "Rock layering stands in for the change of ground. Below this line the " +
+         "subject changes from what the Earth systems do to what money has done about them." },
+  contactB: { name: "pleistocene–holocene boundary",
+    sub: "On the rail's illustrative scale this depth is the last great climate " +
+         "transition, and it is where the page goes dark. Everything below it is " +
+         "argument rather than record." },
+  /* The ice record from the hero returns here, screen-blended rather than framed:
+     a deliberate reprise at bedrock depth, and a clip the browser may already
+     have fetched, which keeps the page inside its payload budget. */
+  contactC: { name: "rust to carbon · bedrock approach",
+    sub: "The deepest ice is the most deformed and the hardest to date. What " +
+         "follows is the account of where every figure above came from." }
+};
+
 function renderContactBands() {
-  var strata = byTag("strata"), ice = byTag("ice");
-  var bands = [
-    { el: "contactA", slug: strata[0],
-      chip: "contact · " + grouped(900) + " m",
-      name: "bone to ochre",
-      sub: "Rock layering stands in for the change of ground. Below this line the " +
-           "subject changes from what the Earth systems do to what money has done about them." },
-    { el: "contactB", slug: strata[1],
-      chip: "contact · " + grouped(1678) + " m · ≈" +
-            grouped(depthToAge(1678)) + " yr bp",
-      name: "pleistocene–holocene boundary",
-      sub: "On the rail's illustrative scale this depth is the last great climate " +
-           "transition, and it is where the page goes dark. Everything below it is " +
-           "argument rather than record." },
-    /* The ice record from the hero returns here, screen-blended rather than
-       framed: a deliberate reprise at bedrock depth, and a clip the browser
-       has already fetched, which keeps the page inside its payload budget. */
-    { el: "contactC", slug: ice[0],
-      chip: "contact · " + grouped(2600) + " m · ≈" +
-            grouped(depthToAge(2600)) + " yr bp",
-      name: "rust to carbon · bedrock approach",
-      sub: "The deepest ice is the most deformed and the hardest to date. What " +
-           "follows is the account of where every figure above came from." }
-  ];
-  bands.forEach(function (b) {
-    if (!b.slug) return;
-    var sec = $(b.el);
+  Object.keys(CONTACT_COPY).forEach(function (id) {
+    var sec = $(id); if (!sec) return;
     var slot = sec.querySelector(".contact-media-slot");
-    slot.outerHTML = mediaMarkup(b.slug, "contact-media");
-    useMedia(b.slug);
-    $(b.el + "Chip").textContent = b.chip;
-    $(b.el + "Name").textContent = b.name;
-    $(b.el + "Sub").textContent = b.sub;
+    var copy = CONTACT_COPY[id], s = segOf(id);
+    if (slot) {
+      var tag = slot.getAttribute("data-tags");
+      var pick = slot.getAttribute("data-pick") === "second" ? 1 : 0;
+      var slug = byTag(tag)[pick];
+      if (slug) { slot.outerHTML = mediaMarkup(slug, "contact-media"); useMedia(slug); }
+    }
+    $(id + "Chip").textContent = s
+      ? "contact · " + grouped(s.d0) + " m · ≈" + grouped(depthToAge(s.d0)) + " yr bp"
+      : "contact";
+    $(id + "Name").textContent = copy.name;
+    $(id + "Sub").textContent = copy.sub;
   });
 }
 
-/* play only while on screen; pause otherwise; never preload */
+/* play only while on screen; pause otherwise; never preload.
+   Clips marked data-autoplay="false" are excluded: they are fetched only when
+   the reader asks, which is what keeps the first viewport inside budget. */
 function wireLazyVideo() {
-  var vids = Array.prototype.slice.call(document.querySelectorAll("video"));
+  var vids = Array.prototype.slice.call(document.querySelectorAll("video"))
+    .filter(function (v) { return v.getAttribute("data-autoplay") !== "false"; });
   if (!vids.length || !("IntersectionObserver" in window)) return;
   var io = new IntersectionObserver(function (entries) {
     entries.forEach(function (e) {
@@ -1518,7 +1772,21 @@ function pips(on, total) {
 }
 
 /* --- globe -------------------------------------------------------------- */
-var G = { rot: [42, -34], proj: null, path: null, R: 0, W: 0, H: 0, hover: null };
+var G = { rot: [42, -34], proj: null, path: null, R: 0, W: 0, H: 0,
+          hover: null, roving: null, visible: [] };
+
+/* Move the roving tabindex to the next/previous marker facing the reader. */
+function moveRoving(step) {
+  if (!G.visible.length) return;
+  var i = G.visible.indexOf(G.roving);
+  if (i === -1) i = 0;
+  else i = (i + step + G.visible.length) % G.visible.length;
+  G.roving = G.visible[i];
+  paintGlobe();
+  var node = d3.select("#gMarks").selectAll("g.mk")
+    .filter(function (s) { return s.id === G.roving; }).node();
+  if (node && node.focus) node.focus();
+}
 var LAND = null;
 try {
   if (window.__LAND_TOPO && window.topojson) {
@@ -1584,21 +1852,48 @@ function paintGlobe() {
       g.append("circle").attr("class", "mk-core");
       g.append("path").attr("class", "mk-cross");
       g.append("text").attr("class", "mk-lab");
-      g.on("click", function (ev, s) { selectSystem(s.id, this); })
+      g.on("click", function (ev, s) { G.roving = s.id; selectSystem(s.id, this); })
        .on("mouseenter", function (ev, s) {
           G.hover = s.id; showTip(ev, tipFor(s)); paintGlobe();
         })
        .on("mouseleave", function () { G.hover = null; hideTip(); paintGlobe(); })
+       .on("focus", function (ev, s) { G.hover = s.id; showTipAt(this, tipFor(s)); paintGlobe(); })
+       .on("blur", function () { G.hover = null; hideTip(); paintGlobe(); })
+       /* Roving tabindex: exactly one visible marker is in the tab order, and
+          the arrow keys step between markers rather than rotating the globe —
+          rotation is what the frame itself handles. stopPropagation keeps the
+          two key handlers from both firing. */
        .on("keydown", function (ev, s) {
-          if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); selectSystem(s.id, this); }
+          if (ev.key === "Enter" || ev.key === " ") {
+            ev.preventDefault(); ev.stopPropagation();
+            G.roving = s.id; selectSystem(s.id, this); return;
+          }
+          var step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[ev.key];
+          if (step) {
+            ev.preventDefault(); ev.stopPropagation();
+            moveRoving(step); return;
+          }
+          if (ev.key === "Escape") {
+            ev.stopPropagation();
+            $("globeFrame").focus();
+          }
         });
       return g;
     });
 
+  /* Recompute which markers face the reader; the roving tabindex must always
+     land on one of them, or the globe becomes keyboard-unreachable after a turn. */
+  G.visible = D.tippingSystems.filter(function (s) {
+    return d3.geoDistance([s.lon, s.lat], center) < Math.PI / 2 * 0.985 &&
+           !!G.proj([s.lon, s.lat]);
+  }).map(function (s) { return s.id; });
+  if (G.visible.indexOf(G.roving) === -1) G.roving = G.visible[0] || null;
+
   marks.each(function (s) {
     var g = d3.select(this);
-    var visible = d3.geoDistance([s.lon, s.lat], center) < Math.PI / 2 * 0.985;
-    g.attr("display", visible ? null : "none").attr("aria-hidden", visible ? null : "true");
+    var visible = G.visible.indexOf(s.id) !== -1;
+    g.attr("display", visible ? null : "none").attr("aria-hidden", visible ? null : "true")
+     .attr("tabindex", visible && s.id === G.roving ? 0 : -1);
     if (!visible) return;
 
     var pt = G.proj([s.lon, s.lat]);
@@ -1715,8 +2010,45 @@ function renderLegend() {
   }).join("");
 }
 
-/* --- dossier ------------------------------------------------------------ */
-var lastTrigger = null;
+/* --- dossier: a fixed tray pulled from the right edge --------------------
+   Modal: scrim, focus moved into the pane, Tab trapped inside it, Esc closes
+   and focus returns to whatever opened it. Closing keeps the SELECTION, so the
+   globe stays annotated and the tray can be pulled out again. */
+var lastTrigger = null, trayOpen = false;
+
+function openTray() {
+  var pane = $("dossier"), scrim = $("dosScrim");
+  /* the hover tooltip would otherwise stay stranded over the page: focus moves
+     into the tray, so the marker or row that raised it never gets a blur */
+  hideTip();
+  pane.hidden = false; scrim.hidden = false;
+  /* a frame's delay so the transform transition has a start state to run from */
+  requestAnimationFrame(function () {
+    pane.setAttribute("data-open", "1");
+    scrim.setAttribute("data-open", "1");
+  });
+  document.documentElement.setAttribute("data-tray", "1");
+  trayOpen = true;
+  $("dosClose").focus();
+}
+
+function closeTray() {
+  var pane = $("dossier"), scrim = $("dosScrim");
+  hideTip();
+  pane.setAttribute("data-open", "0");
+  scrim.setAttribute("data-open", "0");
+  document.documentElement.removeAttribute("data-tray");
+  trayOpen = false;
+  var done = function () { pane.hidden = true; scrim.hidden = true; };
+  if (REDUCED) done(); else setTimeout(done, 380);
+  if (lastTrigger && lastTrigger.focus && document.contains(lastTrigger)) {
+    lastTrigger.focus({ preventScroll: false });
+    /* AFTER the focus restore, not before: the trigger's own focus handler
+       raises the hover tooltip, which would otherwise be left stranded. */
+    hideTip();
+  }
+  updateTrayTab();
+}
 
 function selectSystem(id, trigger) {
   SEL = id;
@@ -1724,20 +2056,32 @@ function selectSystem(id, trigger) {
   fillDossier(id);
   paintGlobe();
   paintBands();
-  $("dosClose").hidden = false;
+  updateTrayTab();
+  if (!trayOpen) openTray();
 }
-function closeDossier() {
-  SEL = null;
-  $("dosTier").textContent = "";
-  $("dosName").textContent = "Select an element";
-  $("dosBody").innerHTML = "<p class=\"dossier-empty\" style=\"margin-top:14px\">Pick an element " +
-    "on the globe or in the band chart below. The dossier reports its threshold range and " +
-    "confidence rating, how long the transition takes once triggered, what it does to the rest " +
-    "of the system, and the sources the numbers come from.</p>";
-  $("dosClose").hidden = true;
-  paintGlobe();
-  paintBands();
-  if (lastTrigger && lastTrigger.focus) lastTrigger.focus();
+
+/* the reading-panel control that pulls the tray back out */
+function updateTrayTab() {
+  var btn = $("dosOpenLast");
+  if (!btn) return;
+  if (!SEL) {
+    btn.disabled = true;
+    btn.textContent = "No element selected yet";
+    return;
+  }
+  var s = D.tippingSystems.find(function (x) { return x.id === SEL; });
+  btn.disabled = false;
+  btn.textContent = "Pull the dossier · " + s.short;
+}
+
+function trapTrayFocus(ev) {
+  if (ev.key !== "Tab" || !trayOpen) return;
+  var f = $("dossier").querySelectorAll(
+    'a[href], button:not([disabled]), input, [tabindex="0"]');
+  if (!f.length) return;
+  var first = f[0], last = f[f.length - 1];
+  if (ev.shiftKey && document.activeElement === first) { ev.preventDefault(); last.focus(); }
+  else if (!ev.shiftKey && document.activeElement === last) { ev.preventDefault(); first.focus(); }
 }
 
 function row(k, v) {
@@ -1764,7 +2108,12 @@ function fillDossier(id) {
     "<span class=\"conf\">" + pips(CONF_PIPS[th.confidence] || 1, 3) + th.confidence + " confidence</span></div>" +
     "<p class=\"note\" style=\"margin:7px 0 0;font-size:.75rem\">At the dial's current setting of " +
     degC(T) + ": <strong>" + STATE_WORD[c.state] + "</strong>" +
-    (c.state === "inside" ? " — " + Math.round(c.frac * 100) + "% of the way through the band" : "") +
+    /* "0% of the way through" reads as a mistake; at the floor, say so in words */
+    (c.state === "inside"
+      ? (Math.round(c.frac * 100) < 1
+          ? " — right at its lower estimate"
+          : " — " + Math.round(c.frac * 100) + "% of the way through the band")
+      : "") +
     (c.state === "inside" && c.pastCentral ? ", above the central estimate" : "") + ".</p>");
   html += row("trigger to impact",
     "<span class=\"num\">" + esc(s.timescale.triggerToImpact) + "</span>" +
@@ -1838,7 +2187,7 @@ function buildBands() {
   refs.append("line").attr("class", "bx-now")
     .attr("x1", BANDS.x(D.warming.current)).attr("x2", BANDS.x(D.warming.current))
     .attr("y1", padTop - 12).attr("y2", H - padBot + 8);
-  refs.append("text").attr("class", "bx-flag").attr("fill", "#3E6B7A")
+  refs.append("text").attr("class", "bx-flag").attr("fill", "#33596A")
     .attr("x", BANDS.x(D.warming.current)).attr("y", padTop - 17)
     .attr("text-anchor", "middle").text("OBSERVED " + degC(D.warming.current));
 
@@ -1934,8 +2283,10 @@ function paintBands() {
     var c = crossing(s, T);
     var x0 = BANDS.x(s.threshold.min);
     var x1 = BANDS.x(Math.min(T, s.threshold.max));
+    /* .style(), not .attr(): a presentation attribute loses to any author CSS
+       rule, which previously froze this fill at one colour for every dial value. */
     g.select(".bx-fill").attr("width", Math.max(0, x1 - x0))
-      .attr("fill", c.state === "past" ? "#9C4A22" : "#C8973F");
+      .style("fill", c.state === "past" ? "#9C4A22" : "#C8973F");
     g.classed("bx-sel", SEL === s.id);
     g.select(".bx-name").classed("bx-name--sel", SEL === s.id);
   });
@@ -2015,9 +2366,14 @@ function streamSum(iv, stream) {
 }
 
 function buildAlloc() {
+  /* The board above is ordered by gap; the ledger is ordered by money, most
+     first, so the two read as a pair: where the gap is, then where the capital
+     actually went. Categories with no disclosed figure sit at the foot, marked,
+     rather than being sorted as if they were zero. */
   var data = D.interventions.slice().sort(function (a, b) {
-    if (b.gapScore !== a.gapScore) return b.gapScore - a.gapScore;
-    return capitalRaised(a) - capitalRaised(b);
+    var ca = capitalRaised(a), cb = capitalRaised(b);
+    if ((ca > 0) !== (cb > 0)) return ca > 0 ? -1 : 1;
+    return cb - ca;
   });
   var W = 900, rowH = 44, padTop = 58, padBot = 40;
   var H = padTop + padBot + data.length * rowH;
@@ -2097,13 +2453,13 @@ function buildAlloc() {
   });
 
   $("allocFoot").innerHTML =
-    "Dots are capital raised, on a log axis, so a dot four times further right is a hundred " +
-    "times more money — read the labels, not the distance. A hollow marker in the left gutter " +
-    "means <strong>no dollar figure is disclosed in the sources</strong>; it does not mean zero. " +
-    "The pips are an editorial assessment of how far potential runs ahead of capital, not a " +
-    "measurement. " + esc(D.interventions.find(function (i) { return i.id === "ice-intervention"; })
-      ? "One category is scored low as a refusal to score a funding gap on an intervention " +
-        "whose feasibility is currently being falsified — its own entry says so." : "");
+    "Ordered by capital raised, most first. Dots sit on a log axis, so a dot four times " +
+    "further right is a hundred times more money — read the labels, not the distance. A hollow " +
+    "marker in the left gutter means <strong>no dollar figure is disclosed in the sources</strong>; " +
+    "it does not mean zero, which is why those rows are placed at the foot rather than sorted as " +
+    "the smallest. The pips repeat the editorial gap assessment from the board above, not a " +
+    "measurement. Open any row for the full entry — leverage, maturity, every money figure as its " +
+    "source labels it, what has actually been delivered, and the caveats.";
 }
 
 function allocTip(iv) {
@@ -2116,6 +2472,158 @@ function allocTip(iv) {
     (cap ? "capital raised " + money(cap) : "capital raised: no figure disclosed") +
     (extra.length ? "<br>separately: " + esc(extra.join(" · ")) : "") +
     "<br>gap assessment " + iv.gapScore + "/5 (editorial)";
+}
+
+/* ===========================================================================
+   OPPORTUNITY BOARD — Act II leads with this.
+   Membership is derived: every category whose gap assessment reaches the board
+   threshold. Nothing is hardcoded, so the board follows the data if it changes.
+
+   ORDERING RULE, and it matters for honesty: within an equal gap assessment,
+   categories with a DISCLOSED capital figure are ranked first, smallest first.
+   Categories with no disclosed figure come after and are marked unranked — a
+   blank is not a zero, so an undisclosed category cannot be presented as more
+   starved of capital than one whose small figure is actually known.
+   =========================================================================== */
+var OPP_THRESHOLD = 4;
+
+function oppCategories() {
+  return D.interventions
+    .filter(function (iv) { return iv.gapScore >= OPP_THRESHOLD; })
+    .map(function (iv) {
+      return { iv: iv, cap: capitalRaised(iv), known: capitalRaised(iv) > 0 };
+    })
+    .sort(function (a, b) {
+      if (b.iv.gapScore !== a.iv.gapScore) return b.iv.gapScore - a.iv.gapScore;
+      if (a.known !== b.known) return a.known ? -1 : 1;
+      return a.cap - b.cap;
+    });
+}
+
+/* hypotheses that name this category in relatedInterventions */
+function hypothesesFor(id) {
+  return D.hypotheses.filter(function (h) {
+    return (h.relatedInterventions || []).indexOf(id) !== -1;
+  });
+}
+
+function renderOpportunity() {
+  var board = oppCategories();
+  if (!board.length) return;
+
+  /* the reference point for the contrast: the best-capitalised category here */
+  var ref = D.interventions.reduce(function (best, iv) {
+    return capitalRaised(iv) > capitalRaised(best) ? iv : best;
+  }, D.interventions[0]);
+  var refCap = capitalRaised(ref);
+
+  var named = board.filter(function (b) { return b.known; })
+    .slice(0, 2).map(function (b) { return shortName(b.iv.name); });
+
+  $("oppEyebrow").textContent = "opportunity · " + board.length +
+    " categories at gap assessment " + OPP_THRESHOLD + " or above, of " +
+    D.interventions.length;
+  $("oppLede").textContent = named.length
+    ? "Where capital is most missing relative to leverage: " +
+      named.join(", and ") + "."
+    : "Where capital is most missing relative to leverage.";
+  $("oppSub").textContent =
+    "These are the categories this research reads as most underfunded against their " +
+    "potential. The gap is an editorial assessment, not a measurement; the money figures " +
+    "beside it are not. Each card carries the leverage argument, what has actually been " +
+    "raised, and the hypotheses in Act III that would test it.";
+
+  $("oppGrid").innerHTML = board.map(function (b, i) {
+    var iv = b.iv;
+    var hyps = hypothesesFor(iv.id);
+    var pct = b.known && refCap ? Math.max(0.4, (b.cap / refCap) * 100) : 100;
+
+    var bars =
+      "<div class=\"opp-bar\"><div class=\"opp-bar-k\"><span>raised here</span><b>" +
+        (b.known ? money(b.cap) : "no figure disclosed") + "</b></div>" +
+        "<div class=\"opp-bar-t\"><div class=\"opp-bar-f" +
+          (b.known ? "" : " opp-bar-f--none") + "\" style=\"width:" +
+          pct.toFixed(2) + "%\"></div></div></div>" +
+      "<div class=\"opp-bar opp-bar--ref\"><div class=\"opp-bar-k\"><span>best-capitalised " +
+        "category here · " + esc(ref.name.split(/[(&]/)[0].trim().toLowerCase()) +
+        "</span><b>" + money(refCap) + "</b></div>" +
+        "<div class=\"opp-bar-t\"><div class=\"opp-bar-f\" style=\"width:100%\"></div></div></div>";
+
+    return "<article class=\"opp-card" + (b.known ? "" : " opp-card--unranked") + "\">" +
+      "<div class=\"opp-rank\"><b>" + esc(iv.section) + "</b>" +
+        "<span>" + (b.known ? "ranked on disclosed capital" : "unranked · capital not disclosed") +
+        "</span></div>" +
+      "<h4 class=\"opp-name\">" + esc(iv.name) + "</h4>" +
+      "<div class=\"opp-gap\">" + pips(iv.gapScore, 5) +
+        "<em>gap " + iv.gapScore + " of 5 · editorial assessment, not a measurement</em></div>" +
+      /* The contrast sits directly under the name so the four bar pairs line up
+         as a row and can be compared at a glance; the leverage argument reads
+         underneath as the supporting prose. */
+      "<div class=\"opp-bars\">" + bars + "</div>" +
+      "<p class=\"opp-lev\">" + esc(iv.leverage) + "</p>" +
+      "<div class=\"opp-hyp\"><p class=\"opp-hyp-k\">" +
+        (hyps.length
+          ? "hypotheses that would test this · act III"
+          : "no hypothesis in act III addresses this category directly") + "</p>" +
+        (hyps.length ? "<div class=\"xlinks\">" + hyps.map(function (h) {
+          return "<button class=\"xlink\" type=\"button\" data-jump=\"hyp-" + attr(h.id) + "\">" +
+            "<b>" + esc(h.id) + "</b> " + esc(shortClaim(h)) + "</button>";
+        }).join("") + "</div>" : "") +
+        "<div class=\"xlinks\" style=\"margin-top:6px\">" +
+          "<button class=\"xlink\" type=\"button\" data-jump=\"iv-" + attr(iv.id) +
+          "\" data-open-iv=\"" + attr(iv.id) + "\">Full ledger entry ↓</button></div>" +
+      "</div></article>";
+  }).join("");
+
+  $("oppFoot").textContent =
+    "Ordering: by gap assessment, then — among equal assessments — by disclosed capital, " +
+    "smallest first. Categories whose sources disclose no capital figure are placed after " +
+    "those that do and marked unranked, because a blank is not a zero and cannot be read as " +
+    "the smallest number.";
+
+  wireJumps($("oppGrid"));
+}
+
+/* Category names in the data are full and precise ("Direct ocean capture &
+   ocean alkalinity enhancement"). A headline needs the short form, so it is
+   derived rather than restated: drop anything after the first "&" or "(", and
+   where a name is a slash-pair keep the more specific half. The full name is
+   printed unaltered on the card itself. */
+function shortName(name) {
+  var s = name.split(/[&(]/)[0].trim();
+  if (s.indexOf("/") !== -1) s = s.split("/").pop().trim();
+  return s.charAt(0).toLowerCase() + s.slice(1);
+}
+
+/* A hypothesis claim is a paragraph; the cross-link needs a phrase. */
+function shortClaim(h) {
+  var s = h.claim.split(/[—:;]/)[0].trim();
+  if (s.length > 74) s = s.slice(0, 72).replace(/\s+\S*$/, "") + "…";
+  return s;
+}
+
+/* Cross-links between acts. The target announces itself so the reader can see
+   where they landed after the jump. */
+function wireJumps(root) {
+  Array.prototype.forEach.call(root.querySelectorAll("[data-jump]"), function (b) {
+    b.addEventListener("click", function () {
+      var ivId = b.getAttribute("data-open-iv");
+      if (ivId) openIv(ivId, true);
+      jumpTo(b.getAttribute("data-jump"), !ivId);
+    });
+  });
+}
+
+function jumpTo(id, scroll) {
+  var el = $(id);
+  if (!el) return;
+  if (scroll) el.scrollIntoView({ behavior: REDUCED ? "auto" : "smooth", block: "center" });
+  el.classList.remove("jumped");
+  /* reflow so the animation restarts if the same target is jumped to twice */
+  void el.offsetWidth;
+  el.classList.add("jumped");
+  if (!el.hasAttribute("tabindex")) el.setAttribute("tabindex", "-1");
+  el.focus({ preventScroll: true });
 }
 
 /* --- funding chips and the intervention log ----------------------------- */
@@ -2158,10 +2666,14 @@ function otherStreams(iv) {
   return rows ? "<ul class=\"src-list\">" + rows + "</ul>" : "";
 }
 
+/* Callers pass either a bare string or their own block element. Wrapping a
+   block that already carries .field-v in another .field-v is dead markup, so
+   only bare text gets the wrapper. */
 function field(k, v, cls) {
   if (!v) return "";
-  return "<div class=\"field" + (cls ? " " + cls : "") + "\"><p class=\"field-k\">" + esc(k) +
-    "</p><div class=\"field-v\">" + v + "</div></div>";
+  var body = /^\s*</.test(v) ? v : "<p class=\"field-v\">" + v + "</p>";
+  return "<div class=\"field" + (cls ? " " + cls : "") + "\"><p class=\"field-k\">" +
+    esc(k) + "</p>" + body + "</div>";
 }
 
 function renderIvList() {
@@ -2276,17 +2788,25 @@ function renderTiers() {
    =========================================================================== */
 function renderTags() {
   $("tags").innerHTML = D.hypotheses.map(function (h) {
+    /* The header slot cross-links back to the intervention category this claim
+       acts on — it used to repeat h.maturity, which the maturity field prints. */
     var rel = (h.relatedInterventions || []).map(function (id) {
-      var iv = D.interventions.find(function (x) { return x.id === id; });
-      return iv ? iv.section + " " + iv.name : null;
-    }).filter(Boolean).join(" · ");
+      return D.interventions.find(function (x) { return x.id === id; });
+    }).filter(Boolean);
     var flag = h.investable === false;
 
-    return "<article class=\"tag rise\">" +
+    return "<article class=\"tag rise\" id=\"hyp-" + attr(h.id) + "\">" +
       "<span class=\"tag-punch\" aria-hidden=\"true\"></span>" +
       "<span class=\"tag-wire\" aria-hidden=\"true\"></span>" +
       "<div class=\"tag-hd\"><span class=\"tag-id\">" + esc(h.id) + "</span>" +
-        "<span class=\"tag-trl\">" + esc(h.maturity) + "</span></div>" +
+        (rel.length
+          ? "<button class=\"tag-xlink\" type=\"button\" data-jump=\"iv-" +
+            attr(rel[0].id) + "\" data-open-iv=\"" + attr(rel[0].id) + "\">" +
+            "<em>acts on · act II</em>" + esc(rel[0].section) + " " +
+            esc(rel[0].name) + " ↑</button>"
+          : "<span class=\"tag-none\">no intervention category in act II · " +
+            "this claim is about the observing system itself</span>") +
+      "</div>" +
       "<h3 class=\"tag-claim\">" + esc(h.claim) + "</h3>" +
       (flag ? "<span class=\"tag-stamp\">research milestone — not investable</span>" : "") +
       "<div class=\"tag-f\"><p class=\"tag-k\">mechanism</p><p class=\"tag-v\">" +
@@ -2303,8 +2823,10 @@ function renderTags() {
         "<ul class=\"tag-actors\">" + h.nearestActors.map(function (a) {
           return "<li>" + esc(a) + "</li>";
         }).join("") + "</ul></div>" +
-      (rel ? "<div class=\"tag-f\"><p class=\"tag-k\">acts on</p><p class=\"tag-v\">" +
-        esc(rel) + "</p></div>" : "") +
+      (rel.length > 1
+        ? "<div class=\"tag-f\"><p class=\"tag-k\">also acts on</p><p class=\"tag-v\">" +
+          esc(rel.slice(1).map(function (iv) { return iv.section + " " + iv.name; }).join(" · ")) +
+          "</p></div>" : "") +
       "<div class=\"tag-f\"><p class=\"tag-k\">sources</p><p class=\"tag-src\">" +
         h.sourceIds.map(function (id) {
           var s = SRC[id]; return esc(s ? s.label.split(",")[0] + " (" + s.date + ")" : id);
@@ -2313,6 +2835,8 @@ function renderTags() {
         "a claim that cannot be killed is not a hypothesis</p>" +
       "</article>";
   }).join("");
+
+  wireJumps($("tags"));
 }
 
 /* ===========================================================================
@@ -2429,6 +2953,8 @@ function renderEyebrows() {
   $("act3Eyebrow").innerHTML = segEyebrow("act3", "vi") + " · " +
     D.hypotheses.length + " hypotheses";
   $("methEyebrow").innerHTML = segEyebrow("methods", "viii") + " · bedrock";
+  $("ledgerEyebrow").textContent = "ledger · all " + D.interventions.length +
+    " intervention categories, best-funded to least";
   $("bandsEyebrow").textContent = "all " + D.tippingSystems.length +
     " elements · Armstrong McKay et al. (2022), Table 1";
   $("atlasEyebrow").textContent = "companies · " +
@@ -2458,6 +2984,10 @@ function wireScroll() {
   var queued = false;
   function tick() { queued = false; updateGauge(); }
   window.addEventListener("scroll", function () {
+    /* A tooltip is anchored to a viewport position, so it is wrong the moment
+       the page moves under it — and nothing else would dismiss one raised by
+       keyboard focus rather than by the pointer. */
+    hideTip();
     if (!queued) { queued = true; requestAnimationFrame(tick); }
   }, { passive: true });
 
@@ -2471,8 +3001,9 @@ function wireScroll() {
 }
 
 document.addEventListener("keydown", function (ev) {
+  if (ev.key === "Tab") { trapTrayFocus(ev); return; }
   if (ev.key === "Escape") {
-    if (SEL) { closeDossier(); return; }
+    if (trayOpen) { closeTray(); return; }
     hideTip();
   }
 });
@@ -2489,8 +3020,14 @@ function boot() {
   wireGlobeInput();
   renderDial();
   buildBands();
-  $("dosClose").addEventListener("click", closeDossier);
+  $("dosClose").addEventListener("click", closeTray);
+  $("dosScrim").addEventListener("click", closeTray);
+  $("dosOpenLast").addEventListener("click", function () {
+    if (SEL) { lastTrigger = this; openTray(); }
+  });
+  updateTrayTab();
 
+  renderOpportunity();
   buildAlloc();
   renderIvList();
   renderTiers();
