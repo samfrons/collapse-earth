@@ -14,27 +14,45 @@
    shared #tip, and .sr screen-reader-only text. State the basis when quoting;
    only deltas measured with THIS script are comparable to each other. */
 import { spawn } from "node:child_process";
-import { mkdtempSync } from "node:fs";
+import { mkdtempSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 const CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
-const PORT = 9231;
+/* Port 0 = let the OS pick, then read the port back from the spawned profile's
+   DevToolsActivePort. A fixed port silently ATTACHES to an already-running
+   Chrome and measures that instance's front tab — i.e. counts the wrong
+   document and reports it as this page's budget. */
+const PORT = 0;
 const URL = process.argv[2];
 if (!URL) { console.error("usage: node word-bases.mjs <url>"); process.exit(1); }
 
+const PROFILE = mkdtempSync(join(tmpdir(), "wb-prof-"));
 const chrome = spawn(CHROME, [
   "--headless", "--disable-gpu", "--hide-scrollbars",
   "--remote-debugging-port=" + PORT,
-  "--user-data-dir=" + mkdtempSync(join(tmpdir(), "wb-prof-")),
+  "--user-data-dir=" + PROFILE,
   "--window-size=1440,900", "about:blank"
 ], { stdio: "ignore" });
 
+/* the real port, straight from the instance we launched */
+async function ownPort() {
+  for (let i = 0; i < 60; i++) {
+    try {
+      const first = readFileSync(join(PROFILE, "DevToolsActivePort"), "utf8").split("\n")[0].trim();
+      if (first) return Number(first);
+    } catch {}
+    await sleep(200);
+  }
+  throw new Error("Chrome never wrote DevToolsActivePort");
+}
+
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 async function wsUrl() {
+  const port = await ownPort();
   for (let i = 0; i < 40; i++) {
     try {
-      const list = await (await fetch(`http://127.0.0.1:${PORT}/json`)).json();
+      const list = await (await fetch(`http://127.0.0.1:${port}/json`)).json();
       const page = list.find(t => t.type === "page");
       if (page) return page.webSocketDebuggerUrl;
     } catch {}
@@ -43,11 +61,24 @@ async function wsUrl() {
   throw new Error("chrome did not start");
 }
 
-let id = 0; const pending = new Map(); let ws;
+let id = 0; const pending = new Map(); let ws; let loadFired = () => {};
+/* Every pending command must settle, or the awaiting call hangs forever and
+   `finally` never runs — leaving an orphaned Chrome behind. */
+function failAllPending(err) {
+  for (const [, p] of pending) p.rej(err);
+  pending.clear();
+}
 function send(method, params = {}) {
   return new Promise((res, rej) => {
-    pending.set(++id, { res, rej });
-    ws.send(JSON.stringify({ id, method, params }));
+    const msgId = ++id;
+    const timer = setTimeout(() => {
+      if (pending.delete(msgId)) rej(new Error(`CDP timeout: ${method}`));
+    }, 30000);
+    pending.set(msgId, {
+      res: (v) => { clearTimeout(timer); res(v); },
+      rej: (e) => { clearTimeout(timer); rej(e); }
+    });
+    ws.send(JSON.stringify({ id: msgId, method, params }));
   });
 }
 
@@ -107,11 +138,29 @@ try {
     if (m.id && pending.has(m.id)) {
       const p = pending.get(m.id); pending.delete(m.id);
       m.error ? p.rej(new Error(m.error.message)) : p.res(m.result);
+    } else if (m.method === "Page.loadEventFired") {
+      loadFired();
     }
   };
+  ws.onerror = () => failAllPending(new Error("CDP socket error"));
+  ws.onclose = () => failAllPending(new Error("CDP socket closed"));
+  chrome.on("exit", (code) => failAllPending(new Error("Chrome exited: " + code)));
   await send("Page.enable");
+  const loaded = new Promise((res) => { loadFired = res; });
   await send("Page.navigate", { url: URL });
-  await sleep(3500);
+  /* A fixed sleep counts whatever happened to have rendered by then — which
+     makes the budget non-repeatable. Wait for load, for webfonts (they change
+     SVG text metrics), and for the page's own instruments to exist. */
+  await Promise.race([loaded, sleep(20000)]);
+  for (let i = 0; i < 60; i++) {
+    const ready = await send("Runtime.evaluate", {
+      expression: `(document.readyState === "complete") && document.fonts.status === "loaded"
+        && !!document.querySelector("#seamSvg text")`,
+      returnByValue: true
+    });
+    if (ready.result.value === true) break;
+    await sleep(250);
+  }
   const r = await send("Runtime.evaluate", { expression: COUNTER, returnByValue: true });
   const v = r.result.value;
   console.log(URL);

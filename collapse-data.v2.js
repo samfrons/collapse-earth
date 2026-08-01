@@ -770,9 +770,12 @@ window.COLLAPSE_DATA = {
   hypotheses: [
     {
       id: "H1",
-      fieldwork: { href: "collapse-methane-mines.html", label: "Field study — The Seam: abandoned-mine methane in the EU" },
+      /* The biofilter half of this hypothesis now has an instrument: sheet
+         M-004 on The Seam draws why the sub-1% band is the only one biology
+         can be handed directly, and what the measured bed volumes cost. */
+      fieldwork: { href: "collapse-methane-mines.html#cowPlate", label: "Field study — The Seam, sheet M-004: why dilute is the only band biology gets handed directly" },
       claim: "Point-source destruction of sub-1% methane streams (dairy ventilation, coal-mine VAM) can reach <$50/tCO₂e-eq abated.",
-      mechanism: "UV-chlorine photochemistry (MEPS) and methanotroph biofilters both operate at dilute concentrations; costs are dominated by air-handling energy, which falls with contact-area engineering rather than exotic inputs.",
+      mechanism: "UV-chlorine photochemistry (MEPS) and methanotroph biofilters both operate at dilute concentrations; costs are dominated by air-handling energy, which falls with contact-area engineering rather than exotic inputs. The concentration ceiling is not a preference but a safety constraint: richer gas has to be diluted to reach a treatable strength, and the dilution path crosses the flammable envelope even when both its endpoints are safe.",
       whyNow: "Methane is ≈30% of the warming rise since the industrial era yet removal is the least-funded category in this dataset; its 20-year leverage is 84–87× CO₂.",
       killCriteria: "Energy cost per tonne CO₂e-eq remains >3× target after two full design iterations at ≥250-cow-barn scale; OR chlorine byproduct toxicity fails environmental review at any pilot.",
       validation: "One site-year at a commercial dairy or VAM shaft with third-party-verified ≥80% destruction and all-in cost <$150/tCO₂e-eq on a credible path to $50.",

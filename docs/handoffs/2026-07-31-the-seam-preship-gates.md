@@ -1,6 +1,43 @@
 # The Seam (`collapse-methane-mines.html`) — build state & pre-ship gates
 
-> **2026-08-01 — scientific-accuracy upgrades (Sam-requested).**
+> **2026-08-01 — Sheet 4, MODEL M-004: the biological route.** Ports the flammability
+> core of the Mine-Methane Biofilter process model from `~/repos/messai-ai`
+> (`apps/lab/src/lib/biofilter/`, TypeScript) into a new ES5 `collapse-bio.v2.js`.
+> **Answers a question Act II leaves hanging**: the page asserts everything between 2%
+> and 30% CH₄ routes as "sealed dilution → RTO, never raw use", but never models the
+> dilution — and the dilution is where the hazard lives. Sheet 4 draws a Coward triangle
+> (Coward & Jones 1952) with the live blend path across it, plus the packed bed as a
+> 14-cell axial profile. Sealed / leaky / late-life gases all trip the interlock; the bed
+> greys to HELD and reports nothing. Ventilation air is the contrast case and passes
+> straight through — labelled on-sheet as an ACTIVE-mine stream that has no place in this
+> page's abandoned-mine inventory.
+>
+> **What was deliberately NOT ported** (upstream design doc §9): removal efficiency,
+> elimination capacity, Ergun pressure drop, the evaporative energy balance, transient
+> growth and clogging, and the 9-overlay/15-preset system. All uncalibrated, and the
+> upstream model has no channelling term so it **over-predicts at high biomass**. The
+> sheet therefore states no absolute performance figure — a CDP check asserts this. The
+> one performance number on the plate is Limbri et al. 2014's *measurement*
+> (27.2 g CH₄ m⁻³ h⁻¹) and their own scale-up from it (≈7,200 m³ of bed for 50 m³ s⁻¹),
+> quoted as a measurement and included because it is the strongest argument *against*
+> what the sheet draws.
+>
+> **The finding is structural, not parameter-dependent** — worth knowing before anyone
+> "fixes" the soft constants. Air dilution drives CH₄ down and O₂ up together, so any gas
+> starting above the flammable band must pass through it on the way to a treatable
+> concentration. Swept 0–20% raw O₂ across 16–82% CH₄: crosses every time. Swept the
+> Coward nose across 11.5–12.5% O₂ and 5.6–6.4% CH₄: still crosses every time, with the
+> fraction of the blend spent inside the envelope moving only between 8.14% and 8.50%.
+> The two PENDING constants below are therefore not load-bearing.
+>
+> Verified: 26/26 new CDP interaction checks (`scratchpad/m004-checks.mjs`), 56/56 model
+> unit tests ported from the upstream vitest suites (`scratchpad/bio-tests.mjs`),
+> `node --check` clean on both JS files and the page's inline block, no uncaught
+> exceptions on either page, H1's `fieldwork` hash lands on the plate.
+>
+> **TWO GATES ARE OPEN AND NEED SAM'S CALL — see "Still open" items 6–8.**
+
+> **2026-08-01 — earlier: scientific-accuracy upgrades (Sam-requested).**
 > (1) **Dry envelope is now structural and citable**: the decline chart's band spans the
 > fastest/slowest of EPA Appendix B Table B5's nine bituminous curves (permeability ×
 > size), replacing the ±35% guess (which now applies to the flooded path only, where EPA
@@ -76,7 +113,8 @@ entry and the H1 tag (data-driven `fieldwork` fields in `collapse-data.v2.js`).
   Shaft cross-section (particles ∝ modelled rate, water table per flooding assumption,
   REDUCED-motion static fallback), routing chart with corrected safety bands, playhead,
   counters, economics sandbox (start-year forfeit hatch, carbon price as upside), editable
-  assumptions pane (22 constants, all sourced, **zero PENDING**).
+  assumptions pane (22 constants, all sourced, zero PENDING *as of that round* —
+  see the 2026-08-01 note: Sheet M-004 later reopened this gate).
 - **Act III, the unit** — containerized cutaway with four state chips; kraft-plated
   CONCEPT stamp; module bill drawer.
 - **Act IV, at depth** — Fermi ladder (both GWP lenses, Mammoth nameplate marked, with its
@@ -146,6 +184,34 @@ entry and the H1 tag (data-driven `fieldwork` fields in `collapse-data.v2.js`).
    styling and the tray in Safari/Firefox).
 4. Optional: run the lead's full rendered-pixel contrast audit method over this page.
 5. Editorial read-through by Sam; then remove `<meta name="robots" content="noindex">`.
+
+### Opened by Sheet 4 (2026-08-01) — need a decision, not just work
+
+6. **PENDING is no longer zero.** `cow_loc` (12.1% O₂) and `cow_nose` (6.0% CH₄) ship
+   `verified:false`. Published limiting-oxygen values for methane sit around 11.7–12.2%
+   depending on diluent and source; Bulletin 503 needs checking at page level, and the
+   `coward1952` source entry carries `verify:true` accordingly. Per the sensitivity sweep
+   recorded above, confirming these will move the crossing figures by well under a
+   percentage point and **cannot change the finding** — so this is a citation chore, not
+   a scientific risk. Fetching Bulletin 627 (Zabetakis 1965), which carries the
+   methane–inert–air diagram explicitly, is probably the faster route than 503.
+7. **Both budgets are now effectively spent, and basis B is over.**
+   Measured with `scratchpad/word-bases.mjs` (the only counter whose numbers are
+   comparable to each other):
+
+   | Gate | Target | Before sheet 4 | Now | Verdict |
+   |---|---|---|---|---|
+   | basis B | ≤2,400 | 2,333 | **2,469** | **over by 69** |
+   | height @1440 | ≤12,000 | ≈11,000 | **11,761** | inside, but at the wall |
+
+   The sheet costs ~136 words net after two trim passes (full hedge moved into a drawer,
+   prose mirror tightened, plate labels shortened). Further cuts would mean deleting axis
+   ticks or the accessible live mirror — gaming the counter rather than tightening the
+   writing, which is worse than being 69 words over. **Three honest options: raise the
+   budget for this page; trim elsewhere (Act IV's "case in three plates" is the wordiest
+   block that is not load-bearing); or move Sheet 4 to its own page owned by H1.**
+8. Sheet 4 has had no pixel-contrast audit. New pairings to probe: the ochre→ice bed
+   ramp and the `#F6A97F` envelope stroke, both on the blueprint plate.
 
 Local preview: `python3 -m http.server 8199` was left running →
 http://localhost:8199/collapse-methane-mines.html

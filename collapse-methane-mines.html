@@ -1495,8 +1495,7 @@ function buildSeam() {
      only the top three countries' totals */
   var restMcm = Math.round(inv.central.mcm - rows.reduce(function (n, r) { return n + r.mcm; }, 0));
   rows.push({ name: "rest of the EU", mcm: restMcm, qualifier: "approximately",
-    derived: true, mines: [],
-    note: "derived remainder: the central total minus the three named country totals" });
+    derived: true, mines: [] });
 
   var plotL = 158, plotR = 860;
   var axisMax = 120;
@@ -1812,7 +1811,13 @@ var PARAMS = {
   cow_ec_bed:      { value: 7200, unit: "m³ of bed", src: "limbri2014", verified: true,
              note: "the authors' own scale-up: the bed volume their measured performance implies for a 50 m³ s⁻¹ ventilation flow. The honest headline of the whole approach" },
   cow_vam_flow:    { value: 50,   unit: "m³ s⁻¹", src: "limbri2014", verified: true,
-             note: "the ventilation flow that scale-up is stated against" }
+             note: "the ventilation flow that scale-up is stated against" },
+  cow_o2_raw:      { value: 0.5,  unit: "% v/v O₂", src: "editorial", verified: true,
+             note: "oxygen in raw drainage gas from a sealed working. Held as a stated assumption rather than a sourced measurement — sealed mine gas is CH₄/CO₂/N₂ with oxygen near zero, which is precisely why it is inerted. Carried as editorial because the sheet's finding does not depend on it: swept 0–20% O₂ across 16–82% CH₄, every dilution path still crosses the envelope. It moves where the crossing happens, not whether" },
+  cow_o2_leaky:    { value: 6.0,  unit: "% v/v O₂", src: "editorial", verified: true,
+             note: "oxygen in gas from an unsealed working under unmanaged suction — air ingress is the same mechanism that drives Lohberg's purity decline (unece-amm Fig. 9.3), so the oxygen must rise as the methane falls. Magnitude editorial; see cow_o2_raw on why it is not load-bearing" },
+  cow_vam_ch4:     { value: 0.6,  unit: "% v/v CH₄", src: "editorial", verified: true,
+             note: "representative ventilation-air methane, shown on this sheet only as the CONTRAST case — VAM comes from ACTIVE mines' ventilation shafts and has no place in this page's abandoned-mine inventory. Typical VAM runs below 1% and often below 0.5%; UNECE BPG §6.2.1 puts the oxidation floor at 0.20%. Representative value, hence editorial" }
 };
 /* editorial is a legitimate source id for stated judgment calls; everything
    else must resolve in meta.sources */
@@ -2396,11 +2401,22 @@ function drawDecline(tw) {
     "long tail. The flooded band keeps an editorial ±" + Math.round(P("spread") * 100) + "%. The tinted region " +
     "between the curves is what one unknown bit — flooded or not — does to the number. The " +
     "red bracket is the model's only anchor to a published figure, and the model is solved " +
-    "through it, not tuned by hand. One check worth knowing: anchored only on this mine's " +
-    "dry figure, the model <em>predicts</em> a flooded-path mean of ≈8.9 MCM/yr over GEM's " +
-    "window — GEM's independently published flooded figure is 8.4. A 6% miss with zero " +
-    "tuning is the strongest evidence on this page that the corrected constants are the " +
-    "ones GEM itself used.";
+    "through it, not tuned by hand." +
+    /* The validation sentence is DERIVED, never typed: swap the specimen or edit a
+       decline constant and this recomputes — or disappears, when the mine has no
+       published flooded figure to check against. A typed agreement would go on
+       claiming a match the model no longer makes. */
+    (tw.mine.floodedDelta
+      ? " One check worth knowing: anchored only on this mine's dry figure, the model " +
+        "<em>predicts</em> a flooded-path mean of ≈" + tw.floodedMeanImplied.toFixed(1) +
+        " MCM/yr over GEM's window — GEM's independently published flooded figure is " +
+        tw.mine.floodedDelta.flooded + ". A " +
+        Math.round(Math.abs(tw.floodedMeanImplied - tw.mine.floodedDelta.flooded) /
+          tw.mine.floodedDelta.flooded * 100) +
+        "% miss with zero tuning is the strongest evidence on this page that the " +
+        "corrected constants are the ones GEM itself used."
+      : " GEM publishes no separate flooded figure for this mine, so the cross-check " +
+        "that validates the constants (see Auguste Victoria) cannot be run here.");
 }
 
 function declineAria(tw, sDry, sFl) {
@@ -2919,7 +2935,7 @@ var EQUIP = [
   { n: 6, id: "router", name: "ROUTER MANIFOLD · V-101/102/103",
     tip: "The invention: three actuated routes chosen by live CH₄ concentration, re-chosen as the mine ages. Valve logic on sheet 2. All three fail closed." },
   { n: 7, id: "engine", name: "GAS ENGINE + GENERATOR",
-    tip: "Lean-burn mine-gas engine and alternator, MW-class, with exhaust heat recovery. Runs only above the 30% transport-safety floor — revenue while the gas is rich enough to move." },
+    tip: "Lean-burn mine-gas engine and alternator, MW-class, with exhaust heat recovery. Runs only above the >35% CHP gas-quality requirement (UNECE No. 64, Table 4.1) — the binding number for a wellhead-mounted unit, where the 30% transport limit is moot. Revenue while the gas is rich enough to burn." },
   { n: 8, id: "flare", name: "ENCLOSED FLARE",
     tip: "Enclosed combustor for rich gas when no grid connection exists. CDM default destruction 90%; CARB allows 99.5%. Destruction first, revenue second." },
   { n: 9, id: "rto", name: "REGENERATIVE OXIDIZER · TWIN BED",
@@ -2994,6 +3010,50 @@ function buildUnit() {
       "<p class=\"bench-note\" style=\"color:#A9C6D8;margin-top:10px\" id=\"xpScenarioNote\">scenario controls come alive with the model</p>" +
       "<p class=\"bench-note\" style=\"color:#A9C6D8\">geometry illustrative — a model of the model; behaviour from this page's own decline equations · the mine cannot tell you dry or flooded; that is Act I's point · 3-D library (three.js) loads only when you scroll here</p>" +
     "</div>" +
+
+    "<p class=\"inst-eyebrow rise\">sheet <b>4</b> · the biological route</p>" +
+    "<div class=\"twin-plot blueprint rise\" id=\"cowPlate\">" +
+      "<p class=\"readout-k\">model M-004 · dilution path · Coward 1952</p>" +
+      "<svg id=\"cowSvg\" role=\"group\"></svg>" +
+      "<div class=\"xp-hud\">" +
+        "<div class=\"seg\" role=\"radiogroup\" aria-label=\"Source gas\" id=\"cowGas\" style=\"flex:0 0 auto\">" +
+          COW_GASES.map(function (g, i) {
+            return "<label style=\"padding:8px 12px\"><input type=\"radio\" name=\"cowgas\" value=\"" +
+              attr(g.id) + "\"" + (i === 0 ? " checked" : "") + ">" + esc(g.chip) + "</label>";
+          }).join("") +
+        "</div>" +
+        "<div class=\"playrow\" style=\"flex:1 1 220px;margin-top:0\">" +
+          "<input type=\"range\" id=\"cowTgt\" min=\"0.2\" max=\"5\" step=\"0.1\" value=\"1\" " +
+            "aria-label=\"Dilute to target methane concentration, percent by volume\">" +
+          "<span class=\"mono\" id=\"cowTgtVal\">1.0%</span>" +
+        "</div>" +
+      "</div>" +
+      "<p class=\"bench-note\" id=\"cowNote\" style=\"color:#A9C6D8;margin-top:10px\"></p>" +
+      /* The full hedge lives in a drawer rather than the spine: the page's
+         disclosure rule allows shortening prose but never a hedge or a badge,
+         so the summary itself has to carry the load-bearing caveat. */
+      "<details class=\"fn\"><summary><span class=\"pull-shut\">modelled shape, not measured performance — what this sheet does and does not claim</span>" +
+        "<span class=\"pull-open\">close</span></summary>" +
+        "<div class=\"fn-body\">" +
+          field("the geometry is sourced",
+            "The flammable envelope is Coward &amp; Jones 1952 and nothing in it is fitted. " +
+            "Its limits are for ambient temperature and pressure — both widen the envelope " +
+            "when raised, which is the non-conservative direction for a hot bed. Screening " +
+            "layer, not a hazard study.") +
+          field("the bed is a shape, not a score",
+            "Shading is a modelled axial profile normalised to its own inlet. This page " +
+            "states no removal efficiency and no elimination capacity for it, because the " +
+            "kinetics behind it are uncalibrated against any installation and carry no " +
+            "channelling term — which would make them over-predict at high biomass.",
+            "field--warn") +
+          field("the one measured number",
+            "27.2 g CH₄ m⁻³ h⁻¹ at a 1% inlet, and ≈7,200 m³ of bed for a 50 m³ s⁻¹ flow, " +
+            "are Limbri et al. 2014's measurement and their own scale-up from it — not this " +
+            "model's output. They are on the plate because they are the strongest argument " +
+            "against the thing it draws.") +
+        "</div></details>" +
+    "</div>" +
+
     "<details class=\"fn\"><summary><span class=\"pull-shut\">the module bill — what exists, what is the invention</span>" +
       "<span class=\"pull-open\">close</span></summary>" +
       "<div class=\"fn-body\" id=\"unitBill\"></div></details>";
@@ -3026,6 +3086,324 @@ function buildUnit() {
   drawPID();
   paintPID();
   xpBoot();
+  wireCoward();
+  drawCoward();
+}
+
+/* ===========================================================================
+   SHEET 4 — THE BIOLOGICAL ROUTE (MODEL M-004).
+
+   Why this sheet exists. Act II establishes that everything between 2% and
+   30% CH₄ is handled "sealed and diluted, never used raw" — UNECE's safety
+   factors on the 5–15% explosive range. That sentence hides the actual
+   hazard. Dilution is not a jump from one composition to another; it is a
+   PATH, and the path runs through the band the safety factors were drawn to
+   keep you out of. Sheet 4 draws the path.
+
+   The bed on the right is the biological alternative to the RTO for the
+   diluted stream: methanotrophs oxidising methane at ambient temperature with
+   no support fuel. It is drawn as a profile SHAPE and nothing more. This page
+   states no removal efficiency for it — see the note in the parameter block.
+
+   Gas compositions are the page's own sourced anchors (c_sealed, c_leaky0 and
+   the Lohberg decline) rather than fresh numbers, so this sheet cannot drift
+   away from Act II.
+   =========================================================================== */
+var COW_INK = "#D7E7F2", COW_HOT = "#F6A97F", COW_COOL = "#8FB8C7", COW_RAW = "#C9B693";
+
+var COW_GASES = [
+  { id: "sealed", chip: "sealed", label: "sealed working",
+    ch4: function () { return P("c_sealed") * 100; },
+    o2:  function () { return P("cow_o2_raw"); } },
+  { id: "leaky", chip: "leaky", label: "unsealed working",
+    ch4: function () { return P("c_leaky0") * 100; },
+    o2:  function () { return P("cow_o2_leaky"); } },
+  { id: "late", chip: "late-life", label: "unsealed, a decade on",
+    /* derived from the page's own leak rate rather than asserted separately */
+    ch4: function () { return (P("c_leaky0") - P("leak_rate") * 10) * 100; },
+    o2:  function () { return P("cow_o2_leaky") * 1.6; } },
+  { id: "vam", chip: "ventilation air", label: "ventilation air — active mine, for contrast",
+    ch4: function () { return P("cow_vam_ch4"); },
+    o2:  function () { return P("cow_airo2") - 0.3; } }
+];
+var COW = { gas: "sealed", target: 1.0 };
+
+function cowGasDef(id) {
+  for (var i = 0; i < COW_GASES.length; i++) { if (COW_GASES[i].id === id) return COW_GASES[i]; }
+  return COW_GASES[0];
+}
+function cowRaw(def) {
+  return { ch4VolPct: def.ch4(), o2VolPct: def.o2(), co2VolPct: 0 };
+}
+
+/* Walk the blend once and hand back everything both the drawing and the prose
+   need, so the two cannot disagree about what the model said. */
+function cowSolvePath(def, targetCh4) {
+  var raw = cowRaw(def);
+  var lim = cowardLimits();
+  var fEnd = BIO.airFractionForTarget(raw.ch4VolPct, targetCh4);
+  var N = 300, pts = [], enter = null, exit = null, i, f, mix, fl;
+  for (i = 0; i <= N; i++) {
+    f = fEnd * i / N;
+    mix = BIO.blendWithAir(raw, f, lim);
+    fl = BIO.classifyMixture(mix.ch4VolPct, mix.o2VolPct, lim).flammable;
+    if (fl) { if (enter === null) enter = f; exit = f; }
+    pts.push({ f: f, ch4: mix.ch4VolPct, o2: mix.o2VolPct, flammable: fl });
+  }
+  return {
+    raw: raw, lim: lim, fEnd: fEnd, pts: pts,
+    enter: enter, exit: exit, crosses: enter !== null,
+    /* A stream already at or below the requested concentration needs no air:
+       airFractionForTarget returns 0 and there is no path to draw. */
+    noDilution: fEnd <= 1e-6,
+    endpoint: BIO.blendWithAir(raw, fEnd, lim)
+  };
+}
+
+function drawCoward() {
+  if (!BIO) {
+    $("cowNote").textContent =
+      "The dilution model did not load, so this sheet cannot draw its path. " +
+      "Sheets 1 and 2 above carry the routing rule it illustrates.";
+    return;
+  }
+  var def = cowGasDef(COW.gas);
+  var sol = cowSolvePath(def, COW.target);
+  var lim = sol.lim;
+
+  var W = 900, H = 430, M = { t: 18, r: 172, b: 46, l: 58 };
+  var iw = W - M.l - M.r, ih = H - M.t - M.b;
+  var Y0 = 0.2, Y1 = 100;
+
+  function sx(o2) { return M.l + (o2 / 21) * iw; }
+  function sy(ch4) {
+    var v = Math.max(Y0, Math.min(Y1, ch4));
+    return M.t + ih - (Math.log(v / Y0) / Math.log(Y1 / Y0)) * ih;
+  }
+
+  var svg = d3.select("#cowSvg");
+  svg.selectAll("*").remove();
+  svg.attr("viewBox", "0 0 " + W + " " + H).attr("width", "100%").attr("height", null)
+     .attr("aria-label", cowAria(def, sol));
+
+  function txt(x, y, s, size, anchor, op) {
+    /* same clamp as the other sheets: hierarchy from size, never from fading */
+    return svg.append("text").attr("x", x).attr("y", y).attr("text-anchor", anchor || "start")
+      .style("font-family", "var(--mono)").style("font-size", (size || 8) + "px")
+      .style("letter-spacing", ".08em").attr("fill", COW_INK)
+      .attr("opacity", op == null ? 1 : Math.max(op, .78)).text(s);
+  }
+
+  /* --- grid ------------------------------------------------------------- */
+  var ticks = [0.2, 0.5, 1, 2, 5, 10, 15, 25, 50, 100], i, yy, o2t;
+  for (i = 0; i < ticks.length; i++) {
+    yy = sy(ticks[i]);
+    svg.append("line").attr("x1", M.l).attr("y1", yy).attr("x2", M.l + iw).attr("y2", yy)
+      .attr("stroke", COW_INK).attr("stroke-width", .6).attr("opacity", .18);
+    txt(M.l - 7, yy + 3, ticks[i], 8, "end");
+  }
+  for (o2t = 0; o2t <= 21; o2t += 3) {
+    svg.append("line").attr("x1", sx(o2t)).attr("y1", M.t).attr("x2", sx(o2t)).attr("y2", M.t + ih)
+      .attr("stroke", COW_INK).attr("stroke-width", .6).attr("opacity", .18);
+    txt(sx(o2t), M.t + ih + 15, o2t, 8, "middle");
+  }
+  txt(M.l + iw / 2, H - 12, "oxygen, % v/v", 8.5, "middle");
+  svg.append("text").attr("transform", "rotate(-90 16 " + (M.t + ih / 2) + ")")
+    .attr("x", 16).attr("y", M.t + ih / 2).attr("text-anchor", "middle")
+    .style("font-family", "var(--mono)").style("font-size", "8.5px")
+    .style("letter-spacing", ".08em").attr("fill", COW_INK)
+    .text("methane, % v/v — log scale");
+
+  /* --- the envelope ------------------------------------------------------ */
+  var lo = [], hi = [], N = 80, o2;
+  for (i = 0; i <= N; i++) {
+    o2 = lim.noseO2 + (21 - lim.noseO2) * (i / N);
+    lo.push([sx(o2), sy(BIO.effectiveLowerLimit(o2, lim))]);
+    hi.push([sx(o2), sy(BIO.effectiveUpperLimit(o2, lim))]);
+  }
+  hi.reverse();
+  svg.append("path")
+    .attr("d", "M" + lo.concat(hi).map(function (p) { return p[0].toFixed(1) + "," + p[1].toFixed(1); }).join("L") + "Z")
+    .attr("fill", "#B8391A").attr("fill-opacity", .34)
+    .attr("stroke", COW_HOT).attr("stroke-width", 1.1);
+  svg.append("text").attr("x", sx(16.4)).attr("y", sy(2.6)).attr("text-anchor", "middle")
+    .style("font-family", "var(--mono)").style("font-size", "8.5px")
+    .style("letter-spacing", ".14em").attr("fill", COW_HOT).text("FLAMMABLE");
+  svg.append("circle").attr("cx", sx(lim.noseO2)).attr("cy", sy(lim.noseCh4)).attr("r", 2.6)
+    .attr("fill", COW_HOT);
+  /* label sits left of the nose, clear of the envelope's lower edge */
+  svg.append("text").attr("x", sx(lim.noseO2) - 8).attr("y", sy(lim.noseCh4) + 3)
+    .attr("text-anchor", "end")
+    .style("font-family", "var(--mono)").style("font-size", "8px")
+    .style("letter-spacing", ".08em").attr("fill", COW_HOT)
+    .text("nose · " + lim.noseO2 + "% O₂");
+
+  /* --- the dilution path, drawn in runs so the hot stretch reads hot ----- */
+  var run = [sol.pts[0]], j, p;
+  for (j = 1; j <= sol.pts.length; j++) {
+    if (j < sol.pts.length && sol.pts[j].flammable === run[0].flammable) { run.push(sol.pts[j]); continue; }
+    if (run.length > 1) {
+      svg.append("path")
+        .attr("d", "M" + run.map(function (q) { return sx(q.o2).toFixed(1) + "," + sy(q.ch4).toFixed(1); }).join("L"))
+        .attr("fill", "none")
+        .attr("stroke", run[0].flammable ? COW_HOT : COW_COOL)
+        .attr("stroke-width", run[0].flammable ? 3.6 : 1.8)
+        .attr("stroke-dasharray", run[0].flammable ? null : "4 3");
+    }
+    if (j < sol.pts.length) run = [sol.pts[j - 1], sol.pts[j]];
+  }
+
+  /* --- endpoints and the crossing ---------------------------------------- */
+  svg.append("circle").attr("cx", sx(sol.raw.o2VolPct)).attr("cy", sy(sol.raw.ch4VolPct))
+    .attr("r", 4).attr("fill", COW_RAW).attr("stroke", "#0F2438").attr("stroke-width", 1);
+  if (sol.noDilution) {
+    /* Already treatable: raw gas and bed feed are the same point, so a second
+       marker and a second label would just be two words on top of each other. */
+    txt(sx(sol.raw.o2VolPct) - 9, sy(sol.raw.ch4VolPct) + 3,
+      "straight to the bed — no dilution", 8.5, "end");
+  } else {
+    txt(sx(sol.raw.o2VolPct) + 8, sy(sol.raw.ch4VolPct) + 3, "raw gas", 8.5);
+    svg.append("circle").attr("cx", sx(sol.endpoint.o2VolPct)).attr("cy", sy(sol.endpoint.ch4VolPct))
+      .attr("r", 4).attr("fill", COW_COOL).attr("stroke", "#0F2438").attr("stroke-width", 1);
+    txt(sx(sol.endpoint.o2VolPct) - 8, sy(sol.endpoint.ch4VolPct) + 3, "to the bed", 8.5, "end");
+  }
+
+  if (sol.crosses) {
+    [sol.enter, sol.exit].forEach(function (f) {
+      var m = BIO.blendWithAir(sol.raw, f, lim);
+      svg.append("circle").attr("cx", sx(m.o2VolPct)).attr("cy", sy(m.ch4VolPct)).attr("r", 5)
+        .attr("fill", "none").attr("stroke", COW_HOT).attr("stroke-width", 1.6);
+    });
+  }
+
+  /* --- the bed, as a profile strip --------------------------------------- */
+  drawCowBed(svg, W - M.r + 30, M.t + 14, 54, 210, sol);
+
+  /* --- the scale reality, in Limbri's own numbers ------------------------
+     Not our model's output — a measurement and the authors' own scale-up from
+     it. It belongs on the sheet because it is the strongest argument against
+     the thing the sheet is drawing, and leaving it off would be advocacy. */
+  var bx = W - M.r + 12, by = M.t + 268;
+  svg.append("line").attr("x1", bx).attr("y1", by - 14).attr("x2", W - 14).attr("y2", by - 14)
+    .attr("stroke", COW_INK).attr("stroke-width", .6).attr("opacity", .45);
+  txt(bx, by, "MEASURED, NOT MODELLED", 7.5, "start", .95);
+  [P("cow_ec_measured") + " g CH₄ m⁻³ h⁻¹",
+   "peak, at a 1% inlet",
+   "",
+   "≈" + P("cow_ec_bed").toLocaleString("en-GB") + " m³ of bed",
+   "at " + P("cow_vam_flow") + " m³ s⁻¹"
+  ].forEach(function (line, k) {
+    if (!line) return;
+    txt(bx, by + 15 + k * 12, line, k === 0 || k === 3 ? 8.5 : 7.5, "start", k === 0 || k === 3 ? 1 : .86);
+  });
+  txt(bx, by + 15 + 5 * 12 + 4, "Limbri et al. 2014", 7, "start", .82);
+
+  cowPaintNote(def, sol);
+}
+
+/* The packed bed as a vertical column of solver cells, shaded by how much
+   methane is left at that depth RELATIVE TO ITS OWN INLET. Deliberately a
+   fraction and not a concentration: the shape of the profile is defensible,
+   the magnitude is not. */
+function drawCowBed(svg, x, y, w, h, sol) {
+  var CELLS = 14;
+  var profile = BIO.solveProfile({
+    inletCh4VolPct: Math.max(0.05, sol.endpoint.ch4VolPct),
+    inletO2VolPct: sol.endpoint.o2VolPct,
+    bedDepth_m: 1.2, vesselDiameter_m: 3.0,
+    /* 50 m³/h through this vessel is a 10.2 min empty-bed residence time,
+       inside the 1.6–19.5 min band Limbri actually measured. */
+    gasFlow_m3PerH: 50, cellCount: CELLS,
+    temperatureC: 25, pressurePa: 101325,
+    moisture: 0.5, ph: 7.0, nutrient: 1, biomass_gm3: 5000,
+    biology: {
+      vMax_gCH4_per_gVSS_per_h: 0.01, kCH4_gm3: 6.6, kO2_gm3: 4.0,
+      cardinalTemperature: { minC: 2, optC: 30, maxC: 45 },
+      phMin: 4.5, phOptLo: 6.5, phOptHi: 7.5, phMax: 9.0
+    },
+    medium: {
+      specificSurfaceArea_m2PerM3: 350, gasFilmCoefficient_mPerH: 5,
+      moistureResponse: { minTheta: .15, optLo: .4, optHi: .65, maxTheta: .95 }
+    }
+  });
+
+  var halted = sol.crosses;
+  var ch = h / CELLS, i, frac, t;
+  for (i = 0; i < CELLS; i++) {
+    frac = profile.cells[i].frac;
+    /* ochre where methane is still present, cooling to ice as it is consumed */
+    t = 1 - frac;
+    svg.append("rect")
+      .attr("x", x).attr("y", y + i * ch).attr("width", w).attr("height", ch - 1)
+      .attr("fill", halted ? "#2A3A47" : d3.interpolateRgb("#C8973F", "#3E6B7A")(t))
+      .attr("fill-opacity", halted ? .5 : .92)
+      .attr("stroke", COW_INK).attr("stroke-width", .4).attr("opacity", .95);
+  }
+  svg.append("rect").attr("x", x).attr("y", y).attr("width", w).attr("height", h)
+    .attr("fill", "none").attr("stroke", COW_INK).attr("stroke-width", 1);
+
+  svg.append("text").attr("x", x + w / 2).attr("y", y - 8).attr("text-anchor", "middle")
+    .style("font-family", "var(--mono)").style("font-size", "8px")
+    .style("letter-spacing", ".1em").attr("fill", COW_INK)
+    .text(halted ? "BED — HELD" : "PACKED BED");
+  ["gas in", "gas out"].forEach(function (s, k) {
+    svg.append("text").attr("x", x + w + 7).attr("y", k === 0 ? y + 9 : y + h - 2)
+      .style("font-family", "var(--mono)").style("font-size", "7.5px")
+      .style("letter-spacing", ".08em").attr("fill", COW_INK).attr("opacity", .82).text(s);
+  });
+  svg.append("text").attr("x", x + w / 2).attr("y", y + h + 15).attr("text-anchor", "middle")
+    .style("font-family", "var(--mono)").style("font-size", "7.5px")
+    .style("letter-spacing", ".06em").attr("fill", COW_INK).attr("opacity", .82)
+    .text(halted ? "interlock" : "shape only");
+}
+
+function cowAria(def, sol) {
+  return "Sheet 4, model M-004: Coward flammability triangle with the dilution path for " +
+    def.label + " at " + sol.raw.ch4VolPct.toFixed(1) + " percent methane, diluted to " +
+    COW.target.toFixed(1) + " percent. " +
+    (sol.crosses
+      ? "The path passes through the flammable envelope between air fractions " +
+        sol.enter.toFixed(3) + " and " + sol.exit.toFixed(3) + "."
+      : "The path stays outside the flammable envelope for its whole length.");
+}
+
+function cowPaintNote(def, sol) {
+  var el = $("cowNote");
+  var rawSafe = !BIO.classifyMixture(sol.raw.ch4VolPct, sol.raw.o2VolPct, sol.lim).flammable;
+  var s = "<b>" + esc(def.label) + "</b> — " + sol.raw.ch4VolPct.toFixed(1) + "% CH₄, " +
+    sol.raw.o2VolPct.toFixed(1) + "% O₂, " + (rawSafe ? "not flammable" : "FLAMMABLE AS FOUND") +
+    ". ";
+  if (sol.crosses) {
+    var mEnter = BIO.blendWithAir(sol.raw, sol.enter, sol.lim);
+    var mExit = BIO.blendWithAir(sol.raw, sol.exit, sol.lim);
+    s += "To " + COW.target.toFixed(1) + "% needs " + (sol.fEnd * 100).toFixed(1) + "% air, of " +
+      "which " + ((sol.exit - sol.enter) * 100).toFixed(1) + "% sits inside the explosive " +
+      "envelope — " + mEnter.ch4VolPct.toFixed(1) + "% down to " + mExit.ch4VolPct.toFixed(1) +
+      "% CH₄. <b>Both ends of the path are safe. The middle is not.</b> Bed held: interlock, " +
+      "not result.";
+  } else if (sol.noDilution) {
+    s += "Already under " + COW.target.toFixed(1) + "%: no air added, so no path to cross. " +
+      "Dilute gas is the only gas never walked through the envelope.";
+  } else {
+    s += "To " + COW.target.toFixed(1) + "% never enters the envelope — this stream starts " +
+      "below the lower flammable limit.";
+  }
+  el.innerHTML = s;
+}
+
+function wireCoward() {
+  var gasEl = $("cowGas"), tgtEl = $("cowTgt");
+  if (!gasEl || !tgtEl) return;
+  gasEl.addEventListener("change", function (e) {
+    if (!e.target || e.target.name !== "cowgas") return;
+    COW.gas = e.target.value;
+    drawCoward();
+  });
+  tgtEl.addEventListener("input", function () {
+    COW.target = parseFloat(tgtEl.value);
+    $("cowTgtVal").textContent = COW.target.toFixed(1) + "%";
+    drawCoward();
+  });
 }
 
 /* ===========================================================================
@@ -4634,8 +5012,13 @@ function drawLadder() {
 /* ===========================================================================
    METHODS & SOURCES — Act IV bedrock. Only the sources this page cites.
    =========================================================================== */
+/* Every source this page renders a figure from. The Sources drawer and the
+   "still to confirm" count both derive from this list, so an omission here
+   breaks the data file's own rule (no rendered number without a source id)
+   AND hides a verify:true citation from the pre-print count. */
 var PAGE_SOURCE_IDS = ["gem2024amm", "kholod2020", "eumr2024", "iea-amm",
-  "unece-bpg", "epa-vam", "ipccar6", "iea-methane", "research-doc"];
+  "unece-bpg", "unece-amm", "epa-vam", "acm0008", "ipccar6", "ipcc2006",
+  "coward1952", "limbri2014", "iea-methane", "research-doc"];
 
 function renderMethodsAssumptions() {
   if (!$("methAssump")) return;
@@ -4752,6 +5135,17 @@ document.addEventListener("keydown", function (ev) {
 });
 
 function boot() {
+  /* Same contract as the data-layer guard: a missing dependency gets an
+     explicit message, never a half-rendered page. Without this, a blocked CDN
+     throws inside drawGauge() and the reader sees broken furniture. */
+  if (!window.d3) {
+    document.documentElement.setAttribute("data-nodata", "1");
+    var f = $("dataFail");
+    if (f) f.innerHTML = "<b>A charting library did not load.</b> This page draws " +
+      "every instrument from d3, fetched from a CDN. Reload, or check whether the " +
+      "network is blocking cdnjs.cloudflare.com.";
+    return;
+  }
   renderHero();
   buildClock();
   renderEyebrows();
