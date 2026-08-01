@@ -79,7 +79,25 @@ window.COLLAPSE_DATA = {
       { id: "mes-trl2024", label: "Trends in Biotechnology — microbial electrosynthesis assessed at TRL 3/4, lab scale, requiring process optimisation before an industrial prototype", date: "2024", url: null, verify: true },
       { id: "ice-negative2024", label: "Preprint by 42 glaciologists condemning ice-sheet and sea-ice thickening / polar geoengineering as infeasible and dangerous", date: "2024-10", url: null, verify: true },
       { id: "ice-negative2025", label: "Study concluding high-profile Arctic and polar interventions are not viable and may cause harm, each costing ≥$10B", date: "2025-09", url: null, verify: true },
-      { id: "doe2025", label: "US DOE grant terminations and rescissions affecting DAC and low-carbon cement (Project Cypress, South Texas hub, Sublime $87M, Brimstone $189M)", date: "2025", url: null, verify: true }
+      { id: "doe2025", label: "US DOE grant terminations and rescissions affecting DAC and low-carbon cement (Project Cypress, South Texas hub, Sublime $87M, Brimstone $189M)", date: "2025", url: null, verify: true },
+      { id: "gem2024amm", label: "Global Energy Monitor, \"The hidden threat: Abandoned coal mine methane emissions in the EU\" (briefing, June 2024) — anchor source for the seam field study; PDF on file", date: "2024-06", url: "https://globalenergymonitor.org/sites/default/files/migration/reports/GEM-EU-Abandoned-Mine-Methane-June-2024-_11.pdf" },
+      { id: "kholod2020", label: "Kholod et al., \"Global methane emissions from coal mining to continue growing even with declining coal production\", Journal of Cleaner Production 256, 120489 (2020) — decline equations §2.3.3: dry hyperbolic b=2.017, Di=0.302/yr; flooded exponential. NOTE: the paper's Table 1 mis-assigns its rows (a b for the flooded equation that has no b term); values used follow EPA's own coefficients", date: "2020", url: "https://doi.org/10.1016/j.jclepro.2020.120489" },
+      { id: "eumr2024", label: "Regulation (EU) 2024/1787 on methane emissions reduction in the energy sector — coal provisions Ch. 4 §III, Arts. 24–26; verified 2026-07-31 against the official text (Publications Office, CELEX 32024R1787; eur-lex.europa.eu sits behind a bot challenge)", date: "2024-06", url: "https://eur-lex.europa.eu/eli/reg/2024/1787/oj" },
+      { id: "iea-amm", label: "IEA Global Methane Tracker 2026, \"Understanding methane emissions\" — abandoned coal mines ≈4.5 Mt CH₄ (2025), ≈60% China; the 2025 edition reported nearly 5 Mt for 2024 (first edition to carry a global abandoned-mine estimate)", date: "2026", url: "https://www.iea.org/reports/global-methane-tracker-2026/understanding-methane-emissions" },
+      { id: "unece-bpg", label: "UNECE, Best Practice Guidance for Effective Methane Drainage and Use in Coal Mines, 2nd ed. (2016), ECE Energy Series 47 — explosive range 5–15% with safety factors 2.5×LEL/2×UEL (p.20), 30% drained-gas transport floor (§6.4.1 p.60), VAM oxidation feasible above 0.20% (§6.2.1 p.58)", date: "2016-12", url: "https://globalmethane.org/documents/BPG-Effective-Methane-Drainage-Coal-Mines_2017.pdf" },
+      { id: "epa-vam", label: "US EPA — Methodology for Estimating Emission Inventories from Abandoned Coal Mines (flooding coefficient 0.672, Table 3.1) and VAM Utilization Technologies, EPA-430-F-19-023 (RTO below-1.5% technology ceiling)", date: "2019-07", url: "https://www.epa.gov/sites/production/files/2016-03/documents/methodology_abandoned_coalmines.pdf" },
+      { id: "acm0008", label: "UNFCCC CDM TOOL06 v04.0, \"Project emissions from flaring\" (defaults: enclosed flare 90%, open 50%) — the flaring tool ACM0008 (coal-mine methane) defers to", date: "2022-03", url: "https://cdm.unfccc.int/methodologies/PAmethodologies/tools/am-tool-06-v4.0.pdf" },
+      { id: "ipcc2006", label: "IPCC 2006 Guidelines, Vol. 2 Ch. 4 §4.1.3.2 — coal-mining Tier 1 methane density convention 0.67 kg/m³ at 20 °C, 1 atm", date: "2006", url: "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_4_Ch4_Fugitive_Emissions.pdf" },
+      { id: "unece-amm", label: "UNECE, Best Practice Guidance for Effective Methane Recovery and Use from Abandoned Coal Mines, ECE Energy Series No. 64 (2019) — AMM purity is seal-governed, not age-governed: well-sealed mines 15–90% CH₄ (Stillingfleet 80–85% fifteen years post-closure, p.47); unsealed Lohberg fell ≈40%→25% over 2008–2018 under unmanaged suction (Fig. 9.3, pp.43–44); CHP gas-quality requirement >35% CH₄ (Table 4.1). unece.org blocks bots — verified from the published edition via archive", date: "2019", url: "https://unece.org/info/Sustainable-Energy/pub/21966" },
+
+      /* --- Sheet M-004, the biological route ------------------------------
+         The flammability geometry and the one MEASURED biofilter performance
+         anchor. See the M-004 parameter block for how each is used, and the
+         page's own hedge: the oxidation kinetics are uncalibrated and no
+         absolute performance figure is rendered from them. */
+      { id: "coward1952", label: "H. F. Coward and G. W. Jones, \"Limits of Flammability of Gases and Vapors\", US Bureau of Mines Bulletin 503, 4th ed. (1952), 155 pp. — the standard construction for methane in oxygen/inert mixtures used in mine-ventilation practice; methane in air 5.0–15.0% v/v. The limiting-oxygen \"nose\" coordinates (≈12.1% O₂, ≈6.0% CH₄) are the conventional Coward-diagram values and still need confirming at page level in the bulletin itself", date: "1952", verify: true, url: "https://digital.library.unt.edu/ark:/67531/metadc12662/" },
+      { id: "limbri2014", label: "Limbri, Gunawan, Thomas, Smith, Scott and Rosche, \"Coal-Packed Methane Biofilter for Mitigation of Green House Gas Emissions from Coal Mine Ventilation Air\", PLoS ONE 9(4): e94641 (2014) — bituminous-coal packing, 1% v/v CH₄ inlet, empty-bed residence 1.6–19.5 min at 30 °C; maximum elimination capacity 27.2 ± 0.66 g CH₄ m⁻³ h⁻¹ at 19.7 ± 2.9% removal (best removal 28.8 ± 1.3%); community dominated by Methylocystis; authors' own scale-up figure ≈7,200 m³ of bed for a 50 m³ s⁻¹ ventilation flow", date: "2014-04", url: "https://doi.org/10.1371/journal.pone.0094641" },
+      { id: "rosso1993", label: "Rosso, Lobry and Flandrois, \"An unexpected correlation between cardinal temperatures of microbial growth highlighted by a new model\", Journal of Theoretical Biology 162(4): 447–463 (1993) — the cardinal-temperature model used for the bed's temperature response, chosen over Arrhenius because methane oxidation has a true optimum and a hard upper cutoff", date: "1993", url: "https://doi.org/10.1006/jtbi.1993.1099" }
     ]
   },
 
@@ -376,6 +394,7 @@ window.COLLAPSE_DATA = {
       id: "methane-removal",
       name: "Atmospheric / point-source methane removal",
       section: "§1",
+      fieldwork: { href: "collapse-methane-mines.html", label: "Field study — The Seam: abandoned-mine methane in the EU" },
       leverage: "Methane is responsible for nearly 30% of the rise in global average temperature since the Industrial Revolution (IEA Global Methane Tracker); its 20-year global warming potential is ≈84–87× CO₂ (IPCC). Near-term methane action is among the highest-leverage climate moves available.",
       maturity: "TRL 1–3 (open-atmosphere) / TRL 4–5 pilot (point-source) / commercial (enteric additives in ration systems)",
       /* leverage 5 — the top band, on the leverage clause's own terms: methane
@@ -751,6 +770,7 @@ window.COLLAPSE_DATA = {
   hypotheses: [
     {
       id: "H1",
+      fieldwork: { href: "collapse-methane-mines.html", label: "Field study — The Seam: abandoned-mine methane in the EU" },
       claim: "Point-source destruction of sub-1% methane streams (dairy ventilation, coal-mine VAM) can reach <$50/tCO₂e-eq abated.",
       mechanism: "UV-chlorine photochemistry (MEPS) and methanotroph biofilters both operate at dilute concentrations; costs are dominated by air-handling energy, which falls with contact-area engineering rather than exotic inputs.",
       whyNow: "Methane is ≈30% of the warming rise since the industrial era yet removal is the least-funded category in this dataset; its 20-year leverage is 84–87× CO₂.",
@@ -1020,6 +1040,198 @@ window.COLLAPSE_DATA = {
       tags: ["strata"],
       bytes: 3828796,
       verifiedAt: "2026-07-30"
+    }
+  },
+
+  /* ---------------------------------------------------------------------------
+     AMM — the seam field study (collapse-methane-mines.html).
+     Abandoned-mine methane in the EU: inventory, regulation, one modelled mine.
+     Anchor source is gem2024amm; the same editorial rules apply as everywhere
+     else in this file — no number without a source id and a date, hedges
+     preserved, modelled figures labelled as modelled.
+     · All MCM figures are methane volume per year as GEM publishes them.
+     · `kt` values are carried ONLY where the briefing itself prints them —
+       the MCM↔kt conversion GEM implies (~0.67 kg/m³) has unstated reference
+       conditions, so nothing here converts on its own. See conversion below.
+     · The venture block is the site's own editorial argument (research-doc
+       register): revenue lines are NOT funding[] streams and must never be
+       rendered as raised capital.
+     --------------------------------------------------------------------------- */
+  amm: {
+    sourceId: "gem2024amm",
+
+    conversion: {
+      kgPerM3: 0.67,
+      basis: "implied by the briefing's own printed MCM↔kt pairs (298.2 MCM ≈ 200 kt; 287 MCM = 193 kt) and exactly the IPCC 2006 coal-mining Tier-1 convention (0.67 kg/m³ at 20 °C, 1 atm) — the two agree, so the convention is stated rather than guessed",
+      sourceIds: ["gem2024amm", "ipcc2006"]
+    },
+
+    regulation: {
+      id: "Regulation (EU) 2024/1787",
+      sourceIds: ["eumr2024"],
+      /* verified 2026-07-31 against the official text (Publications Office
+         cellar endpoint for CELEX 32024R1787). Coal provisions are Ch. 4
+         §III, Arts. 24–26. Scope throughout: underground coal mines "where
+         operations ceased after 3 August 1954" — a FIXED statutory date, not
+         a rolling window. */
+      responsibility: {
+        abandoned: "member states",
+        closed: "mine operators or member states",
+        note: "Art. 25(7): closed mines — 'mine operators or Member States'; abandoned mines — Member States. The split is definitional (Arts. 2(53)–(54)): a mine is 'abandoned' precisely when no operator, owner or licensee can be identified as responsible, or it was not closed in a regulated manner. Under alternative use, the permit holder carries the obligations (Art. 26(3))."
+      },
+      milestones: [
+        { date: "2025-08-05", label: "inventory due", art: "Art. 25(1)",
+          what: "member states publish an inventory of all closed and abandoned underground coal mines where operations ceased after 3 August 1954" },
+        { date: "2026-05-05", label: "measurement begins", art: "Art. 25(2)", clock: false,
+          what: "methane measurement required on all inventoried elements found to emit above 0.5 t CH₄/yr" },
+        { date: "2026-08-05", label: "first emissions reports", art: "Art. 25(6)",
+          what: "first yearly reports of source-level methane emissions — estimates, covering the last available calendar year; annually by 31 May thereafter" },
+        { date: "2027-02-05", label: "mitigation plans", art: "Art. 26(1)",
+          what: "member state mitigation plans covering closed and abandoned mines alike, with key implementation milestones" },
+        { date: "2030-01-01", label: "venting & flaring prohibited", art: "Art. 26(2)",
+          what: "venting and flaring prohibited outright for in-scope equipment — the only exception is demonstrated technical infeasibility or a risk to environmental safety, human safety or health" }
+      ],
+      recital128: {
+        note: "the regulation's own physics and forecast: 'even 10 years after mining has ceased, methane from non-flooded coal mines continues to be emitted at levels attaining approximately 40 % of those recorded at the time of closure', and 'AMM emissions are likely to increase in the Union' as coal retires",
+        sourceIds: ["eumr2024"]
+      }
+    },
+
+    inventory: {
+      window: "mines abandoned 2015–2023",
+      counts: { total: 70, underground: 53, surface: 17 },
+      central: { mcm: 287, kt: 193, basis: "average of the unknown-dry and unknown-flooded scenarios — a modelling convention, not a measurement" },
+      scenarios: [
+        { id: "unknown-dry", label: "all unknown-status mines assumed dry", mcm: 298.2, kt: 200, ktQualifier: "approximately" },
+        { id: "unknown-flooded", label: "all unknown-status mines assumed flooded", mcm: 275.7, kt: 185, ktQualifier: "approximately" },
+        { id: "all-flooded", label: "every mine assumed flooded (best case)", mcm: 238.7, kt: null }
+      ],
+      countries: [
+        { name: "Poland", mcm: 110, qualifier: "approximately", note: "≈40% of EU abandoned-mine methane; most abandoned underground hard-coal mines in the EU" },
+        { name: "Czech Republic", mcm: 90, qualifier: "approximately", note: "ČSA and Darkov, both closed 2021, are ≈70% of the country's total" },
+        { name: "Germany", mcm: 55, qualifier: "approximately", note: "only three abandoned underground mines but very deep, gassy coal; Germany reportedly utilises 99% of its AMM" }
+      ],
+      topThreeShare: "almost 90% of the EU total",
+      status: { unknown: 34, dry: 13, flooded: 6, of: 53,
+        note: "64% of abandoned underground mines have an unknown flooded-or-dry status; flooded mines mostly stop emitting within about a decade" },
+      sixMines: { mcm: 152, kt: 102, note: "half of all EU abandoned-underground-mine methane comes from six mines" },
+      inventoryConflict: {
+        note: "unresolved conflict, flagged not averaged: the EU's 2023 GHG inventory attributes 235 kt CH₄ (2021) to abandoned underground mines, while Romania's own UNFCCC reporting alone claims ≈195 kt — and GEM's asset-level dataset finds ≈193 kt for the whole EU (2015–2023 closures only). The disagreement is the data gap the regulation now forces closed.",
+        sourceIds: ["gem2024amm"]
+      },
+      sourceIds: ["gem2024amm"]
+    },
+
+    mines: [
+      { id: "csa", name: "ČSA Coal Mine", region: "Karviná", country: "Czech Republic",
+        closed: 2021, mcm: 36, status: "unknown",
+        note: "largest single emitter in the EU dataset; neighbour Darkov closed the same year — a natural two-mine portfolio",
+        sourceIds: ["gem2024amm"] },
+      { id: "auguste-victoria", name: "Auguste Victoria Colliery", region: "Marl", country: "Germany",
+        closed: 2015, mcm: 28, status: "unknown",
+        floodedDelta: { dry: 28.3, flooded: 8.4,
+          note: "GEM's own published pair: if this mine is in fact flooded it emits ≈70% less. The flooding unknown IS the inventory's biggest error bar." },
+        note: "shafts potentially infilled; the briefing's worked example of status uncertainty",
+        sourceIds: ["gem2024amm"] },
+      { id: "myslowice-wesola", name: "KWK Mysłowice-Wesoła I", region: "Silesia", country: "Poland",
+        closed: null, mcm: 26, status: "unknown",
+        note: "closure year not printed in the briefing; Poland's state SRK manages twelve abandoned underground mines and is slated to receive all future closures — this mine's manager unverified",
+        sourceIds: ["gem2024amm"] },
+      { id: "darkov", name: "Darkov Mine", region: "Karviná", country: "Czech Republic",
+        closed: 2021, mcm: 24, status: "unknown",
+        note: "with ČSA, ≈70% of Czech abandoned-mine methane",
+        sourceIds: ["gem2024amm"] },
+      { id: "rydultowy", name: "KWK Rydułtowy I", region: "Silesia", country: "Poland",
+        closed: null, mcm: 19, status: "unknown",
+        note: "closure year not printed in the briefing; manager unverified (see Mysłowice-Wesoła note)",
+        sourceIds: ["gem2024amm"] },
+      { id: "prosper-haniel", name: "Prosper-Haniel Mine", region: "Ruhr", country: "Germany",
+        closed: 2018, mcm: 18, status: "unknown",
+        note: "Germany's last hard-coal mine, closed by subsidy phase-out",
+        sourceIds: ["gem2024amm"] }
+    ],
+
+    /* ONE pair of warming-potential constants for the whole page — the twin,
+       the ladder and the dossier all read these two numbers and no others.
+       AR6 fossil-origin values chosen and stated; the lead page's "84–87×"
+       prose spans other AR bases and is not used here. */
+    gwp: {
+      gwp20: 82.5, gwp100: 29.8,
+      basis: "IPCC AR6 WG1 Table 7.15, fossil-origin methane (82.5 ±25.8 / 29.8 ±11); both lenses always shown together",
+      sourceIds: ["ipccar6"]
+    },
+
+    /* Fermi ladder — modelled, editorial. Each rung's CH₄ tonnage is either a
+       sourced figure or a stated editorial range; CO₂e is computed at render
+       from `gwp`, never typed. */
+    fermi: [
+      { id: "one-site", label: "one good site",
+        ktCh4: { min: 1, central: 2, max: 3 }, modelled: true,
+        basis: "editorial range for a well-chosen vent or gob well, consistent with the per-mine figures above",
+        sourceIds: ["gem2024amm"] },
+      { id: "six-mines", label: "the six named mines",
+        ktCh4: { min: 102, central: 102, max: 102 }, modelled: false,
+        basis: "GEM's printed total for the top six",
+        sourceIds: ["gem2024amm"] },
+      { id: "eu-ceiling", label: "EU ceiling · all abandoned underground mines",
+        ktCh4: { min: 185, central: 193, max: 200 }, modelled: true,
+        basis: "GEM's scenario range; 2015–2023 closures only, so a floor on the true ceiling",
+        sourceIds: ["gem2024amm"] },
+      { id: "global", label: "global abandoned coal mines",
+        ktCh4: { min: 4500, central: 4500, max: 5000 }, modelled: true,
+        basis: "IEA estimates: ≈4.5 Mt CH₄ in 2025 (GMT 2026), nearly 5 Mt in 2024 (GMT 2025); ≈60% China. Within the EU, the regulation's own Recital 128 expects AMM to increase as coal retires",
+        sourceIds: ["iea-amm", "eumr2024"] }
+    ],
+
+    /* the DAC contrast — same figures the lead's §5 carries, restated here so
+       the venture case can price the impact without touching the lead's rows */
+    dacContrast: {
+      sectorCapitalUsd: 2.3e9, sectorCapitalQualifier: "approximately",
+      sectorCapitalWhat: "tracked private DAC investment, 2021–H1 2025",
+      deliveredT: 1186, deliveredQualifier: "approximately",
+      deliveredWhat: "delivered by six DAC suppliers since 2023 — ≈0.05% of contracted volume",
+      costPerT: "≈$600–1,000/t against a ≈$100/t target",
+      sourceIds: ["cdrfyi2025", "research-doc"]
+    },
+
+    venture: {
+      framing: "the missing company — a research thesis, not a pitch; working names live in a drawer and nowhere else",
+      workingNames: ["Aftermine", "Last Vent", "MineZero", "Closure Carbon"],
+      layers: [
+        { id: "find",    label: "find",    what: "rank sites from the regulation's own inventories, historic mine data and first measurements" },
+        { id: "verify",  label: "verify",  what: "install compliant source-level monitoring; establish the defensible baseline" },
+        { id: "design",  label: "design",  what: "match concentration, flow and site conditions to capture, oxidation, heat recovery or use" },
+        { id: "finance", label: "finance", what: "build the project economics; contract with the state, the operator or climate finance" },
+        { id: "deploy",  label: "deploy",  what: "integrate existing equipment; own the customer, the data and the performance" },
+        { id: "report",  label: "report",  what: "recurring regulatory MRV and verified abatement reporting" }
+      ],
+      /* revenue lines — deliberately NOT funding[] streams; never summable,
+         never renderable as capital raised */
+      revenue: [
+        { label: "site assessment & feasibility", kind: "paid studies — the wedge" },
+        { label: "monitoring & regulatory reporting", kind: "subscription" },
+        { label: "engineering & deployment", kind: "project margin" },
+        { label: "operations & maintenance", kind: "long-term contract" },
+        { label: "carbon revenue", kind: "upside only — never the base case", warn: true }
+      ],
+      killCriteria: [
+        { id: "K1", clause: "No authority or operator acknowledges responsibility for a defined group of sites." },
+        { id: "K2", clause: "No customer pays for assessment, monitoring or mitigation without relying entirely on voluntary credits." },
+        { id: "K3", clause: "No site shows flow and concentration stable enough for plausible economics." },
+        { id: "K4", clause: "The first site cannot be addressed with existing equipment — it needs years of original reactor R&D." },
+        { id: "K5", clause: "Site access and operational data cannot be obtained." },
+        { id: "K6", clause: "The opportunity does not repeat across enough mines to support a company rather than a consultancy." }
+      ],
+      /* the concentration-flexible router — FOAK concept states, verified
+         against UNECE BPG 2016 and EPA VAM materials. The verification pass
+         REMOVED a first-draft 15–30% flare band: UNECE's safety factors rule
+         all raw use between 2% (2.5×LEL) and 30% (2×UEL) unacceptable. */
+      productStates: [
+        { id: "rich", label: "rich gas", band: "≳35% CH₄", route: "gas engine / CHP", note: "the >35% CHP gas-quality requirement (UNECE No. 64, Table 4.1) — for a wellhead-mounted unit this, not the 30% transport floor, is the binding number" },
+        { id: "mid",  label: "rich gas · no offtake", band: "≳35% CH₄", route: "enclosed flare — destruction without a grid connection", note: "CDM default efficiency 90%; CARB allows 99.5%" },
+        { id: "lean", label: "margin & lean gas", band: "≈0.2–35% CH₄", route: "dilute below the ≈1.5% RTO feed ceiling → regenerative oxidation", note: "raw use inside the 2–30% safety margins is ruled out (UNECE BPG); sealed dilution is the only path through" },
+        { id: "unsafe", label: "explosive core", band: "≈5–15% CH₄ in air", route: "no raw handling — sealed systems only, dilute before processing", note: "the band the whole unit is engineered never to expose" }
+      ]
     }
   }
 };

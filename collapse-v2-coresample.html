@@ -457,6 +457,9 @@ input[type=range]::-moz-range-thumb{width:15px;height:22px;background:var(--carb
 .dos-scrim{position:fixed;inset:0;z-index:88;background:rgba(11,9,8,.62);
   opacity:0;pointer-events:none;transition:opacity .32s var(--ease)}
 .dos-scrim[data-open="1"]{opacity:1;pointer-events:auto}
+/* the class display beats the hidden attribute's UA rule — without this the
+   closed tray's grip pokes a 10px sliver into the right edge of the viewport */
+.dossier[hidden],.dos-scrim[hidden]{display:none}
 
 .dossier{
   position:fixed;top:0;right:0;bottom:0;z-index:90;
@@ -3362,6 +3365,10 @@ function renderIvList() {
       field("gap assessment",
         "<div class=\"assess\">" + pips(iv.gapScore, 5) +
         "<span>" + iv.gapScore + " of 5 · editorial assessment, not a measurement</span></div>") +
+      (iv.fieldwork
+        ? field("fieldwork", "<p class=\"field-v\"><a href=\"" + attr(iv.fieldwork.href) +
+            "\">" + esc(iv.fieldwork.label) + " →</a></p>")
+        : "") +
       field("sources", "<ul class=\"src-list\">" + srcList(iv.sourceIds) + "</ul>");
 
     /* The summary carries the whole rigor payload for this row: the hedged
@@ -3539,6 +3546,11 @@ function renderTags() {
         h.sourceIds.map(function (id) {
           var s = SRC[id]; return esc(s ? s.label.split(",")[0] + " (" + s.date + ")" : id);
         }).join(" · ") + "</p></div>" +
+      (h.fieldwork
+        ? "<div class=\"tag-f\"><p class=\"tag-k\">fieldwork</p><p class=\"tag-v\">" +
+          "<a href=\"" + attr(h.fieldwork.href) + "\">" + esc(h.fieldwork.label) +
+          " →</a></p></div>"
+        : "") +
       "<p class=\"tag-order\">kill criteria are printed above validation criteria — " +
         "a claim that cannot be killed is not a hypothesis</p>" +
       "</div></details>";
@@ -3790,6 +3802,18 @@ function boot() {
      wider once the real faces arrive. Re-place them then, against real metrics. */
   if (document.fonts && document.fonts.ready && document.fonts.ready.then) {
     document.fonts.ready.then(placeFieldCaptions);
+  }
+
+  /* An arriving hash that targets a closed <details> (or content inside one)
+     would land on nothing visible — open it before the browser's scroll. */
+  if (location.hash) {
+    var tgt = $(location.hash.slice(1));
+    if (tgt) {
+      if (tgt.tagName === "DETAILS") tgt.open = true;
+      var host = tgt.closest && tgt.closest("details");
+      if (host) host.open = true;
+      tgt.scrollIntoView({ block: "center" });
+    }
   }
 }
 
