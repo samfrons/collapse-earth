@@ -141,24 +141,76 @@
     };
   }
 
-  /* Walk the dilution path and report the first air fraction at which the
-     mixture becomes flammable. 400 steps is the upstream default; at typical
-     mine-gas compositions the flammable window spans tens of percent of the
-     air fraction, so the walk resolves it comfortably. */
+  function flammableAt(raw, f, lim) {
+    var m = blendWithAir(raw, f, lim);
+    return classifyMixture(m.ch4VolPct, m.o2VolPct, lim).flammable;
+  }
+
+  /* Walk the dilution path and report where it is flammable.
+
+     RESOLUTION MATTERS HERE IN ONE DIRECTION ONLY. A sampled walk that steps
+     over a narrow flammable window reports "path clear" — a false negative on
+     a safety finding, which is the one error this function must not make. The
+     upstream default of 400 uniform steps is comfortable for typical mine gas
+     (the window spans ~8% of the blend) but is not a guarantee.
+
+     Two things make it one. First, the sample set explicitly includes the two
+     breakpoints where the oxygen-depletion clamp engages — between those, the
+     flammable-limit lines and the mixture composition are all linear in f, so
+     the window cannot open and close unseen inside a sub-interval unless it is
+     narrower than one step. Second, the step count defaults to 2000 rather
+     than 400. Entry and exit are then refined by bisection, so accuracy does
+     not depend on the sample count. */
   function blendPathCrossesFlammable(raw, targetAirFraction, lim, steps) {
-    var n = steps || 400;
-    var first = null;
-    var i, f, mix;
-    for (i = 0; i <= n; i++) {
-      f = (targetAirFraction * i) / n;
-      mix = blendWithAir(raw, f, lim);
-      if (classifyMixture(mix.ch4VolPct, mix.o2VolPct, lim).flammable) { first = f; break; }
+    var n = steps || 2000;
+    var fs = [], i, f;
+    for (i = 0; i <= n; i++) { fs.push((targetAirFraction * i) / n); }
+
+    /* f at which the blend reaches ambient oxygen, and at which it reaches the
+       limiting oxygen concentration — the clamp's two corners. */
+    var denom = lim.airO2 - raw.o2VolPct;
+    [lim.airO2, lim.noseO2].forEach(function (target) {
+      if (denom === 0) return;
+      var fb = (target - raw.o2VolPct) / denom;
+      if (fb > 0 && fb < targetAirFraction) fs.push(fb);
+    });
+    fs.sort(function (a, b) { return a - b; });
+
+    var first = null, last = null, prev = null;
+    for (i = 0; i < fs.length; i++) {
+      f = fs[i];
+      if (flammableAt(raw, f, lim)) {
+        if (first === null) first = refineEdge(raw, prev, f, lim);
+        last = f;
+      } else if (last !== null && first !== null) {
+        last = refineEdge(raw, f, last, lim);
+        break;
+      }
+      prev = f;
     }
+    if (first !== null && last !== null && last === fs[fs.length - 1]) {
+      last = targetAirFraction;
+    }
+
     return {
       crosses: first !== null,
       firstCrossingAirFraction: first,
+      lastCrossingAirFraction: last,
       endpoint: blendWithAir(raw, targetAirFraction, lim)
     };
+  }
+
+  /* Bisect between a known-safe and a known-flammable air fraction. Returns
+     the flammable-side bound, so a reported edge is always inside the
+     envelope rather than just outside it. */
+  function refineEdge(raw, safeF, hotF, lim) {
+    if (safeF === null || safeF === undefined) return hotF;
+    var lo = safeF, hi = hotF, mid, i;
+    for (i = 0; i < 50; i++) {
+      mid = (lo + hi) / 2;
+      if (flammableAt(raw, mid, lim)) hi = mid; else lo = mid;
+    }
+    return hi;
   }
 
   /* The air fraction that dilutes raw gas to a target methane concentration.
@@ -186,6 +238,13 @@
   function assessBlendSafety(input) {
     var findings = [];
     var lim = input.limits;
+
+    /* A blend schedule with no gas to blend is a caller bug, and the failure
+       must be loud: silently skipping the path check would return "normal"
+       for the exact case this function exists to catch. */
+    if (input.airBlendFraction > 0 && !input.rawGas) {
+      throw new Error("assessBlendSafety: rawGas is required when airBlendFraction > 0");
+    }
 
     var inletMixture = classifyMixture(input.inletCh4VolPct, input.inletO2VolPct, lim);
     var outletMixture = classifyMixture(input.outletCh4VolPct, input.outletO2VolPct, lim);
@@ -388,7 +447,15 @@
       return { rate: kinetic, limitation: bindingFactor(state), surfaceCh4_gm3: state.ch4_gm3 };
     }
 
-    /* residual(Cs) = transport supply - reaction demand.
+    /* Review suggested hoisting the methane-independent factors (f_T, f_θ,
+       f_pH, nutrient) out of this bisection, since intrinsicRate recomputes
+       all six every iteration. Correct, and not taken: the axial march nests
+       40 iterations around these 60, but a full sheet redraw is still
+       imperceptible, and the saving would come at the cost of splitting the
+       rate law across two functions whose agreement is exactly what the unit
+       tests pin. Revisit only if a redraw ever becomes visible.
+
+       residual(Cs) = transport supply - reaction demand.
        Positive at Cs = 0; negative at Cs = C_bulk (supply zero, demand maximal). */
     function residual(cs) {
       return transportCoefficient * (state.ch4_gm3 - cs) -
@@ -426,6 +493,16 @@
      Each cell carries `frac` — methane remaining as a fraction of the inlet.
      That normalisation is the point: it is the shape, not the magnitude.  */
   function solveProfile(opts) {
+    /* NaN propagates silently through this whole function: Math.max(1, NaN)
+       is NaN, dz becomes NaN, `i < NaN` is false on the first test, and the
+       caller gets cells:[] with outletFrac:1 — a result that looks exactly
+       like a valid inert bed. A DOM value arriving as a string, or a missing
+       field, would read as "the bed does nothing" rather than as an error. */
+    ["cellCount", "bedDepth_m", "vesselDiameter_m", "gasFlow_m3PerH"].forEach(function (k) {
+      if (typeof opts[k] !== "number" || !isFinite(opts[k])) {
+        throw new Error("solveProfile: " + k + " must be a finite number, got " + opts[k]);
+      }
+    });
     var area = Math.PI * Math.pow(opts.vesselDiameter_m / 2, 2);
     var cellCount = Math.max(1, Math.round(opts.cellCount));
     var dz = opts.bedDepth_m / cellCount;

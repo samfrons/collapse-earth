@@ -157,6 +157,53 @@ describe("blendPathCrossesFlammable", () => {
       }
     }
   });
+  it("reports the exit as well as the entry, with entry before exit", () => {
+    const raw = { ch4VolPct: 82, o2VolPct: 0.5, co2VolPct: 6 };
+    const p = B.blendPathCrossesFlammable(raw, B.airFractionForTarget(82, 1.0), LIM);
+    ok(p.crosses);
+    ok(p.firstCrossingAirFraction < p.lastCrossingAirFraction,
+      `entry ${p.firstCrossingAirFraction} should precede exit ${p.lastCrossingAirFraction}`);
+    for (const f of [p.firstCrossingAirFraction, p.lastCrossingAirFraction]) {
+      const m = B.blendWithAir(raw, f, LIM);
+      ok(B.classifyMixture(m.ch4VolPct, m.o2VolPct, LIM).flammable,
+        `reported edge ${f} should itself be inside the envelope`);
+    }
+  });
+  it("cannot step over a narrow window — a false 'clear' is the one unacceptable error", () => {
+    // Force the window narrow by diluting only just past the upper limit, so
+    // the flammable stretch occupies a tiny slice of the air-fraction range.
+    // A coarse uniform walk misses this; the refined one must not.
+    const raw = { ch4VolPct: 82, o2VolPct: 0.5, co2VolPct: 6 };
+    for (const target of [11.0, 11.5, 11.8, 11.9]) {
+      const fTarget = B.airFractionForTarget(82, target);
+      const coarse = B.blendPathCrossesFlammable(raw, fTarget, LIM, 8);
+      const fine = B.blendPathCrossesFlammable(raw, fTarget, LIM, 20000);
+      // The fine walk is the reference; wherever it finds a crossing the
+      // default-resolution call must find one too.
+      const dflt = B.blendPathCrossesFlammable(raw, fTarget, LIM);
+      if (fine.crosses) {
+        ok(dflt.crosses,
+          `default resolution missed a window the fine walk found at target ${target}% ` +
+          `(coarse-8 said ${coarse.crosses})`);
+      }
+    }
+  });
+  it("agrees with a brute-force scan on where the envelope starts and ends", () => {
+    const raw = { ch4VolPct: 40, o2VolPct: 4, co2VolPct: 8 };
+    const fTarget = B.airFractionForTarget(40, 1.0);
+    let bfFirst = null, bfLast = null;
+    for (let i = 0; i <= 200000; i++) {
+      const f = fTarget * i / 200000;
+      const m = B.blendWithAir(raw, f, LIM);
+      if (B.classifyMixture(m.ch4VolPct, m.o2VolPct, LIM).flammable) {
+        if (bfFirst === null) bfFirst = f;
+        bfLast = f;
+      }
+    }
+    const p = B.blendPathCrossesFlammable(raw, fTarget, LIM);
+    close(p.firstCrossingAirFraction, bfFirst, 1e-4, "entry disagrees with brute force");
+    close(p.lastCrossingAirFraction, bfLast, 1e-4, "exit disagrees with brute force");
+  });
   it("does not cross when the raw gas already sits below the lower flammable limit", () => {
     // Ventilation air is the case that needs no dilution at all, and this is
     // exactly why it is the stream biofiltration is proposed for.
@@ -203,6 +250,13 @@ describe("assessBlendSafety", () => {
       ok(!r.includes("recommended target"), "must not say 'recommended target'");
       ok(!r.includes("acceptable"), "must not say 'acceptable'");
     }
+  });
+  it("throws rather than silently skipping the path check when rawGas is missing", () => {
+    let threw = false;
+    try {
+      B.assessBlendSafety(Object.assign({}, nominal, { rawGas: undefined, airBlendFraction: 0.9 }));
+    } catch (e) { threw = /rawGas is required/.test(e.message); }
+    ok(threw, "expected a named error, not a silent 'normal' verdict");
   });
   it("always attributes every finding to at least one named parameter", () => {
     const a = B.assessBlendSafety(Object.assign({}, nominal,
@@ -424,6 +478,15 @@ describe("solveProfile", () => {
     }));
     ok(r.oxygenLimited, "expected the oxygen cap to bind in a single-cell march");
     ok(r.outletFrac >= 0 && r.outletFrac <= 1, "capped result must stay physical");
+  });
+  it("throws on non-finite geometry rather than returning a plausible inert bed", () => {
+    for (const bad of [{ cellCount: undefined }, { cellCount: "14" }, { bedDepth_m: NaN },
+                       { vesselDiameter_m: undefined }, { gasFlow_m3PerH: "50" }]) {
+      let threw = false;
+      try { B.solveProfile(profileOpts(bad)); }
+      catch (e) { threw = /must be a finite number/.test(e.message); }
+      ok(threw, `expected a throw for ${JSON.stringify(bad)}, got a result instead`);
+    }
   });
   it("names a limitation for every cell", () => {
     for (const c of B.solveProfile(profileOpts()).cells) {

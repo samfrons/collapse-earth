@@ -35,9 +35,17 @@
      · every emissions figure is modelled and stamped as such. The gap between
        modelled and measured is not a footnote here, it is the thesis.
 
-   WORD BUDGET: default-visible target ≤2,400 on basis B (all rendered text,
+   WORD BUDGET: default-visible target ≤2,600 on basis B (all rendered text,
    SVG included, closed <details> contributing only summaries) — measured with
    the same script family as the lead; the delta is what travels.
+   RAISED from 2,400 on 2026-08-01, Sam's call, when sheet 4 (M-004) landed at
+   2,469. The budget exists to stop TEXT WALLS, and what pushed the count over
+   was a chart with a live readout, not prose — the remaining trims available
+   were the plot's axis numbers and the accessible live mirror, i.e. gaming the
+   counter rather than tightening the writing. The real backstop against
+   overwhelming a reader is the height budget below, which is unchanged.
+   HEIGHT BUDGET: ≤12,000px at 1440 wide. This is now the binding constraint
+   (11,761px as of sheet 4) — treat it as the one that must not move.
    =========================================================================== */
 
 *,*::before,*::after{box-sizing:border-box}
@@ -3142,17 +3150,25 @@ function cowSolvePath(def, targetCh4) {
   var raw = cowRaw(def);
   var lim = cowardLimits();
   var fEnd = BIO.airFractionForTarget(raw.ch4VolPct, targetCh4);
-  var N = 300, pts = [], enter = null, exit = null, i, f, mix, fl;
+
+  /* The SAFETY answer comes from the model, which refines its edges by
+     bisection — never from this loop. The loop exists only to draw the curve,
+     and drawing resolution must not be able to change what the page claims. */
+  var path = BIO.blendPathCrossesFlammable(raw, fEnd, lim);
+
+  var N = 300, pts = [], i, f, mix, fl;
   for (i = 0; i <= N; i++) {
     f = fEnd * i / N;
     mix = BIO.blendWithAir(raw, f, lim);
-    fl = BIO.classifyMixture(mix.ch4VolPct, mix.o2VolPct, lim).flammable;
-    if (fl) { if (enter === null) enter = f; exit = f; }
+    /* colour the drawn segment from the model's edges, so a sample that falls
+       just outside a narrow window still renders as hot */
+    fl = path.crosses && f >= path.firstCrossingAirFraction && f <= path.lastCrossingAirFraction;
     pts.push({ f: f, ch4: mix.ch4VolPct, o2: mix.o2VolPct, flammable: fl });
   }
   return {
     raw: raw, lim: lim, fEnd: fEnd, pts: pts,
-    enter: enter, exit: exit, crosses: enter !== null,
+    enter: path.firstCrossingAirFraction, exit: path.lastCrossingAirFraction,
+    crosses: path.crosses,
     /* A stream already at or below the requested concentration needs no air:
        airFractionForTarget returns 0 and there is no path to draw. */
     noDilution: fEnd <= 1e-6,

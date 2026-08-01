@@ -35,7 +35,9 @@
 > `node --check` clean on both JS files and the page's inline block, no uncaught
 > exceptions on either page, H1's `fieldwork` hash lands on the plate.
 >
-> **TWO GATES ARE OPEN AND NEED SAM'S CALL — see "Still open" items 6–8.**
+> Budget gate resolved: **Sam raised this page's word budget to ≤2,600 on basis B**
+> (2026-08-01). Remaining open: the two PENDING Coward constants and a contrast audit
+> of the new sheet — "Still open" items 6 and 8. Neither blocks the argument.
 
 > **2026-08-01 — earlier: scientific-accuracy upgrades (Sam-requested).**
 > (1) **Dry envelope is now structural and citable**: the decline chart's band spans the
@@ -145,7 +147,8 @@ entry and the H1 tag (data-driven `fieldwork` fields in `collapse-data.v2.js`).
   `--ember-lt:#F6A97F` for dark grounds; deep `#5A1A0C` for alert marks on ochre; dark
   plot plates on rust/carbon; kraft-plated stamps). NOTE: this was a *spot* audit of new
   pairings, not the lead's full blank-glyph modal-pixel audit.
-- Word budget: **basis B = 1,698** (target ≤2,400) via the rebuilt
+- Word budget: **basis B = 1,698** (target at the time ≤2,400; raised to ≤2,600 on
+  2026-08-01 — see item 7) via the rebuilt
   `scratchpad/word-bases.mjs`. Caveat the lead's header insists on: this reconstruction
   reads the lead at 3,264 where the original session-local counter read 2,492 — absolutes
   do not travel between counter implementations; this page is comfortably inside budget
@@ -195,21 +198,24 @@ entry and the H1 tag (data-driven `fieldwork` fields in `collapse-data.v2.js`).
    percentage point and **cannot change the finding** — so this is a citation chore, not
    a scientific risk. Fetching Bulletin 627 (Zabetakis 1965), which carries the
    methane–inert–air diagram explicitly, is probably the faster route than 503.
-7. **Both budgets are now effectively spent, and basis B is over.**
-   Measured with `scratchpad/word-bases.mjs` (the only counter whose numbers are
-   comparable to each other):
+7. ~~**Both budgets are now effectively spent, and basis B is over.**~~
+   **CLOSED 2026-08-01 — Sam raised the word budget for this page from ≤2,400 to
+   ≤2,600 on basis B.** Measured with `scratchpad/word-bases.mjs` (the only counter
+   whose numbers are comparable to each other):
 
    | Gate | Target | Before sheet 4 | Now | Verdict |
    |---|---|---|---|---|
-   | basis B | ≤2,400 | 2,333 | **2,469** | **over by 69** |
-   | height @1440 | ≤12,000 | ≈11,000 | **11,761** | inside, but at the wall |
+   | basis B | ≤2,600 *(was 2,400)* | 2,333 | **2,469** | inside, 131 to spare |
+   | height @1440 | ≤12,000 | ≈11,000 | **11,761** | inside, 239px to spare |
 
-   The sheet costs ~136 words net after two trim passes (full hedge moved into a drawer,
-   prose mirror tightened, plate labels shortened). Further cuts would mean deleting axis
-   ticks or the accessible live mirror — gaming the counter rather than tightening the
-   writing, which is worse than being 69 words over. **Three honest options: raise the
-   budget for this page; trim elsewhere (Act IV's "case in three plates" is the wordiest
-   block that is not load-bearing); or move Sheet 4 to its own page owned by H1.**
+   Reasoning, so the raise is not read as the budget quietly drifting: the sheet costs
+   ~136 words net after two trim passes (full hedge moved into a drawer, prose mirror
+   tightened, plate labels shortened), and what remained to cut was the plot's axis
+   numbers and the accessible live mirror — gaming the counter, not tightening the
+   writing. The budget exists to prevent TEXT WALLS; a chart with a live readout is not
+   one. **The height budget is unchanged and is now the binding constraint — treat 12,000px
+   as the gate that must not move.** With 239px of headroom, any further default-visible
+   addition to this page needs a height measurement before it lands, not after.
 8. Sheet 4 has had no pixel-contrast audit. New pairings to probe: the ochre→ice bed
    ramp and the `#F6A97F` envelope stroke, both on the blueprint plate.
 
