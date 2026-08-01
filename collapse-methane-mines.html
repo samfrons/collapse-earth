@@ -3086,9 +3086,10 @@ function buildUnit() {
       "unit that meters, conditions and routes a declining gas stream to the right " +
       "destruction path for a decade without a crew. Deliberately unheroic, and " +
       "deliberately buildable.", "field--warn") +
-    field("working names, since you will ask",
-      A.venture.workingNames.join(" · ") + " — parked in this drawer on purpose; the thesis " +
-      "does not need a brand yet.");
+    field("the name",
+      "<b>" + esc(A.venture.name) + "</b> — the work needs something to be called. It is " +
+      "not a company: no entity, no raise, nothing on offer. Also considered: " +
+      esc(A.venture.namesConsidered.join(" · ")) + ".");
 
   drawGA();
   drawPID();
