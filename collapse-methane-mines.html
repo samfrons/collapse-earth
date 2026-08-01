@@ -1820,10 +1820,18 @@ var PARAMS = {
              note: "the authors' own scale-up: the bed volume their measured performance implies for a 50 m³ s⁻¹ ventilation flow. The honest headline of the whole approach" },
   cow_vam_flow:    { value: 50,   unit: "m³ s⁻¹", src: "limbri2014", verified: true,
              note: "the ventilation flow that scale-up is stated against" },
-  cow_o2_raw:      { value: 0.5,  unit: "% v/v O₂", src: "editorial", verified: true,
-             note: "oxygen in raw drainage gas from a sealed working. Held as a stated assumption rather than a sourced measurement — sealed mine gas is CH₄/CO₂/N₂ with oxygen near zero, which is precisely why it is inerted. Carried as editorial because the sheet's finding does not depend on it: swept 0–20% O₂ across 16–82% CH₄, every dilution path still crosses the envelope. It moves where the crossing happens, not whether" },
-  cow_o2_leaky:    { value: 6.0,  unit: "% v/v O₂", src: "editorial", verified: true,
-             note: "oxygen in gas from an unsealed working under unmanaged suction — air ingress is the same mechanism that drives Lohberg's purity decline (unece-amm Fig. 9.3), so the oxygen must rise as the methane falls. Magnitude editorial; see cow_o2_raw on why it is not load-bearing" },
+  /* --- GROUND-TRUTHING — the twin's own epistemics, in its source's words ---
+     UNECE No. 64 §7 is unusually blunt about what geological modelling of an
+     abandoned mine is worth without physical testing, and it supplies the
+     number. This page models a mine it has never drilled; these two constants
+     are the honest scale of that. */
+  gt_model_mw:  { value: 20, unit: "MW electrical", src: "unece-amm", verified: true,
+             note: "what extensive geological modelling projected for one UK AMM development — the modelled reserve" },
+  gt_actual_mw: { value: 6,  unit: "MWe", src: "unece-amm", verified: true,
+             note: "what boreholes drilled into the same workings actually found. UNECE's own words: 'the need to combine modelling and physical testing is graphically illustrated.' A 70% overestimate by a competent developer using the same class of tool this page uses" },
+  amm_suitable_hi: { value: 0.20, unit: "fraction of mines", src: "unece-amm", verified: true,
+             note: "'no more than 10–20 per cent of any group of mines' is expected to suit an AMM project — gassy, drained during operation, and not quickly flooded. The upper bound is carried; the inventory is not the opportunity" },
+
   cow_vam_ch4:     { value: 0.6,  unit: "% v/v CH₄", src: "editorial", verified: true,
              note: "representative ventilation-air methane, shown on this sheet only as the CONTRAST case — VAM comes from ACTIVE mines' ventilation shafts and has no place in this page's abandoned-mine inventory. Typical VAM runs below 1% and often below 0.5%; UNECE BPG §6.2.1 puts the oxidation floor at 0.20%. Representative value, hence editorial" }
 };
@@ -3019,6 +3027,15 @@ function buildUnit() {
       "<p class=\"bench-note\" style=\"color:#A9C6D8\">geometry illustrative — a model of the model; behaviour from this page's own decline equations · the mine cannot tell you dry or flooded; that is Act I's point · 3-D library (three.js) loads only when you scroll here</p>" +
     "</div>" +
 
+    /* The twin's own epistemics. This belongs to the model, not to the unit,
+       so it sits directly under M-003 — and it goes in a drawer because the
+       six rows are reference material, not spine. The summary carries the
+       hedge, per the disclosure rule. */
+    "<details class=\"fn\"><summary><span class=\"pull-shut\">what a real twin would have to know — and the " +
+      P("gt_model_mw") + " MW that turned out to be " + P("gt_actual_mw") + "</span>" +
+      "<span class=\"pull-open\">close</span></summary>" +
+      "<div class=\"fn-body\" id=\"twinGaps\"></div></details>" +
+
     "<p class=\"inst-eyebrow rise\">sheet <b>4</b> · the biological route</p>" +
     "<div class=\"twin-plot blueprint rise\" id=\"cowPlate\">" +
       "<p class=\"readout-k\">model M-004 · dilution path · Coward 1952</p>" +
@@ -3043,6 +3060,14 @@ function buildUnit() {
       "<details class=\"fn\"><summary><span class=\"pull-shut\">modelled shape, not measured performance — what this sheet does and does not claim</span>" +
         "<span class=\"pull-open\">close</span></summary>" +
         "<div class=\"fn-body\">" +
+          field("the leakier the mine, the longer it spends in the band",
+            "Oxygen here is not assumed — it follows from Act II's own purity model, because " +
+            "air ingress is what UNECE says drives an unsealed working's purity down. Run the " +
+            "three cases to 1% and the envelope stretches: a sealed working spends <b>8%</b> " +
+            "of its blend inside it, an unsealed one <b>17%</b>, and the same working a decade " +
+            "on <b>27%</b>. The weaker gas is the more dangerous gas to dilute, because the " +
+            "oxygen that weakened it is already in the pipe. Ingress also steals the suction " +
+            "you can apply — that half is not modelled here.", "field--warn") +
           field("the geometry is sourced",
             "The flammable envelope is Coward &amp; Jones 1952 and nothing in it is fitted. " +
             "Its limits are for ambient temperature and pressure — both widen the envelope " +
@@ -3059,6 +3084,35 @@ function buildUnit() {
             "are Limbri et al. 2014's measurement and their own scale-up from it — not this " +
             "model's output. They are on the plate because they are the strongest argument " +
             "against the thing it draws.") +
+          /* The concept as specified in the MESSAI Lab catalog entry this model
+             was ported from (mine-methane-biofilter, "The Mine Breather"). */
+          field("the band nothing else serves",
+            "This is the whole case for the bed, and it is a gap in a ladder rather than a " +
+            "claim of superiority. Flares need roughly <b>20%</b> methane; lean-burn engines " +
+            "around <b>25%</b>; regenerative thermal oxidation reaches down to about " +
+            "<b>0.2%</b> but pays for it in energy. Biological oxidation runs at ambient " +
+            "temperature on blower power alone, and at these loadings its greenhouse benefit " +
+            "exceeds its own emissions by orders of magnitude. Above the flammable band the " +
+            "gas is a fuel; below it, biology is the only route that wants it.") +
+          field("what the vessel is",
+            "A vertical cylinder: inlet plenum, support grid, 0.5–2 m of irrigated porous " +
+            "packing carrying the methanotroph biofilm, a top distributor, sampling ports at " +
+            "several bed heights, a drainage layer over a leachate reservoir, and an outlet " +
+            "plenum to a monitored stack. Gas is drawn from boreholes through a sealed " +
+            "low-pressure header and a conditioning skid — knockout, particulate filter, " +
+            "flame arrestor, blower — and enters below the bed, oxidising as it rises on " +
+            "oxygen carried in the same stream. Reaction heat goes mostly into evaporation, " +
+            "so the bed sits only modestly above inlet temperature. The collection system is " +
+            "sealed and physically separate from the reactor.") +
+          field("where it would be pointed",
+            "Ventilation air from active shafts · low-concentration drainage gas from sealed " +
+            "or abandoned workings · post-closure methane management at legacy sites · " +
+            "polishing the lean tail of a gas-utilisation scheme. Operating window 0.1–1.5% " +
+            "v/v inlet — which must stay under the 5% lower flammable limit — at a 2–10 min " +
+            "empty-bed residence time, on 0.02–0.5 kW of blower at pilot scale. " +
+            "<b>TRL 5–7:</b> landfill-cover and mine-vent biofilters are demonstrated in the " +
+            "field; this reactor is not, and this model of it is fitted to nothing.",
+            "field--warn") +
         "</div></details>" +
     "</div>" +
 
@@ -3091,12 +3145,73 @@ function buildUnit() {
       "not a company: no entity, no raise, nothing on offer. Also considered: " +
       esc(A.venture.namesConsidered.join(" · ")) + ".");
 
+  renderTwinGaps();
   drawGA();
   drawPID();
   paintPID();
   xpBoot();
   wireCoward();
   drawCoward();
+}
+
+/* ===========================================================================
+   WHAT THE TWIN DOES NOT KNOW.
+
+   Act II's model runs on two curves and a seal. A twin that an engineer could
+   actually spend money against has to carry six things, and UNECE No. 64 §7
+   lists both what they are and how you test each one. Setting our assumption
+   beside their test is the most honest thing this page can do with a model of
+   a mine nobody has drilled — and it is the difference between a diagram and
+   a specification for the fieldwork that would replace it.
+   =========================================================================== */
+var TWIN_GAPS = [
+  { k: "Void space and geology",
+    need: "The physical extent of the reservoir: de-stressed stacks of unmined seam left by longwall working, the strata between them, and the total void of goafs and roadways.",
+    test: "Monitor passive vents for gas pressure and temperature over time. Rapid pressure swings at low flow indicate minimal void — a high-resistance or flooding system.",
+    ours: "Not modelled. Volume enters as a fitted q₀, solved through GEM's published mean, so the geometry on the plate is illustrative and carries no reservoir estimate." },
+  { k: "Flooding and water recovery",
+    need: "Inflow rate decides the project's life. Rising water exerts hydrostatic pressure that stops desorption, and it blocks connections before it ever reaches the seam.",
+    test: "Boreholes and changes to de-watering schemes to clarify recovery rates across all parts of the workings; water-quality analysis for discharge.",
+    ours: "Binary. The bench offers dry or flooded and applies EPA's flooding coefficient; there is no water level, no inflow rate, and no low point in a roadway where gas is cut off early." },
+  { k: "Transmissivity and connection",
+    need: "Whether surface suction actually reaches the gas. Collapsed zones and flooded tunnels choke a vacuum long before the resource is exhausted.",
+    test: "Active pump tests; pressure loss measured surface-to-underground. A rapid rise in suction with falling flow indicates partial blockage.",
+    ours: "Absent. Flow is treated as if the whole void were reachable from one point, which is the assumption most likely to be flattering." },
+  { k: "Air ingress — the mine breathes",
+    need: "Abandoned mines inhale and exhale with barometric pressure. Ingress dilutes the gas, cuts the suction that can be applied, and — the reason it is a safety item, not an efficiency one — walks the mixture toward the flammable band.",
+    test: "Oxygen in the extracted gas is the tell. Shallow spike probing and smoke tests around former entries locate the leak; remedial works on mine entries fix it.",
+    ours: "Half modelled. Seal quality drives purity, and sheet M-004 draws what happens when the mixture crosses the envelope — but oxygen is a stated assumption, not a modelled ingress, and nothing here breathes with the weather." },
+  { k: "Desorption and decline",
+    need: "Residual in-situ gas content and coal properties, projected as a hyperbolic or exponential decline over the life of the scheme.",
+    test: "Historical mining records and residual gas content, calibrated against measured production.",
+    ours: "This one the twin does model, and it is the only one it validates: anchored on the dry figure alone it predicts a flooded mean of 8.9 MCM/yr against GEM's published 8.4." },
+  { k: "Physical ground-truthing",
+    need: "Everything above is worth what its input data is worth. Modelling substitutes for drilling only until someone drills.",
+    test: "Trial drilling, and a suction draw-down and recovery test into the workings.",
+    ours: "None. This page has drilled nothing." }
+];
+
+function renderTwinGaps() {
+  var host = $("twinGaps");
+  if (!host) return;
+  host.innerHTML =
+    field("the number to keep in mind",
+      "A UK developer modelled an abandoned-mine reserve extensively and made it worth a <b>" +
+      P("gt_model_mw") + " MW</b> power station. Boreholes into the same workings found enough " +
+      "gas for <b>" + P("gt_actual_mw") + " MWe</b>. Same class of tool as the one on this " +
+      "plate, used by people whose money depended on the answer — off by a factor of three. " +
+      "UNECE's own conclusion: the need to combine modelling and physical testing is " +
+      "graphically illustrated.", "field--warn") +
+    TWIN_GAPS.map(function (g) {
+      return field(g.k,
+        esc(g.need) +
+        "<br><br><span class=\"readout-k\">how it is tested</span> " + esc(g.test) +
+        "<br><span class=\"readout-k\">what this twin does</span> " + esc(g.ours));
+    }).join("") +
+    field("and how few mines are worth it at all",
+      "UNECE expects no more than <b>" + Math.round(P("amm_suitable_hi") * 100) + "%</b> of any " +
+      "group of mines to suit an AMM project — gassy, drained while working, and not quick to " +
+      "flood. Act I's inventory is a population, not a pipeline.");
 }
 
 /* ===========================================================================
@@ -3120,17 +3235,42 @@ function buildUnit() {
    =========================================================================== */
 var COW_INK = "#D7E7F2", COW_HOT = "#F6A97F", COW_COOL = "#8FB8C7", COW_RAW = "#C9B693";
 
+/* AIR INGRESS — the mine breathes, and that is where the oxygen comes from.
+
+   UNECE No. 64 names oxygen in the extracted gas as the diagnostic for air
+   ingress, and names ingress as the mechanism behind falling purity in an
+   unsealed working under suction: Lohberg bled 40%→25% CH₄ over a decade of
+   unmanaged suction through unrecorded entries. If the diluent is air, the
+   oxygen follows arithmetically from the purity the page already models —
+   which is better than the editorial constant this replaces, because it means
+   the sheet's oxygen is DERIVED from Act II rather than asserted beside it.
+
+       CH₄ = c₀·(1 − f)   and   O₂ = 20.9·f   with f the ingressed air fraction
+   ⇒   O₂ = 20.9·(1 − c/c₀)
+
+   A perfect seal returns zero, which is the honest answer: no ingress, no
+   oxygen. The consequence UNECE draws is the one sheet M-004 draws too —
+   ingress dilutes toward the flammable band, and it also steals the suction
+   you can apply. This models the first half; the second is still absent. */
+function ingressO2(purityNow, purityAtStart) {
+  if (purityAtStart <= 0) return 0;
+  var f = 1 - (purityNow / purityAtStart);
+  return Math.max(0, Math.min(1, f)) * P("cow_airo2");
+}
+
 var COW_GASES = [
   { id: "sealed", chip: "sealed", label: "sealed working",
     ch4: function () { return P("c_sealed") * 100; },
-    o2:  function () { return P("cow_o2_raw"); } },
+    o2:  function () { return ingressO2(P("c_sealed"), P("c_sealed")); } },
   { id: "leaky", chip: "leaky", label: "unsealed working",
+    /* Lohberg's own starting purity: suction has begun but the decade of
+       ingress has not yet run, so the oxygen is still near zero. */
     ch4: function () { return P("c_leaky0") * 100; },
-    o2:  function () { return P("cow_o2_leaky"); } },
+    o2:  function () { return ingressO2(P("c_leaky0"), P("c_sealed")); } },
   { id: "late", chip: "late-life", label: "unsealed, a decade on",
-    /* derived from the page's own leak rate rather than asserted separately */
+    /* purity from the page's own leak rate; oxygen from that purity */
     ch4: function () { return (P("c_leaky0") - P("leak_rate") * 10) * 100; },
-    o2:  function () { return P("cow_o2_leaky") * 1.6; } },
+    o2:  function () { return ingressO2(P("c_leaky0") - P("leak_rate") * 10, P("c_sealed")); } },
   { id: "vam", chip: "ventilation air", label: "ventilation air — active mine, for contrast",
     ch4: function () { return P("cow_vam_ch4"); },
     o2:  function () { return P("cow_airo2") - 0.3; } }

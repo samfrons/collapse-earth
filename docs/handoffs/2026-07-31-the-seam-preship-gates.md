@@ -1,5 +1,47 @@
 # The Seam (`collapse-methane-mines.html`) — build state & pre-ship gates
 
+> **2026-08-01 — air ingress modelled; the twin's own gaps specified; the reactor
+> concept written up.** Three changes, all sourced from UNECE No. 64, which turns out
+> to contain far more of what this page needs than we had drawn from it.
+>
+> **1. Oxygen is now DERIVED, not asserted.** Sheet M-004's raw-gas oxygen was two
+> editorial constants (`cow_o2_raw`, `cow_o2_leaky`, both now retired). UNECE names air
+> ingress as the mechanism behind an unsealed working's falling purity — Lohberg bled
+> 40%→25% under unmanaged suction — and names oxygen in the extracted gas as its
+> diagnostic. If the diluent is air, oxygen follows arithmetically from the purity Act II
+> already models: `O₂ = 20.9·(1 − c/c₀)`. New `ingressO2()`.
+> **This produced a finding worth keeping: the leakier the mine, the LONGER its dilution
+> path sits inside the flammable envelope** — 8.2% of the blend for a sealed working,
+> 16.9% unsealed, 27.0% for the same working a decade on. The weaker gas is the more
+> dangerous gas to dilute, because the oxygen that weakened it is already in the pipe.
+> Not modelled: ingress also steals the suction you can apply. Said so on the sheet.
+>
+> **2. A specification for the fieldwork that would replace the twin.** New drawer under
+> M-003 (`renderTwinGaps`, `TWIN_GAPS`) covering the six things a spendable twin must
+> carry — void space, flooding and water recovery, transmissivity and connection, air
+> ingress, desorption, ground-truthing — each with UNECE's own test method beside what
+> this twin actually does. Five of the six it does not do; the sixth (decline) is the one
+> it validates. **Headline: a UK developer modelled a reserve worth a 20 MW station and
+> boreholes found 6 MWe** (§7, now `gt_model_mw` / `gt_actual_mw`). Also
+> `amm_suitable_hi`: UNECE expects ≤20% of any group of mines to suit an AMM project —
+> Act I's inventory is a population, not a pipeline.
+>
+> **3. The reactor concept, from the MESSAI Lab catalog entry** it was ported from
+> (`mine-methane-biofilter`, "The Mine Breather" — messai.io/lab/catalog). Three new
+> fields in M-004's drawer: the concentration ladder that is the whole case for the bed
+> (flares ≈20% CH₄, lean-burn engines ≈25%, RTO to ≈0.2% at an energy cost, biology at
+> ambient on blower power alone), the vessel as specified, and the operating window with
+> its TRL 5–7 and its uncalibrated status.
+>
+> **Retrieval note that saved this work:** unece.org serves a bot challenge, but the
+> Wayback Machine has the full 80-page PDF —
+> `https://web.archive.org/web/2023/https://unece.org/fileadmin/DAM/energy/images/CMM/CMM_CE/Best_Practice_Guidance_for_Effective_Methane_Recovery_and_Use_from_Abandoned_Coal_Mines_FINAL__with_covers_.pdf`
+> — and `pdftotext -layout` gives clean text. §7 and the assessment table around p.57 are
+> the richest part and are not yet fully mined.
+>
+> Verified: 26/26 M-004 checks, 41/41 contrast, basis B 2,487 of 2,600, height 11,803px
+> of 12,000. Drawers cost 18 words and 42px, which is why the depth went in drawers.
+
 > **2026-08-01 — Sheet 4, MODEL M-004: the biological route.** Ports the flammability
 > core of the Mine-Methane Biofilter process model from `~/repos/messai-ai`
 > (`apps/lab/src/lib/biofilter/`, TypeScript) into a new ES5 `collapse-bio.v2.js`.
