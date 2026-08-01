@@ -196,8 +196,22 @@ entry and the H1 tag (data-driven `fieldwork` fields in `collapse-data.v2.js`).
    `coward1952` source entry carries `verify:true` accordingly. Per the sensitivity sweep
    recorded above, confirming these will move the crossing figures by well under a
    percentage point and **cannot change the finding** — so this is a citation chore, not
-   a scientific risk. Fetching Bulletin 627 (Zabetakis 1965), which carries the
-   methane–inert–air diagram explicitly, is probably the faster route than 503.
+   a scientific risk.
+
+   **Routes tried 2026-08-01 and blocked — do not burn time repeating these:**
+   - UNT Digital Library holds Bulletin 503 (`ark:/67531/metadc12662`) but its advertised
+     `.../high_res_d/Bulletin0503.pdf` serves an HTML viewer shell, not a PDF; the `m1/`
+     page images 302 away. A scripted fetch will not get the text.
+   - `stacks.cdc.gov/view/cdc/9780/cdc_9780_DS1.pdf` (NIOSH, limiting oxygen
+     concentration) returns **403** to non-browser clients.
+   - The `charles-oneill.com` mirror of Bulletin 627 (Zabetakis 1965) fails DNS.
+
+   **Next thing to try:** Bulletin 627 is the better citation anyway — it carries the
+   methane–inert–air flammability diagram explicitly, where 503 is primarily limits in
+   air. Look for it via NIOSH/CDC stacks with a real browser session, or the Bureau of
+   Mines collection on HathiTrust/Internet Archive. Expect the published LOC to land
+   near 11.7% (nitrogen diluent) rather than 12.1%; if so, update `cow_loc` and re-run
+   `scratchpad/bio-tests.mjs` — the sweep test already asserts the finding survives it.
 7. ~~**Both budgets are now effectively spent, and basis B is over.**~~
    **CLOSED 2026-08-01 — Sam raised the word budget for this page from ≤2,400 to
    ≤2,600 on basis B.** Measured with `scratchpad/word-bases.mjs` (the only counter
@@ -216,8 +230,30 @@ entry and the H1 tag (data-driven `fieldwork` fields in `collapse-data.v2.js`).
    one. **The height budget is unchanged and is now the binding constraint — treat 12,000px
    as the gate that must not move.** With 239px of headroom, any further default-visible
    addition to this page needs a height measurement before it lands, not after.
-8. Sheet 4 has had no pixel-contrast audit. New pairings to probe: the ochre→ice bed
-   ramp and the `#F6A97F` envelope stroke, both on the blueprint plate.
+8. ~~Sheet 4 has had no pixel-contrast audit.~~ **CLOSED 2026-08-01.**
+   `scratchpad/contrast-m004.mjs` runs the lead's rendered-pixel method over the sheet:
+   blank the glyphs, screenshot, take the modal pixel behind each text rect, and let
+   Chrome decode the PNG so no image library is needed. **41/41 text pairings pass AA**
+   (worst 7.19:1, the ember `nose` label). Non-text graphics pass 1.4.11.
+
+   Two things the audit caught that are worth keeping:
+   - *Method bug, not a page bug.* Blanking with `visibility:hidden` also removes an
+     element's own background, which turned the selected chip (dark ink on a near-white
+     pill) into "dark ink on the dark plate" and reported a false 1.06:1. Blank glyphs
+     with transparent `color`/`fill` instead, never `visibility`.
+   - *Real finding.* At realistic conversions the bed's ochre→ice ramp ends measure only
+     **1.51:1** apart, so the axial profile was effectively colour-only. Fixed the way
+     the assay field already handles this — **redundant encoding**: a polyline whose
+     horizontal position tracks methane remaining, drawn as a `#0B1A28` casing under an
+     `#F2F8FC` core so it holds on every fill in the ramp (4.23:1 on its better stroke).
+     The profile now survives colour-vision deficiency and a greyscale print. Do not
+     "simplify" that line away — the hue ramp alone does not carry the information.
+9. **`rosso1993` was missing from `PAGE_SOURCE_IDS`** (found by CodeRabbit on PR #2, which
+   caught the same class of omission for four other ids Sam fixed in `66611cb`). This is
+   worse than a thin Sources drawer: `renderMethods()` derives the "still to confirm"
+   count from that list, so a missing id silently hides a `verify:true` citation from the
+   very gate meant to surface it — `coward1952` was invisible. Now listed; the page
+   renders "1 still to confirm" with one badge, as it should.
 
 Local preview: `python3 -m http.server 8199` was left running →
 http://localhost:8199/collapse-methane-mines.html
