@@ -394,7 +394,14 @@ window.COLLAPSE_DATA = {
       id: "methane-removal",
       name: "Atmospheric / point-source methane removal",
       section: "§1",
-      fieldwork: { href: "collapse-methane-mines.html", label: "Field study — The Seam: abandoned-mine methane in the EU" },
+      /* `short` is the chart label. The assay field renders it as a link under
+         this category's marker, because the field study IS the worked example
+         of the white space the chart is pointing at — and a reader who spots
+         the top-left corner should be able to get there without first knowing
+         the dossier tray exists. */
+      fieldwork: { href: "collapse-methane-mines.html",
+                   short: "Aftermine — field study",
+                   label: "Field study — Aftermine / The Seam: abandoned-mine methane in the EU" },
       leverage: "Methane is responsible for nearly 30% of the rise in global average temperature since the Industrial Revolution (IEA Global Methane Tracker); its 20-year global warming potential is ≈84–87× CO₂ (IPCC). Near-term methane action is among the highest-leverage climate moves available.",
       maturity: "TRL 1–3 (open-atmosphere) / TRL 4–5 pilot (point-source) / commercial (enteric additives in ration systems)",
       /* leverage 5 — the top band, on the leverage clause's own terms: methane
@@ -1198,8 +1205,14 @@ window.COLLAPSE_DATA = {
     },
 
     venture: {
-      framing: "the missing company — a research thesis, not a pitch; working names live in a drawer and nowhere else",
-      workingNames: ["Aftermine", "Last Vent", "MineZero", "Closure Carbon"],
+      framing: "the missing company — a research thesis, not a pitch. It now carries a name; that does not make it a company, and nothing here is an offer.",
+      /* Named 2026-08-01. Until then four candidates sat in a drawer on the
+         grounds that the thesis did not need a brand; the thesis still does
+         not, but the work needs something to be called. The alternates stay
+         recorded because a name that was chosen reads differently from a name
+         that was the only one thought of. */
+      name: "Aftermine",
+      namesConsidered: ["Last Vent", "MineZero", "Closure Carbon"],
       layers: [
         { id: "find",    label: "find",    what: "rank sites from the regulation's own inventories, historic mine data and first measurements" },
         { id: "verify",  label: "verify",  what: "install compliant source-level monitoring; establish the defensible baseline" },

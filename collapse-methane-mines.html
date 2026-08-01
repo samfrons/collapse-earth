@@ -3086,9 +3086,10 @@ function buildUnit() {
       "unit that meters, conditions and routes a declining gas stream to the right " +
       "destruction path for a decade without a crew. Deliberately unheroic, and " +
       "deliberately buildable.", "field--warn") +
-    field("working names, since you will ask",
-      A.venture.workingNames.join(" · ") + " — parked in this drawer on purpose; the thesis " +
-      "does not need a brand yet.");
+    field("the name",
+      "<b>" + esc(A.venture.name) + "</b> — the work needs something to be called. It is " +
+      "not a company: no entity, no raise, nothing on offer. Also considered: " +
+      esc(A.venture.namesConsidered.join(" · ")) + ".");
 
   drawGA();
   drawPID();
@@ -3355,6 +3356,30 @@ function drawCowBed(svg, x, y, w, h, sol) {
       .attr("fill-opacity", halted ? .5 : .92)
       .attr("stroke", COW_INK).attr("stroke-width", .4).attr("opacity", .95);
   }
+  /* REDUNDANT ENCODING, same rule the assay field follows: the profile must
+     survive colour-vision deficiency and a greyscale print. The ochre→ice ramp
+     alone does not — at realistic conversions its two ends measure barely
+     1.5:1 apart, so the gradient is close to invisible as a quantity. A
+     polyline whose horizontal position tracks methane remaining carries the
+     same information as position, which needs no hue at all. Drawn as a dark
+     casing under a paper-white line so it holds contrast over every fill in
+     the ramp. */
+  if (!halted) {
+    var pts = profile.cells.map(function (c, k) {
+      return [x + 3 + (w - 6) * c.frac, y + (k + 0.5) * ch];
+    });
+    var d = "M" + pts.map(function (p) { return p[0].toFixed(1) + "," + p[1].toFixed(1); }).join("L");
+    svg.append("path").attr("d", d).attr("fill", "none")
+      .attr("stroke", "#0B1A28").attr("stroke-width", 3.4).attr("stroke-linejoin", "round");
+    svg.append("path").attr("d", d).attr("fill", "none")
+      .attr("stroke", "#F2F8FC").attr("stroke-width", 1.5).attr("stroke-linejoin", "round");
+    /* endpoints, so the direction of travel is unambiguous */
+    [pts[0], pts[pts.length - 1]].forEach(function (p) {
+      svg.append("circle").attr("cx", p[0]).attr("cy", p[1]).attr("r", 2.2)
+        .attr("fill", "#F2F8FC").attr("stroke", "#0B1A28").attr("stroke-width", .9);
+    });
+  }
+
   svg.append("rect").attr("x", x).attr("y", y).attr("width", w).attr("height", h)
     .attr("fill", "none").attr("stroke", COW_INK).attr("stroke-width", 1);
 
@@ -3370,7 +3395,7 @@ function drawCowBed(svg, x, y, w, h, sol) {
   svg.append("text").attr("x", x + w / 2).attr("y", y + h + 15).attr("text-anchor", "middle")
     .style("font-family", "var(--mono)").style("font-size", "7.5px")
     .style("letter-spacing", ".06em").attr("fill", COW_INK).attr("opacity", .82)
-    .text(halted ? "interlock" : "shape only");
+    .text(halted ? "interlock" : "CH₄ left, shape only");
 }
 
 function cowAria(def, sol) {
@@ -5032,9 +5057,14 @@ function drawLadder() {
    "still to confirm" count both derive from this list, so an omission here
    breaks the data file's own rule (no rendered number without a source id)
    AND hides a verify:true citation from the pre-print count. */
+/* Every source the page renders a figure from. renderMethods() derives the
+   "still to confirm" count from this list, so an omission does not just thin
+   the Sources drawer — it silently hides a verify:true citation from the gate
+   that exists to surface it. rosso1993 belongs here because the M-004 bed
+   profile is shaped by its cardinal-temperature model. */
 var PAGE_SOURCE_IDS = ["gem2024amm", "kholod2020", "eumr2024", "iea-amm",
   "unece-bpg", "unece-amm", "epa-vam", "acm0008", "ipccar6", "ipcc2006",
-  "coward1952", "limbri2014", "iea-methane", "research-doc"];
+  "coward1952", "limbri2014", "rosso1993", "iea-methane", "research-doc"];
 
 function renderMethodsAssumptions() {
   if (!$("methAssump")) return;
