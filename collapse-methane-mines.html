@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Collapse Earth — The Seam</title>
-<meta name="description" content="A field study beneath Core Sample §1: abandoned-mine methane in the EU. The inventory, a modelled digital twin of one mine, a first-of-a-kind abatement unit, and the company thesis. Research and opinion, not investment advice.">
+<title>Collapse Earth — Mine Methane</title>
+<meta name="description" content="A field study: abandoned-mine methane in the EU. The inventory, a modelled digital twin of one mine, a first-of-a-kind abatement unit, and the company thesis. Research and opinion, not investment advice.">
 <!-- Unlisted while its citation gates are open — same discipline as the lead's
      pre-ship gates. Remove noindex only after the verify pass. -->
 <meta name="robots" content="noindex">
@@ -20,7 +20,7 @@
 
 <style>
 /* ===========================================================================
-   COLLAPSE EARTH — "THE SEAM"
+   COLLAPSE EARTH — "MINE METHANE" (formerly "The Seam")
    A field study beneath Core Sample §1. The lead page drills a core through
    the whole Earth system; this page drills into one seam. Scroll is descent
    into a closed coal mine: surface works, the inventory, the shaft, the
@@ -420,7 +420,7 @@ a:hover{text-decoration-color:currentColor}
 
 /* ===========================================================================
    CHART LANGUAGE — fd-* classes carried from the lead's assay field, shared by
-   the seam field, the decline chart, the routing chart and the ladder.
+   the mine-inventory chart, the decline chart, the routing chart and the ladder.
    =========================================================================== */
 .field-scroll{overflow-x:auto}
 .field-scroll svg{display:block;min-width:760px;width:100%;height:auto}
@@ -760,7 +760,7 @@ html[data-tray="1"]{overflow:hidden}
   <section id="hero" class="stratum s-firn">
     <div class="wrap">
       <p class="eyebrow" id="heroEyebrow"></p>
-      <h1 class="hero-title"><span>The</span><span class="t2">Seam</span></h1>
+      <h1 class="hero-title"><span>Mine</span><span class="t2">Methane</span></h1>
       <div class="hero-meta" id="heroMeta"></div>
 
       <div class="hero-grid" style="margin-top:clamp(26px,4vh,44px)">
@@ -803,11 +803,11 @@ html[data-tray="1"]{overflow:hidden}
       </header>
 
       <p class="eyebrow" id="seamEyebrow"></p>
-      <h3 style="margin:8px 0 16px">The seam field</h3>
+      <h3 style="margin:8px 0 16px">The mine inventory</h3>
       <div class="field-scroll rise"><svg id="seamSvg" role="group"></svg></div>
       <p class="note fd-callout rise" id="seamCallout"></p>
       <details class="fn">
-        <summary><span class="pull-shut">how to read the seam field</span>
+        <summary><span class="pull-shut">how to read the mine inventory</span>
           <span class="pull-open">close</span></summary>
         <div class="fn-body"><p class="note" id="seamFoot" style="margin:0"></p></div>
       </details>
@@ -1027,7 +1027,7 @@ html[data-tray="1"]{overflow:hidden}
     </div>
   </div>
   <div class="dossier-body" id="dosBody">
-    <p class="dossier-empty">Pick a mine in the seam field. The dossier reports its
+    <p class="dossier-empty">Pick a mine in the inventory chart above. The dossier reports its
       modelled emissions, what is and is not known about its status, and the sources.</p>
   </div>
 </aside>
@@ -1513,7 +1513,7 @@ function buildSeam() {
   var x = d3.scaleLinear().domain([0, axisMax]).range([plotL, plotR]).clamp(true);
 
   svg.attr("viewBox", "0 0 " + W + " " + H).attr("width", "100%").attr("height", "auto")
-    .attr("aria-label", "The seam field: modelled abandoned-mine methane by country. " +
+    .attr("aria-label", "The mine inventory: modelled abandoned-mine methane by country. " +
       rows.map(function (r) { return r.name + " approximately " + r.mcm + " MCM per year"; }).join("; ") +
       ". The six named mines are placed at their own modelled rates on the same axis; " +
       "each is a focusable control that opens its dossier. All figures are modelled.");
@@ -5270,7 +5270,7 @@ function renderMethods() {
   }).join("");
 
   $("footRow").innerHTML = [
-    "Collapse Earth — the seam",
+    "Collapse Earth — mine methane",
     "field study · beneath §1",
     "updated " + D.meta.updated,
     A.inventory.counts.total + " mines · " + used.length + " sources",

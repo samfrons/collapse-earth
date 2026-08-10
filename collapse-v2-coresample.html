@@ -1316,12 +1316,12 @@ html[data-tray="1"]{overflow:hidden}
           <span class="pull-open">close</span></summary>
         <div class="fn-body"><p class="note" id="fieldFoot" style="margin:0;color:var(--fg-2)"></p></div>
       </details>
-      <!-- The readiness ordinal gets its own instrument: The Bench breaks every
-           band on this chart down by subsystem, engineering constraint and
-           supply chain. Linked here at the chart and again per ledger row. -->
+      <!-- The readiness ordinal gets its own instrument: the TRL deep-dive
+           breaks every band on this chart down by subsystem, engineering
+           constraint and supply chain. Linked here and again per ledger row. -->
       <p class="note" style="margin:14px 0 0;color:var(--fg-2)">Every marker size above is a
         readiness <em>band</em>, not a measurement.
-        <a href="collapse-trl.html">The Bench — a readiness deep-dive — takes each band apart:
+        <a href="collapse-trl.html">The TRL deep-dive takes each band apart:
         subsystem TRLs, engineering constraints and supply chains, category by category →</a></p>
 
       <h3 style="margin:clamp(34px,5vh,54px) 0 4px">The full ledger</h3>
@@ -3393,8 +3393,8 @@ function renderIvList() {
     var left =
       field("leverage", "<p class=\"field-v\">" + esc(iv.leverage) + "</p>") +
       field("maturity", "<p class=\"field-v\">" + esc(iv.maturity) +
-        " <a href=\"collapse-trl.html#bench-" + attr(iv.id) +
-        "\">readiness deep-dive — The Bench →</a></p>") +
+        " <a href=\"collapse-trl.html#trl-" + attr(iv.id) +
+        "\">TRL deep-dive →</a></p>") +
       field("delivered — what actually exists", "<p class=\"field-v\">" + esc(iv.delivered) + "</p>") +
       (iv.announcedNotDelivered ? field("announced, not delivered",
         "<p class=\"field-v\">" + esc(iv.announcedNotDelivered) + "</p>", "field--warn") : "") +

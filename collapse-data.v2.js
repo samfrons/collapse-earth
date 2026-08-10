@@ -80,7 +80,7 @@ window.COLLAPSE_DATA = {
       { id: "ice-negative2024", label: "Preprint by 42 glaciologists condemning ice-sheet and sea-ice thickening / polar geoengineering as infeasible and dangerous", date: "2024-10", url: null, verify: true },
       { id: "ice-negative2025", label: "Study concluding high-profile Arctic and polar interventions are not viable and may cause harm, each costing ≥$10B", date: "2025-09", url: null, verify: true },
       { id: "doe2025", label: "US DOE grant terminations and rescissions affecting DAC and low-carbon cement (Project Cypress, South Texas hub, Sublime $87M, Brimstone $189M)", date: "2025", url: null, verify: true },
-      { id: "gem2024amm", label: "Global Energy Monitor, \"The hidden threat: Abandoned coal mine methane emissions in the EU\" (briefing, June 2024) — anchor source for the seam field study; PDF on file", date: "2024-06", url: "https://globalenergymonitor.org/sites/default/files/migration/reports/GEM-EU-Abandoned-Mine-Methane-June-2024-_11.pdf" },
+      { id: "gem2024amm", label: "Global Energy Monitor, \"The hidden threat: Abandoned coal mine methane emissions in the EU\" (briefing, June 2024) — anchor source for the mine-methane field study; PDF on file", date: "2024-06", url: "https://globalenergymonitor.org/sites/default/files/migration/reports/GEM-EU-Abandoned-Mine-Methane-June-2024-_11.pdf" },
       { id: "kholod2020", label: "Kholod et al., \"Global methane emissions from coal mining to continue growing even with declining coal production\", Journal of Cleaner Production 256, 120489 (2020) — decline equations §2.3.3: dry hyperbolic b=2.017, Di=0.302/yr; flooded exponential. NOTE: the paper's Table 1 mis-assigns its rows (a b for the flooded equation that has no b term); values used follow EPA's own coefficients", date: "2020", url: "https://doi.org/10.1016/j.jclepro.2020.120489" },
       { id: "eumr2024", label: "Regulation (EU) 2024/1787 on methane emissions reduction in the energy sector — coal provisions Ch. 4 §III, Arts. 24–26; verified 2026-07-31 against the official text (Publications Office, CELEX 32024R1787; eur-lex.europa.eu sits behind a bot challenge)", date: "2024-06", url: "https://eur-lex.europa.eu/eli/reg/2024/1787/oj" },
       { id: "iea-amm", label: "IEA Global Methane Tracker 2026, \"Understanding methane emissions\" — abandoned coal mines ≈4.5 Mt CH₄ (2025), ≈60% China; the 2025 edition reported nearly 5 Mt for 2024 (first edition to carry a global abandoned-mine estimate)", date: "2026", url: "https://www.iea.org/reports/global-methane-tracker-2026/understanding-methane-emissions" },
@@ -400,8 +400,8 @@ window.COLLAPSE_DATA = {
          the top-left corner should be able to get there without first knowing
          the dossier tray exists. */
       fieldwork: { href: "collapse-methane-mines.html",
-                   short: "Aftermine — field study",
-                   label: "Field study — Aftermine / The Seam: abandoned-mine methane in the EU" },
+                   short: "Mine-methane field study",
+                   label: "Field study — abandoned-mine methane in the EU" },
       leverage: "Methane is responsible for nearly 30% of the rise in global average temperature since the Industrial Revolution (IEA Global Methane Tracker); its 20-year global warming potential is ≈84–87× CO₂ (IPCC). Near-term methane action is among the highest-leverage climate moves available.",
       maturity: "TRL 1–3 (open-atmosphere) / TRL 4–5 pilot (point-source) / commercial (enteric additives in ration systems)",
       /* leverage 5 — the top band, on the leverage clause's own terms: methane
@@ -778,9 +778,9 @@ window.COLLAPSE_DATA = {
     {
       id: "H1",
       /* The biofilter half of this hypothesis now has an instrument: sheet
-         M-004 on The Seam draws why the sub-1% band is the only one biology
+         M-004 on the mine-methane field study draws why the sub-1% band is the only one biology
          can be handed directly, and what the measured bed volumes cost. */
-      fieldwork: { href: "collapse-methane-mines.html#cowPlate", label: "Field study — The Seam, sheet M-004: why dilute is the only band biology gets handed directly" },
+      fieldwork: { href: "collapse-methane-mines.html#cowPlate", label: "Mine-methane field study, sheet M-004 — why dilute is the only band biology gets handed directly" },
       claim: "Point-source destruction of sub-1% methane streams (dairy ventilation, coal-mine VAM) can reach <$50/tCO₂e-eq abated.",
       mechanism: "UV-chlorine photochemistry (MEPS) and methanotroph biofilters both operate at dilute concentrations; costs are dominated by air-handling energy, which falls with contact-area engineering rather than exotic inputs. The concentration ceiling is not a preference but a safety constraint: richer gas has to be diluted to reach a treatable strength, and the dilution path crosses the flammable envelope even when both its endpoints are safe.",
       whyNow: "Methane is ≈30% of the warming rise since the industrial era yet removal is the least-funded category in this dataset; its 20-year leverage is 84–87× CO₂.",
@@ -1054,7 +1054,7 @@ window.COLLAPSE_DATA = {
   },
 
   /* ---------------------------------------------------------------------------
-     AMM — the seam field study (collapse-methane-mines.html).
+     AMM — the mine-methane field study (collapse-methane-mines.html).
      Abandoned-mine methane in the EU: inventory, regulation, one modelled mine.
      Anchor source is gem2024amm; the same editorial rules apply as everywhere
      else in this file — no number without a source id and a date, hedges
