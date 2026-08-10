@@ -30,6 +30,13 @@ content in different visual languages, plus a switcher page to compare them:
   a per-category ladder of stated maturity spans, ten subsystem/engineering/
   supply-chain dossiers, and capital-by-rung analysis — all rendered from
   `collapse-data.v2.js` with a runtime consistency gate against its `trlBand`s
+- `collapse-lowercarbon.html` — **The Book**, an independent diligence work
+  sample (unlisted, `noindex`, not linked from the deployed pages): the Bench's
+  instrument pointed at Lowercarbon Capital's public portfolio for the
+  Technical Lead – Growth application — the TRL 6–8 growth window drawn on the
+  ladder, the full 101-company shelf mapped, a crosswalk to this atlas's
+  verified dataset (gated at runtime), eight posting-format diligence cards,
+  and portfolio-level reads
 
 None of the above are deployed — `/` still serves `collapse-tech.html`. Open
 `collapse-v2-index.html` locally (see below) to browse the variants.
