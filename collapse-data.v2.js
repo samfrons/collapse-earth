@@ -1212,6 +1212,12 @@ window.COLLAPSE_DATA = {
          recorded because a name that was chosen reads differently from a name
          that was the only one thought of. */
       name: "Aftermine",
+      /* The concept now has its own site (added 2026-08-10): platform modules,
+         the pilot case study, and the company thesis live there. The register
+         does not change — the site presents a venture concept, not an
+         operating company, and nothing here or there is an offer. */
+      url: "https://aftermine.vercel.app",
+      urlLabel: "aftermine.vercel.app — platform · research · pilot · company",
       namesConsidered: ["Last Vent", "MineZero", "Closure Carbon"],
       layers: [
         { id: "find",    label: "find",    what: "rank sites from the regulation's own inventories, historic mine data and first measurements" },

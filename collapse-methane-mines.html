@@ -3141,8 +3141,12 @@ function buildUnit() {
       "destruction path for a decade without a crew. Deliberately unheroic, and " +
       "deliberately buildable.", "field--warn") +
     field("the name",
-      "<b>" + esc(A.venture.name) + "</b> — the work needs something to be called. It is " +
-      "not a company: no entity, no raise, nothing on offer. Also considered: " +
+      "<b>" + esc(A.venture.name) + "</b> — the work needs something to be called, and " +
+      "the concept now has its own site: " +
+      (A.venture.url ? "<a href=\"" + attr(A.venture.url) + "\">" + esc(A.venture.url.replace(/^https?:\/\//, "")) +
+        " →</a>. " : "") +
+      "The register does not change: a venture concept, not an operating company — no raise, " +
+      "nothing on offer. Also considered: " +
       esc(A.venture.namesConsidered.join(" · ")) + ".");
 
   renderTwinGaps();
@@ -4979,7 +4983,15 @@ function buildVenture() {
     "<p class=\"note\" style=\"margin-top:8px\">Pre-written. If any of these holds, the company " +
     "should not be built — and the second-best wedge (methane abatement for industrial " +
     "wastewater lagoons) takes its place.</p>" +
-    "<div class=\"tags rise\" id=\"killTags\"></div>";
+    "<div class=\"tags rise\" id=\"killTags\"></div>" +
+
+    (A.venture.url
+      ? "<p class=\"note rise\" style=\"margin-top:clamp(28px,4vh,44px);padding-top:14px;" +
+        "border-top:1px solid var(--rule)\">This page is the research underneath the concept. " +
+        "The concept itself — the eight platform modules, the pilot case study, and the company " +
+        "thesis — lives on its own site: <a href=\"" + attr(A.venture.url) + "\">" +
+        esc(A.venture.urlLabel || A.venture.url) + " →</a></p>"
+      : "");
 
   Array.prototype.forEach.call(host.querySelectorAll("#gwpChips .uchip"), function (b) {
     b.addEventListener("click", function () {
