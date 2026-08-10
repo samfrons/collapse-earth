@@ -479,7 +479,11 @@ details.fn .fn-body{padding:2px 0 14px}
       meaning, and no value between rungs exists. Where a category shows more than one
       bar, its maturity string names distinct routes at genuinely different stages; the
       thin connector marks the span the stored band is the midpoint of. Open the
-      category's dossier for the decomposition.</p>
+      category's dossier for the decomposition. One honest limit of the consistency
+      gate: it verifies this chart transcribes the data layer's recorded readings
+      faithfully — it cannot arbitrate which rung a hedged word like "commercial"
+      deserves, and that call differs by entry (the data layer's own comments fix
+      each one; they are the authority followed here).</p>
   </div>
 </section>
 
@@ -590,11 +594,18 @@ function byId(id){return D.interventions.filter(function(iv){return iv.id===id;}
 
 /* ---------------------------------------------------------------------------
    ROUTES — each category's stated TRL spans, transcribed from the maturity
-   strings in the data layer (the authority). "commercial" transcribes as rung
-   9 (proven in operations), matching the data layer's own reading — its
-   methane-removal comment calls 5 "the midpoint of the full 1–9 span".
-   The gate below re-derives each band from these spans; edit the maturity
-   string first, then this table, and the gate catches a divergence.
+   strings in the data layer (the authority).
+   HONESTY NOTE ON WHAT THE GATE PROVES: the word "commercial" does not map to
+   one rung by itself — the data layer's own per-entry comments are what fix
+   it (methane-removal's enteric routes read as 9 because its comment calls 5
+   "the midpoint of the full 1–9 span", while biochar's "commercially
+   operating at scale" is recorded as 8 and clean-firm's "commercially
+   operating, project-financeable" as 8–9). This table follows those recorded
+   readings, so the gate below verifies TRANSCRIPTION FIDELITY to the data
+   layer — it cannot arbitrate the rung a hedged word deserves. Where §B1's
+   rung glosses and a recorded reading pull apart, the data layer wins and
+   the tension is noted here rather than smoothed over.
+   Edit the maturity string first, then this table; the gate catches drift.
    --------------------------------------------------------------------------- */
 var ROUTES = {
   "methane-removal":[

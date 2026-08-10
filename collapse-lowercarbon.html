@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Collapse Earth — The Book</title>
-<meta name="description" content="An independent diligence work sample: one venture fund's climate portfolio read with the atlas's readiness instrument — the growth window (TRL 6–8), the full shelf, eight technical diligence cards, and the portfolio-level reads. Research and opinion, not investment advice.">
+<meta name="description" content="An independent diligence work sample: one venture fund's climate portfolio read with the atlas's readiness instrument — the growth window (TRL 6–8) under two banding rules, the full shelf, eight diligence cards ending in capital judgments, and seven portfolio-level reads. Research and opinion, not investment advice.">
 <!-- A personal application work sample. Unlisted by design, not only while
      citation gates are open: this page names a live job application and stays
      noindex regardless of verify passes. -->
@@ -17,10 +17,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
-<!-- The shared data layer: used here to CROSS-CHECK, not to restate. Every
-     claim on this page that also lives in the atlas carries the atlas's badge,
-     and the crosswalk gate verifies each claimed overlap actually occurs in
-     the data layer at load. -->
+<!-- The shared data layer: used here to CROSS-CHECK, not to restate. The
+     crosswalk gate below is a SCOPE check (the claimed name occurs inside the
+     claimed category's own records) — it does not prove facts; the facts carry
+     the atlas's badges inline. -->
 <script src="collapse-data.v2.js"></script>
 
 <style>
@@ -29,30 +29,33 @@
    One fund's portfolio, read on the Bench. An independent work sample
    prepared alongside an application to Lowercarbon Capital's Technical
    Lead – Growth role, which scopes itself to technical diligence on
-   growth-stage climate companies at TRL 6–8. So this page does exactly
-   that job, in public, on the fund's own book:
+   growth-stage climate companies at TRL 6–8. So this page does that job,
+   in public, on the fund's own book — and, after an adversarial review
+   pass (2026-08-10, findings folded in), it does it under TWO banding
+   rules printed side by side, because the window's population turned out
+   to be a function of the rule:
 
-     · the mandate — the role's stated scope, drawn as a window on the ladder;
-     · the shelf — all 101 companies + 2 nonprofits on the fund's public
-       companies page, grouped, with the growth-window subset flagged;
-     · the crosswalk — where the fund's book intersects this atlas's verified
-       dataset (it already does: the data layer cites Lowercarbon by name);
-     · eight diligence cards — the role's deliverable form: stage evidence,
-       an honest band, the critical technical questions in priority order,
-       failure modes and the cost-reliability tradeoff, and the one
-       measurement that would change the underwriting;
-     · the portfolio-level reads — what the book's shape says.
+     · MIDPOINT RULE (the atlas's category rule): band = floor(midpoint) of
+       the full stated span. All eight profiled companies land in-window.
+     · GATING RULE (the honest company rule): a company is only as far up
+       the ladder as its weakest load-bearing TECHNICAL subsystem — banded
+       as floor(midpoint) of that subsystem's span. Six of eight land
+       in-window; Zanskar and UNDO drop out.
+   Cost, finance and adoption gates are NOT smuggled into TRLs (the Bench's
+   §B2 rule): they are labeled as companion-axis gates on the card instead.
 
-   Sibling of collapse-trl.html (The Bench); same tokens, grain, drawer and
-   band idioms. House rules inherited unchanged: bands are editorial ordinals
-   on discrete rungs, midpoints round down, hedges survive summaries, and a
-   runtime gate stamps any inconsistency visibly rather than shipping it.
+   Sections: the mandate; the shelf (101 companies + 2 nonprofits, counted
+   at load); the crosswalk (scope-gated against the data layer); eight
+   diligence cards — dated evidence, dual bands, sharpened questions,
+   policy exposure, failure modes, KILL CRITERIA, and a capital JUDGMENT,
+   because diligence that never reaches judgment is a literature review in
+   a diligence costume; then seven portfolio-level reads, several adverse.
 
-   REGISTER, stated once: this page is independent. It is not affiliated
-   with, produced for, reviewed by, or endorsed by Lowercarbon Capital.
-   Company one-liners in the shelf are quoted from the fund's public
-   companies page and attributed; every judgment is the author's own,
-   from public sources, dated.
+   REGISTER, stated once: this page is independent. Not affiliated with,
+   produced for, reviewed by, or endorsed by Lowercarbon Capital. Shelf
+   one-liners are the fund's own marketing taglines, quoted and attributed;
+   domain groupings built on them inherit their softness and say so. Every
+   judgment is the author's, from dated public sources.
    =========================================================================== */
 
 *,*::before,*::after{box-sizing:border-box}
@@ -109,7 +112,6 @@ h1{font-family:var(--disp);font-weight:800;line-height:1.02;margin:0 0 18px;
 .lede{max-width:66ch;font-size:clamp(1.05rem,1rem + .3vw,1.2rem);margin:0}
 .lede b{font-weight:600}
 
-/* the independence plate — visible above the fold, not buried in the footer */
 .indep{border:1.5px solid var(--ink);background:var(--kraft-hi);
   padding:14px 18px;margin-top:22px;max-width:74ch}
 .indep p{font-size:.85rem;margin:0;color:var(--kraft-ink)}
@@ -125,7 +127,6 @@ p{margin:0 0 14px;max-width:70ch}
 a{color:var(--accent)}
 a:hover{color:var(--ice-dk)}
 
-/* mandate quote */
 .mandate{border-left:3px solid var(--accent);background:var(--plate);
   padding:16px 20px;margin:18px 0;max-width:74ch}
 .mandate p{font-size:.9rem;margin:0 0 10px}
@@ -134,12 +135,13 @@ a:hover{color:var(--ice-dk)}
 .mandate .cite{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;
   text-transform:uppercase;color:var(--fg-2)}
 
-/* the window strip */
 .win-scroll{overflow-x:auto;margin:20px 0 6px;border:1px solid var(--rule-hi);background:var(--bone)}
-#window{min-width:720px}
+#window{min-width:760px}
 .ld-note{font-size:.83rem;color:var(--fg-2);max-width:74ch}
+.two-counts{font-family:var(--mono);font-size:.8rem;font-weight:600;
+  border:1.5px solid var(--ink);display:inline-block;padding:8px 12px;margin:10px 0 4px;
+  letter-spacing:.04em}
 
-/* the shelf */
 .shelf-legend{display:flex;flex-wrap:wrap;gap:8px 20px;margin:14px 0 6px;
   font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-2)}
 .shelf-legend .sw{display:inline-block;width:11px;height:11px;border:1px solid var(--rule-hi);
@@ -161,39 +163,38 @@ a:hover{color:var(--ice-dk)}
 .chip a{color:inherit;text-decoration:none}
 .chip--prof a:hover .c-name{text-decoration:underline}
 
-/* crosswalk table — scrolls inside its own container on narrow screens */
 .xwalk-scroll{overflow-x:auto;margin:16px 0 4px}
 .xwalk{width:100%;min-width:640px;margin:0;font-size:.86rem}
 .xwalk th{font-family:var(--mono);font-size:.66rem;letter-spacing:.13em;text-transform:uppercase;
   text-align:left;color:var(--fg-2);padding:0 14px 8px 0;border-bottom:1px solid var(--rule-hi)}
 .xwalk td{vertical-align:top;padding:9px 14px 9px 0;border-bottom:1px solid var(--rule)}
 .xwalk td:first-child{font-family:var(--mono);font-size:.78rem;font-weight:600;white-space:nowrap}
-.xbadge{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;
-  border:1px solid var(--rule-hi);padding:2px 6px;white-space:nowrap}
+.xbadge{font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;
+  border:1px solid var(--rule-hi);padding:2px 6px;white-space:nowrap;display:inline-block;margin:1px 0}
 .gate-fail{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;
   color:#fff;background:var(--ember-dk);padding:6px 10px;display:inline-block;margin:0 0 10px}
 
-/* diligence cards */
 .card{border:1px solid var(--rule-hi);border-bottom:0;background:var(--bone)}
 .card:last-of-type{border-bottom:1px solid var(--rule-hi)}
-.card>summary{list-style:none;cursor:pointer;display:grid;gap:4px 16px;
-  grid-template-columns:minmax(0,1fr) auto auto;align-items:center;padding:14px 18px}
+.card>summary{list-style:none;cursor:pointer;display:grid;gap:4px 12px;
+  grid-template-columns:minmax(0,1fr) auto auto auto;align-items:center;padding:14px 18px}
 .card>summary::-webkit-details-marker{display:none}
 .card>summary:hover{background:var(--plate)}
 .k-sec{font-family:var(--mono);font-size:.68rem;letter-spacing:.13em;text-transform:uppercase;color:var(--fg-2)}
 .k-name{font-family:var(--disp);font-weight:700;font-size:1.02rem;line-height:1.25}
-.k-band{font-family:var(--mono);font-size:.72rem;font-weight:600;white-space:nowrap;
-  border:1.5px solid var(--ink);padding:5px 9px;letter-spacing:.06em}
-.k-band small{display:block;font-weight:400;font-size:.62rem;letter-spacing:.1em;
+.k-band{font-family:var(--mono);font-size:.7rem;font-weight:600;white-space:nowrap;
+  border:1.5px solid var(--ink);padding:5px 8px;letter-spacing:.04em;text-align:center}
+.k-band small{display:block;font-weight:400;font-size:.58rem;letter-spacing:.1em;
   text-transform:uppercase;color:var(--fg-2)}
-.k-band.out{border-style:dashed}
+.k-band--gate{border-color:var(--accent);color:var(--ice-dk)}
+.k-band--gate.below{border-color:var(--rust);color:var(--rust);border-style:dashed}
 .k-pull{font-family:var(--mono);font-size:.66rem;letter-spacing:.13em;text-transform:uppercase;
   color:var(--accent);white-space:nowrap}
 .card[open] .k-pull .shut{display:none}
 .card:not([open]) .k-pull .open{display:none}
 .k-thesis{grid-column:1/-1;font-size:.85rem;color:var(--fg-2);max-width:82ch}
 .k-thesis b{color:var(--fg);font-weight:600}
-@media(max-width:700px){.card>summary{grid-template-columns:minmax(0,1fr) auto}.k-pull{display:none}}
+@media(max-width:760px){.card>summary{grid-template-columns:minmax(0,1fr) auto auto}.k-pull{display:none}}
 .k-body{padding:6px 18px 24px;border-top:1px solid var(--rule)}
 .k-grid{display:grid;gap:clamp(16px,2.4vw,30px);grid-template-columns:minmax(0,1fr)}
 @media(min-width:900px){.k-grid{grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr)}}
@@ -202,6 +203,15 @@ a:hover{color:var(--ice-dk)}
 .k-v{font-size:.9rem;margin:0 0 4px;max-width:70ch}
 .k-warn{border-left:3px solid var(--alert);padding-left:12px}
 .k-warn .k-k{color:var(--alert)}
+.k-judge{border:1.5px solid var(--ink);background:var(--kraft-hi);padding:12px 16px;margin-top:18px}
+.k-judge .k-k{color:var(--rust);margin-top:0}
+.k-judge .k-v{color:var(--kraft-ink)}
+.subsys{width:100%;font-size:.85rem;margin:4px 0 2px}
+.subsys td{vertical-align:top;padding:7px 12px 7px 0;border-bottom:1px solid var(--rule)}
+.subsys tr:last-child td{border-bottom:0}
+.subsys .s-band{font-family:var(--mono);font-weight:600;white-space:nowrap}
+.subsys .s-gate{font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--rust)}
 .qlist{margin:2px 0 0;padding:0;list-style:none;font-size:.88rem;counter-reset:q}
 .qlist li{padding:8px 0 8px 34px;border-bottom:1px solid var(--rule);position:relative;counter-increment:q}
 .qlist li:last-child{border-bottom:0}
@@ -215,14 +225,18 @@ a:hover{color:var(--ice-dk)}
 .ev .e-date{font-family:var(--mono);font-size:.7rem;color:var(--fg-2);white-space:nowrap;padding-top:2px}
 .k-src{font-size:.76rem;color:var(--fg-2);margin-top:14px}
 
-/* portfolio-level reads */
 .reads{display:grid;gap:1px;background:var(--rule-hi);margin:20px 0 8px;border:1px solid var(--rule-hi);
-  grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr))}
 .read{background:var(--bone);padding:18px 20px}
 .read h4{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;margin:0 0 8px}
-.read p{font-size:.86rem;margin:0}
+.read h4 .adverse{color:var(--alert)}
+.read p{font-size:.86rem;margin:0 0 10px}
+.read p:last-child{margin:0}
+.read .falsify{font-size:.79rem;color:var(--fg-2);border-top:1px dashed var(--rule-hi);
+  padding-top:8px;margin-top:10px}
+.read .falsify b{font-family:var(--mono);font-size:.64rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--rust)}
 
-/* footing */
 .footing{background:var(--carbon);color:var(--inv);
   padding:clamp(40px,7vh,80px) 0 clamp(50px,8vh,90px);margin-top:clamp(40px,7vh,80px)}
 .footing h2{color:var(--inv)}
@@ -263,21 +277,22 @@ details.fn .fn-body{padding:2px 0 14px}
 
 <section class="hero">
   <div class="wrap">
-    <p class="eyebrow">the Bench, pointed at one fund's book</p>
+    <p class="eyebrow">the Bench, pointed at one fund's book · adversarially reviewed 2026-08-10</p>
     <h1>The Book</h1>
     <p class="lede">Lowercarbon Capital's Technical Lead – Growth role scopes itself to
       <b>technical diligence on growth-stage climate companies at TRL 6–8</b>. This
       page does that job, in public, on the fund's own portfolio: the full shelf of
-      101 companies mapped, the growth window drawn, <b>eight diligence cards</b> in
-      the role's own deliverable form — stage evidence, an honest band, the critical
-      technical questions in priority order, failure modes and cost-reliability
-      tradeoffs, and the one measurement that would change the underwriting.</p>
+      101 companies mapped, the growth window drawn <b>under two banding rules —
+      because its population turns out to depend on the rule</b> — and eight diligence
+      cards that end where diligence has to end: dated evidence, sharpened questions,
+      failure modes, <b>kill criteria, and a capital judgment</b>, several of them
+      adverse.</p>
     <div class="indep">
       <span class="stamp">independence · read before anything else</span>
       <p>This is an <b>independent work sample</b>, prepared alongside an application to
       the role it cites. It is not affiliated with, produced for, reviewed by, or
-      endorsed by Lowercarbon Capital. Company one-liners on the shelf are quoted from
-      the fund's public companies page and attributed; every band and judgment is the
+      endorsed by Lowercarbon Capital. Company one-liners on the shelf are the fund's
+      own marketing taglines, quoted and attributed; every band and judgment is the
       author's own editorial assessment from dated public sources, under the same house
       rules as the rest of this atlas. Research and opinion, not investment advice.</p>
     </div>
@@ -290,7 +305,7 @@ details.fn .fn-body{padding:2px 0 14px}
 <section class="bk" id="mandate">
   <div class="wrap">
     <p class="eyebrow">§P1 · the mandate</p>
-    <h2>The growth window, drawn on the ladder</h2>
+    <h2>The growth window, drawn on the ladder — twice</h2>
     <p>The role's posting defines its own scope, and the definition is a readiness
       claim — so it can be drawn on the same nine rungs as everything else on this
       site:</p>
@@ -302,21 +317,31 @@ details.fn .fn-body{padding:2px 0 14px}
         translating technical uncertainty into capital decision implications …
         failure modes and cost-reliability tradeoffs."</p>
       <p class="cite">Lowercarbon Capital, Technical Lead – Growth posting
-        (lowercarbon-capital.breezy.hr/p/49a05e59169a, read 2026-08-10)</p>
+        (lowercarbon-capital.breezy.hr/p/49a05e59169a, read 2026-08-10). Context: the
+        fund raised a growth/opportunities vehicle as part of its $550M two-fund close
+        in Sep 2023 — the capital this role presumably underwrites for.</p>
     </div>
-    <p>TRL 6–8 is a precise place to sit. Below it, diligence is science review; above
-      it, it is project finance. Inside it live the questions this atlas's Bench calls
-      the mid-ladder's own: does the prototype's performance survive the move to the
-      operational environment, does the cost curve bend before the capital runs out,
-      and does the verification subsystem mature as fast as the deployment subsystem.
-      The strip below places this page's eight profiled companies on the window.</p>
+    <p>TRL 6–8 is a precise place to sit. Below it the dominant risk is scientific;
+      inside it, technical and financing risk converge until they are the same risk
+      wearing different badges (§P5's FOAK read); above it, risk becomes mostly
+      contractual. But "is this company at TRL 6–8" has two honest answers, and this
+      page prints both:</p>
+    <p><b>The midpoint rule</b> — the atlas's category rule: band = midpoint of the
+      full stated span, halves rounding down. <b>The gating rule</b> — the honest rule
+      for a single company: it is only as far up the ladder as its weakest
+      load-bearing <i>technical</i> subsystem. Cost, finance and adoption gates are
+      never smuggled into a TRL (that is the Bench's §B2 discipline); they are labeled
+      on each card as companion-axis gates instead. The strip shows both readings per
+      company; the count line beneath is the point.</p>
     <div class="win-scroll"><svg id="window" role="img"
-      aria-label="Nine TRL rungs with the growth window 6–8 shaded and eight profiled companies placed at their editorial bands"></svg></div>
-    <p class="ld-note">Rungs are ordinal; the window shading marks the posting's stated
-      scope. Bands are this page's editorial assessments (basis stated on each card),
-      under the atlas's house rules: band = midpoint of the stated span, halves round
-      down, never upward. One profiled company sits below the window on purpose — see
-      its card for why that is the diligence finding, not a placement error.</p>
+      aria-label="Nine TRL rungs with the growth window 6–8 shaded and eight profiled companies placed under both banding rules"></svg></div>
+    <p class="two-counts" id="twoCounts"></p>
+    <p class="ld-note">Rungs are ordinal; the shading marks the posting's stated scope.
+      ◆ = midpoint-rule band · ○ = gating-rule band (the gating subsystem's own
+      midpoint, rounded down). Where the two markers separate, the distance is the
+      diligence finding: it names which subsystem a growth check actually underwrites.
+      Both derivations run at load against each card's declared bands — a mismatch
+      renders a red stamp, not a silently wrong chart.</p>
   </div>
 </section>
 
@@ -329,14 +354,24 @@ details.fn .fn-body{padding:2px 0 14px}
     <h2>The whole book, grouped</h2>
     <p>Every company on the fund's public companies page (read 2026-08-10), grouped
       into seven editorial domains plus the fund's two nonprofit research initiatives.
-      The italic line on each chip is the fund's own one-liner, quoted. Groupings are
-      this page's, not the fund's.</p>
+      The italic line on each chip is the fund's own tagline, quoted — which means the
+      domain layer is built on marketing copy, the least reliable text on the page;
+      three known misfits are flagged in the note below the grid. Counts are asserted
+      at load: if this page's transcription drifts from 101 + 2, a red stamp renders
+      here.</p>
     <div class="shelf-legend">
       <span><span class="sw" style="background:var(--kraft-hi);outline:1.5px solid var(--ink);outline-offset:-1.5px"></span>profiled below — diligence card</span>
       <span><span class="sw" style="background:var(--bone)"></span>mapped only</span>
       <span style="color:var(--accent)">◆ already in this atlas's verified dataset</span>
     </div>
     <div id="shelfHost"></div>
+    <p class="note" style="margin-top:14px">Grouping honesty: <b>Frost Methane</b> is
+      methane <i>abatement</i>, not carbon removal — it sits in the carbon-and-methane
+      domain because seven domains have no better home, and §P5's white-space read
+      turns on exactly this chip. <b>Biosphere</b> and <b>Ulysses</b> sit in
+      risk-nature-software mostly because nothing else fit. A partner would redraw
+      several of these lines; the taglines they rest on were written to charm, not to
+      classify.</p>
   </div>
 </section>
 
@@ -350,16 +385,21 @@ details.fn .fn-body{padding:2px 0 14px}
     <p>This atlas was built before this page was conceived, and its data layer already
       cites Lowercarbon by name — Heirloom's Series B is recorded there as "co-led by
       Future Positive and Lowercarbon Capital". The table lists every portfolio company
-      that appears in the atlas's verified dataset, with the badge the data layer
-      assigns and the Bench dossier that dissects its category. A runtime gate checks
-      each claimed overlap against the data layer at load; a failure renders a red
-      stamp, not a silent error.</p>
+      that appears in the atlas's dataset, with badges shown <b>per claim</b> (a row is
+      never summarized by its strongest badge). The runtime gate here is a scope check
+      — each claimed name must occur inside the claimed category's own records in the
+      data layer — not a proof of the facts, which carry their badges inline.</p>
     <div id="xwalkHost"></div>
-    <p class="note">Two more echoes worth naming: the fund's nonprofit initiative
-      CarbonPlan is one of this atlas's cited sources (the four-orders-of-magnitude
-      ERW spread), and Running Tide — the kelp-sinking cautionary case the atlas's
-      blue-carbon entry turns on — was a Lowercarbon-adjacent chapter the book's
-      Macro Oceans bet now has to answer.</p>
+    <p class="note"><b>Two echoes, corrected after review.</b> The fund's nonprofit
+      initiative CarbonPlan is one of this atlas's cited sources (the
+      four-orders-of-magnitude ERW spread). And <b>Running Tide was a Lowercarbon
+      portfolio company outright</b> — ≈$54M raised from investors including
+      Lowercarbon before winding down global operations in June 2024 (Axios,
+      2024-06-17) — not the "adjacent chapter" an earlier draft of this page called
+      it. The lesson stays confined where the atlas puts it: Running Tide failed on
+      kelp-<i>sinking</i> permanence and crediting; Macro Oceans sells kelp as
+      <i>product</i> and inherits none of that — conflating the two would be a
+      category error in both directions.</p>
   </div>
 </section>
 
@@ -372,11 +412,14 @@ details.fn .fn-body{padding:2px 0 14px}
     <h2>Eight companies, taken through the window</h2>
     <p>Selection rule, stated up front: companies in or adjacent to the TRL 6–8
       window, in physical (not software) categories, where enough dated public
-      evidence exists to band honestly — plus one deliberate edge case below the
-      window, because knowing <i>which subsystem</i> holds a company out of the window
-      is the job. Cards follow the posting's own deliverable form. Facts carry dates;
-      the atlas's badge vocabulary applies: nothing announced is rendered as
-      delivered.</p>
+      evidence exists to band honestly. Cards follow the posting's deliverable form
+      and end in a judgment, because a diligence sample that never reaches judgment is
+      a literature review in a diligence costume. The atlas's badge vocabulary
+      applies throughout: nothing announced is rendered as delivered. <b>Standing
+      information gap on every card:</b> team and manufacturing-capability risk is not
+      honestly assessable from the public record at this depth — it is flagged here
+      once rather than faked eight times, and it is the first thing a diligence room
+      adds that this page cannot.</p>
     <div id="cardHost"></div>
   </div>
 </section>
@@ -387,37 +430,115 @@ details.fn .fn-body{padding:2px 0 14px}
 <section class="bk" id="reads">
   <div class="wrap">
     <p class="eyebrow">§P5 · the portfolio-level reads</p>
-    <h2>What the shape of the book says</h2>
+    <h2>Seven reads, several adverse</h2>
+    <p>Each read is stated falsifiably where the data allows — the atlas's hypothesis
+      discipline applied to a fund instead of a field. Adverse findings are marked;
+      diligence that only discovers wisdom in its subject is marketing.</p>
     <div class="reads">
-      <div class="read"><h4>a barbell, with the window in the middle</h4>
-        <p>The book is heavy at the frontier — eight distinct fusion bets (magnets,
-        stellarators, pulsed, laser, Z-pinch, compact) that are TRL 2–4 science
-        positions — and heavy in software and finance rails (Watershed, Crux, Eli,
-        Enode) where TRL barely applies. The physical middle — Antora, Twelve,
-        Electra, Sublime, Heirloom, Charm, Zanskar — is exactly the growth window
-        this role underwrites. The barbell is a choice: cheap options on physics,
-        cash-flowing rails, and concentrated technical risk in between.</p></div>
-      <div class="read"><h4>the fund builds its own verification layer</h4>
-        <p>Isometric (registry), Yard Stick (soil carbon measurement), Loam
-        (farm-to-registry), CarbonPlan and Carbon180 (nonprofit science and policy):
-        the book funds the measurement infrastructure its own removal companies will
-        be priced by. This atlas's Bench argues MRV is the binding constraint in four
-        of ten categories; the book reads as if the fund agrees, and is long the
-        constraint itself.</p></div>
-      <div class="read"><h4>everything in the window buys electrons</h4>
-        <p>Antora arbitrages them, Twelve electrolyses them, Electra plates iron with
-        them, Heirloom and Sublime consume them, Zanskar produces them. The dominant
-        shared exposure across the profiled eight is delivered clean electricity
-        price — which makes the cost-reliability tradeoff the posting names the
-        portfolio's single most repeated diligence question, and interconnection
-        queues its quietest schedule risk.</p></div>
-      <div class="read"><h4>the window's recurring failure mode is FOAK finance</h4>
-        <p>Sublime's paused Holyoke plant (rescinded $87M DOE grant) is the live case;
-        Electra's first commercial facility and Twelve's next AirPlants are the next
-        tests. In this window, technology risk and financing risk are the same risk
-        wearing different badges — the diligence question is rarely "does it work"
-        and usually "what evidence unlocks the next tranche of someone else's
-        capital".</p></div>
+
+      <div class="read"><h4>1 · the barbell is literally the fund structure</h4>
+        <p>The book is heavy at the frontier — eight distinct fusion bets this page
+        deliberately does <i>not</i> band (no fusion entry exists in the atlas, and
+        banding eight companies in a subordinate clause would break the house rules) —
+        and heavy in software and finance rails (Watershed, Crux, Eli, Enode), for
+        which no revenue evidence is public and none is claimed here. The physical
+        middle is the growth window this role underwrites. The shape is not inference:
+        the fund raised a $250M fusion-only vehicle (Q&gt;1, 2022), a $350M carbon
+        removal fund (2022), and a growth/opportunities fund (2023). The barbell is
+        the fund's own capital formation, printed.</p>
+        <p class="falsify"><b>test</b> Map each 2024–26 investment to a vehicle; the
+        barbell holds if growth-fund checks concentrate in the physical middle.</p></div>
+
+      <div class="read"><h4>2 · the electron book: six longs, one short, one engine of the problem</h4>
+        <p>Six profiled positions buy delivered clean electricity (Antora arbitrages
+        it, Twelve electrolyses it, Electra plates with it, Heirloom and Sublime
+        consume it) — but the book is not simply long cheap electrons. <b>Zanskar
+        sells them</b>: a sustained fall in clean firm power prices helps six cards
+        and compresses Zanskar's plant economics — an internal hedge the book never
+        names. Charm and UNDO sit outside the trade entirely (their exposures are
+        hauling radius and measurement cost). And <b>Crusoe is now a driver of the
+        power demand the longs fear</b>: it sold its bitcoin unit (Mar 2025) to become
+        an AI-infrastructure developer — lead developer of the Stargate Abilene
+        campus, 206 MW scaling toward ≈1.2 GW, partly gas-bridged. Antora's own
+        Series C reframes its demand thesis around that load growth. The fund is long
+        the cause and the casualties of rising power prices at once.</p>
+        <p class="falsify"><b>test</b> Outcome dispersion across the profiled eight
+        should be lower than a naive all-long-electrons model predicts; Zanskar and
+        the six longs should move oppositely on power-price shocks.</p></div>
+
+      <div class="read"><h4><span class="adverse">3 · adverse — the referee problem</span></h4>
+        <p>The fund is long the registry (Isometric) and long issuers priced by it —
+        and the relationship is not structural but <b>transactional</b>: Isometric
+        issued Charm's first verified bio-oil credits (107.21 credits, to JPMorgan,
+        Shopify, Stripe) and verified Vaulted Deep's first ≈2,000 t in Kansas. Charm,
+        Vaulted and Isometric are all portfolio companies. Owning the referee of your
+        own positions' kill criteria is a risk finding, not a compliment: UNDO's
+        stated failure mode is "a registry tightens tolerance," and the book holds
+        both sides of that sentence.</p>
+        <p class="falsify"><b>test</b> A registry-integrity policy change (ICVCM/CCP
+        or buyer-side) should reprice Isometric and the fund's issuers
+        simultaneously — correlated, not diversified. The diligence question for the
+        fund itself: what independence structure separates Isometric's protocol
+        decisions from its cap table?</p></div>
+
+      <div class="read"><h4>4 · one buyer is the demand book's spine</h4>
+        <p>From this corpus alone, Microsoft is the offtaker on three profiled cards —
+        Heirloom (up to 315,000 t), Sublime (up to 622,500 t), UNDO (28,900 t,
+        third deal, ≈49,000 t cumulative) — and on four more data-layer companies
+        (Ebb ≤350,000 t; Exomad ≥1.24M t; Lithos 11,400 t; InPlanet). A single change
+        in one buyer's carbon and materials procurement program reprices at least
+        three cards and two whole categories' contracted-vs-delivered gap at once.
+        Portfolio demand risk here is materially one program, not a market.</p>
+        <p class="falsify"><b>test</b> Fraction of each company's forward book held by
+        its top buyer; the read fails if any profiled CDR/materials position shows
+        top-buyer concentration &lt;50%.</p></div>
+
+      <div class="read"><h4><span class="adverse">5 · adverse — base rates, and what actually discriminated in 2026</span></h4>
+        <p>The corpus contains its own failure sample: Running Tide (portfolio; wound
+        down Jun 2024), Climeworks (&gt;10% layoff, 2025), Sublime (first plant
+        paused, Dec 2025), Brimstone (lost $189M award), Twelve (reduction in force,
+        Dec 2025, citing the 45Z rollback). The pattern across the window's 2026
+        outcomes: every profiled company that closed 2026 capital (Antora, Zanskar,
+        Electra, Twelve's plant opening) had steel in the ground before the Oct 2025
+        DOE rescissions; the two that stalled (Sublime, Heirloom's Louisiana scope)
+        were policy-entangled chemistry plays awaiting first plants. <b>The 2026 FOAK
+        discriminant was committed capex, not category or TRL.</b> The number a
+        growth investor most needs and this page cannot compute from public record:
+        what fraction of first commercial plants in this reference class reach a
+        second plant?</p>
+        <p class="falsify"><b>test</b> Extend the sample beyond this book; the
+        committed-capex discriminant fails if post-rescission closes cluster in
+        pre-construction companies.</p></div>
+
+      <div class="read"><h4>6 · revealed preference: no open-system attribution risk the fund doesn't own the verifier for</h4>
+        <p>Held against the atlas's ten intervention categories, the shelf has zero
+        presence in ocean CDR (Macro Oceans is kelp-products, not alkalinity), zero
+        in blue carbon and peatland, zero in ice intervention, and nothing
+        open-atmosphere in methane — precisely the categories whose Bench binding
+        constraints are open-system attribution (H7), credit-grade measurement (H5),
+        and feasibility itself. Where the fund does take MRV-gated risk (ERW via
+        UNDO, biochar/bio-oil via Charm and Vaulted), it also owns registry and
+        measurement positions (Isometric, Yard Stick, Loam). The book behaves as if
+        the Bench's MRV findings are its investment policy.</p>
+        <p class="falsify"><b>test</b> Lowercarbon does not enter ocean CDR before a
+        registry accepts tracer-anchored attribution at ≤±25% on ≥10,000 t (H7's
+        validation gate) — or if it does, it enters through the MRV layer, not the
+        alkalinity layer.</p></div>
+
+      <div class="read"><h4><span class="adverse">7 · adverse — the highest-gap category is one unexamined chip</span></h4>
+        <p>The atlas scores methane removal leverage 5 and gap 5 — "among the
+        highest-leverage climate moves available," ≈30% of the warming rise, the
+        least-funded category in the dataset, with a whole field study (The Seam)
+        as its worked example. The fund's total exposure: <b>Frost Methane</b>, one
+        chip, misfiled under carbon removal, uncrosswalked, unprofiled — and mapping
+        directly onto H1's point-source mechanism. Ranked by the atlas's
+        leverage×gap against the fund's per-category headcount, methane is the
+        maximum-divergence cell — a sharper white-space observation than anything
+        this page says about fusion or software.</p>
+        <p class="falsify"><b>test</b> The read fails if the fund's non-public book
+        holds methane positions the public page omits — which is itself a question
+        worth asking in the room.</p></div>
+
     </div>
   </div>
 </section>
@@ -429,23 +550,31 @@ details.fn .fn-body{padding:2px 0 14px}
   <div class="wrap">
     <p class="eyebrow">bedrock · methods &amp; sources</p>
     <h2>Methods &amp; sources</h2>
-    <p>The shelf transcribes the fund's public companies page (read 2026-08-10).
-      Crosswalk rows are verified against
+    <p>The shelf transcribes the fund's public companies page (read 2026-08-10;
+      count asserted at load). Crosswalk rows are scope-checked against
       <span style="font-family:var(--mono);font-size:.85rem">collapse-data.v2.js</span>
-      at load. Diligence-card facts carry their dates inline; primary announcements
-      are listed below. Bands follow the atlas's house rules (editorial ordinals,
-      discrete rungs, midpoint rounds down) and are the author's alone.</p>
+      at load; card bands are re-derived from their stated spans under both rules and
+      compared to the declared values. This page was adversarially reviewed on
+      2026-08-10 — a fact-verification pass against primary sources and a
+      reasoning-attack pass — and the corrections are folded in rather than listed;
+      the two systematic fixes were an operating facility one card had omitted
+      (Heirloom's Tracy plant) and a banding rule one card had applied that the page
+      never stated (now §P1's two-rule frame).</p>
     <details class="fn">
       <summary><span class="shut">primary sources for the diligence cards</span><span class="open">close</span></summary>
       <div class="fn-body">
         <ul class="srcs">
-          <li><span class="s-date">2026-08</span><span>Lowercarbon Capital — Technical Lead – Growth posting (breezy.hr) and lowercarbon.com/companies, both read 2026-08-10.</span></li>
-          <li><span class="s-date">2026-07</span><span>Antora Energy — $550M Series C co-led by G2 Venture Partners and Eclipse (company release, 2026-07-30); ≈$1B total corporate and project financing reported; first commercial-scale 5 GWh system at POET Bioprocessing, Big Stone City SD, commissioning from May 2026, 200+ modules (Canary Media / Energy-Storage.news coverage).</span></li>
-          <li><span class="s-date">2026-06</span><span>Twelve — AirPlant One, Moses Lake WA, opened 2026-06-10 as the first commercial-scale US E-Jet facility, ≈50,000 gal/yr; $645M announced Sep 2024 led by TPG Rise Climate incl. up to $400M project equity; Alaska Airlines / IAG / Microsoft offtake relationships (company release, ESG Dive, SAF Investor).</span></li>
-          <li><span class="s-date">2026-03</span><span>Electra — $186M Series B (2025-04, co-led Capricorn and Temasek; total then $214M); $30M J.P. Morgan venture debt (2026-03); $50M Breakthrough Energy Catalyst award; Colorado $8M clean-industry tax credit; Jefferson County CO demonstration plant, operations from mid-2026, up to 500 t/yr; Meta and Nucor agreements (GlobeNewswire, Canary Media).</span></li>
-          <li><span class="s-date">2026-01</span><span>Zanskar — $115M Series C led by Spring Lane Capital (2026-01-21; ≈$180M total equity); "Big Blind" discovery announced 2025-12 — reported as the first blind geothermal system confirmed commercial by US industry in over 30 years, ≈250°F permeable reservoir at ≈2,700 ft; six 20-MW plants in development pipeline (GlobeNewswire, Latitude Media, Heatmap).</span></li>
-          <li><span class="s-date">2026-07</span><span>Heirloom, Sublime Systems, Charm Industrial, UNDO, Vaulted Deep, Carbon Engineering / 1PointFive — all facts as recorded and badged in this atlas's data layer (collapse-data.v2.js, updated 2026-07-30) and its research synthesis (collapse-tech-research.md, July 2026); sources of record listed there.</span></li>
-          <li><span class="s-date">2023-08</span><span>Occidental's acquisition of Carbon Engineering (≈$1.1B, widely reported Aug 2023) — noted as context only; this page's DAC facts are the atlas's badged entries.</span></li>
+          <li><span class="s-date">2026-08</span><span>Lowercarbon Capital — Technical Lead – Growth posting (breezy.hr) and lowercarbon.com/companies, both read 2026-08-10. Fund vehicles: Q&gt;1 $250M fusion fund and $350M carbon removal fund (2022, ImpactAlpha / fund's own "Race to Q&gt;1"); $550M across two funds incl. a growth/opportunities vehicle (Sep 2023, Axios / ImpactAlpha).</span></li>
+          <li><span class="s-date">2026-07</span><span>Antora — $550M Series C co-led by G2 Venture Partners and Eclipse (release 2026-07-30; Canary Media); ≈$1B total corporate + project financing (Crunchbase News). POET Big Stone City 5 GWh system commissioned and delivering energy (POET/Antora release 2026-05-19; Energy-Storage.news). TPV: &gt;40% heat-to-electricity demonstrated; San Jose TPV production line; $14.5M ARPA-E SCALEUP; 2023 Wellhead 5 MWh heat-and-power pilot (Antora releases; Contrary Research).</span></li>
+          <li><span class="s-date">2026-06</span><span>Twelve — AirPlant One opened 2026-06-10, first commercial-scale US E-Jet facility, ≈50,000 gal/yr, ASTM-certified (PRNewswire; GreenAir News); $645M led by TPG Rise Climate incl. up to $400M project equity (TPG, 2024-09). Reduction in force reported 2025-12-23 citing 45Z rollback (E&amp;E News/Politico); H.R.1 cut the SAF-specific 45Z advantage (CATF, 2025-10).</span></li>
+          <li><span class="s-date">2026-06</span><span>Charm Industrial — JPMorganChase 61,500 t purchase + $20M debt facility for the Colorado facility, total 90,000 t with JPM (Charm press / ESG Dive, 2026-06-04); Isometric-issued first verified bio-oil credits (107.21, to JPMorgan/Shopify/Stripe) and CCP-labeled biochar credits — dual-protocol (Isometric; Charm blog); cumulative deliveries on the order of 6,000–7,200+ t (Charm blog; Contrary Research); Frontier $53M / 112,000 t offtake (Frontier, 2023-05); Google 100,000 t biochar (2025-01); Boeing partnership (TechCrunch, 2025-11-14).</span></li>
+          <li><span class="s-date">2026-03</span><span>Electra — $186M Series B co-led Capricorn + Temasek, total then $214M (GlobeNewswire, 2025-04-24); demonstration facility unveiled 2025-10-21 with $50M BE Catalyst award, $8M Colorado clean-industry tax credit, Meta EAC purchase and Nucor/Toyota Tsusho/INTERFER iron purchase agreements (GlobeNewswire; Latitude Media; Canary Media); $30M J.P. Morgan venture debt toward the first commercial facility (GlobeNewswire, 2026-03-10); demo operations mid-2026, fully operational Q3 2026, up to 500 t/yr.</span></li>
+          <li><span class="s-date">2026-01</span><span>Zanskar — $115M Series C led by Spring Lane Capital, ≈$180M total equity (GlobeNewswire, 2026-01-21); "Big Blind" announced 2025-12-04 — first blind geothermal system confirmed commercial by US industry in 30+ years, ≈250°F at ≈2,700 ft, two wells Jul–Aug 2025 (GlobeNewswire; Canary Media); six 20-MW plants, &gt;700 MW of sites (Latitude Media; Heatmap).</span></li>
+          <li><span class="s-date">2025-12</span><span>Sublime Systems — Holyoke (≈30,000 t/yr design) construction paused with ~10% layoffs after the $87M DOE grant cancellation (S&amp;P Global, 2025-12-11; Rep. Neal, 2025-06-09); Microsoft binding offtake up to 622,500 t (2025-05-22); still paused as of mid-2026, "pursuing multiple avenues to backfill" (Boston Real Estate Times).</span></li>
+          <li><span class="s-date">2025-10</span><span>UNDO — Microsoft 28,900 t deal announced 2025-10-21, debt financing from the Inlandsis Fund, Microsoft's third UNDO deal (5,000 t 2023; 15,000 t 2024; ≈49,000 t total) (Newswire.ca; ESG Dive); deployment &gt;313,800 t rock across 398 farms / 54,400 acres toward ≈69,000 t eventual removal (Regreener, 2026); $5M XPRIZE runner-up (2025-04, atlas-badged verified). Context: the industry's first verified ERW credits went to InPlanet (Isometric, 2025-01), not UNDO.</span></li>
+          <li><span class="s-date">2025-02</span><span>Heirloom — Tracy, CA: America's first commercial DAC facility, operating since Nov 2023, ≈1,000 t/yr, CO₂ stored in concrete via CarbonCure, delivered removals incl. Microsoft, Stripe, Shopify, Klarna (Businesswire, 2023-11-09; Latitude Media); $150M Series B co-led by Future Positive and Lowercarbon (Businesswire, 2024-12-04); United Airlines SFF investment with right to purchase up to 500,000 t (PRNewswire, 2025-02); Project Cypress tranches slated for termination Oct 2025 — letters not sent, projects later told to proceed (MIT Tech Review; Heatmap; Carbon Herald).</span></li>
+          <li><span class="s-date">2024-06</span><span>Running Tide — ≈$54M raised from investors including Lowercarbon Capital; global operations wound down June 2024 (Axios, 2024-06-17; Latitude Media). Crusoe — bitcoin unit sold to NYDIG (CNBC, 2025-03-25); Stargate Abilene lead developer, 206 MW → ≈1.2 GW, $1.375B Series E (Crusoe releases; Contrary Research); gas-turbine bridging caveat noted.</span></li>
+          <li><span class="s-date">2026-07</span><span>Heirloom, Sublime, Charm, UNDO, Vaulted Deep, Carbon Engineering / 1PointFive, Twelve, Isometric — category facts as recorded and badged in collapse-data.v2.js (updated 2026-07-30) and collapse-tech-research.md (July 2026). Occidental's acquisition of Carbon Engineering (≈$1.1B, reported Aug 2023) noted as context only.</span></li>
         </ul>
       </div>
     </details>
@@ -454,10 +583,11 @@ details.fn .fn-body{padding:2px 0 14px}
         and an application work sample, not an engagement.</b></p>
       <p class="note" style="color:var(--inv-2);margin:0">Funding figures move fast and
         are often self-reported; every figure above carries the date its source gave
-        it, and announced is never rendered as delivered. Where the atlas's data layer
-        and a newer press figure could disagree, the conflict would be flagged, not
-        averaged — none was found for the entries used here. Prepared by the author of
-        this atlas, 2026-08-10.</p>
+        it, and announced is never rendered as delivered. Bands are editorial ordinals
+        on discrete rungs under the two rules stated in §P1 — never averaged, summed,
+        or read as quantities. Where sources conflict they are flagged, not averaged.
+        Prepared by the author of this atlas, 2026-08-10; adversarial review pass
+        (fact verification + reasoning attack) folded in the same day.</p>
     </div>
   </div>
 </section>
@@ -465,8 +595,9 @@ details.fn .fn-body{padding:2px 0 14px}
 <script>
 /* ===========================================================================
    THE BOOK — script
-   Renders: the window strip (§P1), the shelf (§P2), the crosswalk with its
-   runtime gate (§P3), the diligence cards with band self-check (§P4).
+   Renders: the dual-rule window strip (§P1), the shelf with count assertion
+   (§P2), the scope-gated crosswalk (§P3), the diligence cards with real
+   dual-band checks (§P4).
    =========================================================================== */
 (function () {
 "use strict";
@@ -474,12 +605,14 @@ function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").repl
 
 /* ---------------------------------------------------------------------------
    THE SHELF — transcribed from lowercarbon.com/companies, read 2026-08-10.
-   `l` is the fund's own one-liner, quoted verbatim. `d` is this page's
-   editorial domain. `prof` marks a diligence card below; `atlas` marks
-   presence in collapse-data.v2.js (verified by the crosswalk gate).
+   `l` is the fund's own tagline, quoted verbatim. `d` is this page's
+   editorial domain (soft by construction — see the grouping-honesty note).
+   `prof` marks a diligence card below; `atlas` marks presence in
+   collapse-data.v2.js (scope-checked by the crosswalk gate).
+   Count asserted at load: 101 companies + 2 nonprofits.
    --------------------------------------------------------------------------- */
 var DOMAINS = {
-  carbon:"carbon removal, utilization & MRV",
+  carbon:"carbon & methane — removal, utilization, abatement & MRV",
   power:"power, grid, storage & solar",
   fusion:"fusion",
   industry:"industry, materials & minerals",
@@ -600,170 +733,258 @@ var SHELF = [
  {n:"Carbon180",l:"Carbon's very own think tank",d:"np"},
  {n:"CarbonPlan",l:"The cutting-edge of carbon removal science",d:"np"}
 ];
-/* The transcription total must match the fund page: 101 companies + 2
-   nonprofits — verified at build time; the eyebrow renders the live count. */
 
 /* ---------------------------------------------------------------------------
-   THE CARDS — eight diligence profiles. `spans` are this page's editorial
-   subsystem TRL spans (basis in `basis`); band = floor(midpoint(min,max)),
-   self-checked at load. Facts carry dates inline. `q` = critical technical
-   questions in priority order — the posting's core deliverable.
+   THE CARDS — eight diligence profiles under the two-rule frame.
+   `spans` are TECHNICAL subsystem TRL spans only (no cost/finance/adoption
+   smuggling); exactly one span carries `gating:true`. `mid` and `gate` are
+   DECLARED and re-derived at load — a mismatch stamps the card. `gateAxis`
+   names the companion-axis gate where the binding constraint is not a TRL.
+   Every card ends in `kill` (exit condition) and `judge` (capital judgment).
    --------------------------------------------------------------------------- */
 var CARDS = [
+
  {id:"antora",n:"Antora Energy",cat:"thermal storage / industrial heat & power",
-  spans:[{lo:7,hi:8,label:"carbon-block thermal battery system"}],
-  thesis:"Electrons are cheapest when nobody wants them; industrial heat is needed always. Antora buys the first and sells the second from a solid carbon block.",
-  ev:[["2026-05","First commercial-scale deployment — a 5 GWh system of 200+ modules at POET Bioprocessing, Big Stone City, South Dakota — began commissioning."],
-      ["2026-07","$550M Series C co-led by G2 Venture Partners and Eclipse (2026-07-30); ≈$1B total corporate + project financing reported. Commissioning is not yet a delivered operating record."]],
-  basis:"A first commercial-scale system in commissioning at a real industrial host is the definition of TRL 7 crossing to 8; band 7 (7–8 rounds down). Sustained operating data at the host is what 8 requires.",
-  q:[["What is the measured round-trip economics at POET — delivered heat cost per MMBtu across a full season of real charge windows?","Modelled arbitrage spreads and achieved spreads diverge with curtailment patterns, interconnection limits and host demand profiles; one season of meters settles it."],
-     ["What is the degradation and thermal-loss curve of the block-and-insulation system at cycle depth?","Standing losses compound against the arbitrage margin; the cost-reliability tradeoff lives here."],
-     ["Does thermophotovoltaic discharge (heat-to-power) reach useful efficiency at production cost, or is the near-term business heat-only?","Heat-only is a real business but a different multiple; the TPV claim is the step-change and the least-proven subsystem."],
-     ["How replicable is the interconnection + host-siting playbook beyond the first site?","The constraint the whole power domain shares; a 200-module system is also a grid project."]],
-  fail:"Failure mode: spread compression — if curtailed-power windows narrow (more storage on the grid) while standing losses stay fixed, the margin closes from both sides. Cost-reliability tradeoff: oversizing insulation and modules buys reliability at exactly the capital intensity the model needs to avoid.",
-  move:"One full operating year at Big Stone City with metered delivered-heat cost and availability published to buyers — the difference between a commissioned system and a bankable product.",
-  src:"Company release 2026-07-30; Canary Media / Energy-Storage.news, 2026-08."},
+  mid:7,gate:7,gateAxis:"demand-thesis drift (adoption axis)",
+  spans:[{lo:7,hi:8,label:"carbon-block thermal battery system",gating:true},
+         {lo:6,hi:7,label:"TPV heat-to-power product"}],
+  thesis:"Electrons are cheapest when nobody wants them; industrial heat is needed always. Antora buys the first and sells the second from a solid carbon block — and its newest capital reframes the demand thesis around AI-era load growth, which is a different bet than the curtailment story it was founded on.",
+  ev:[["2026-05","POET Big Stone City, SD: the 5 GWh, 200+ module system was commissioned and delivering energy (announced 2026-05-19), construction-to-energy in under 12 months; full operation targeted later in 2026. Commissioned-and-delivering, not yet a season of operating record."],
+      ["2026-07","$550M Series C co-led by G2 Venture Partners and Eclipse (2026-07-30); ≈$1B total corporate + project financing. The round's stated aim: data-center-driven load and a second US manufacturing hub."],
+      ["2023–24","TPV subsystem is further along than commonly assumed: >40% heat-to-electricity efficiency demonstrated, a TPV cell production line in San Jose, a $14.5M ARPA-E SCALEUP award for a combined heat-and-power product, and a 2023 5 MWh Fresno pilot that delivered continuous heat and power."]],
+  basis:"First commercial-scale system commissioned and delivering at a real industrial host: TRL 7 crossing to 8 for the thermal system (gating, band 7). TPV: demonstrated at pilot with a production line running — 6–7, no longer the speculative tail an earlier draft of this card implied. Midpoint band 7; gating band 7; in-window under both rules.",
+  ref:"Reference class: Rondo Energy and Malta (non-portfolio thermal storage; no public delivered-cost curves there either). Inside the book, Base Power, Storio and Fuse are building the storage that narrows Antora's charge windows — see §P5 read 2.",
+  q:[["What is the measured round-trip economics at POET — delivered heat cost per MMBtu across a full season of real charge windows, against the site's natural-gas counterfactual?","Modelled and achieved spreads diverge with curtailment patterns, interconnection limits and host demand profiles; one season of meters settles what no deck can."],
+     ["What standing loss (%/day) does the block-and-insulation system hold in the field, and at what loss does the required charge-window spread exceed what the served market's price-duration curve provides?","This is the cost-reliability tradeoff as one number; the diligence room should demand the measured curve, not the design curve."],
+     ["What is the module production rate and cost at the current line, and what does the second manufacturing hub assume per module?","A 200+ module system is a manufacturing (MRL) story; TRL says nothing about producing at rate — the Bench's §B2 silence, applied here."],
+     ["Does the data-center demand thesis change the product from arbitraged heat to firm heat-and-power — and does the TPV product carry that at its demonstrated efficiency?","The Series C's own framing shifts the bet; a changed thesis should be priced as changed, not as a bigger version of the old one."]],
+  policy:"ITC/storage-credit exposure and interconnection queue timing on the charging side; demand side now coupled to data-center buildout policy and power-market rules rather than industrial-heat policy alone.",
+  fail:"Failure mode: spread compression from both sides — grid storage (including three sibling portfolio companies) narrows the cheap-power windows while standing losses stay fixed. Cost-reliability tradeoff: oversizing insulation and module count buys reliability at exactly the capital intensity the arbitrage model needs to avoid.",
+  kill:"Kill: a full operating year at Big Stone City cannot price delivered heat below the site's fossil counterfactual without subsidy; or measured standing losses materially exceed the design curve — a physics miss no fleet scale repairs.",
+  move:"One full operating year at POET with metered delivered-heat cost and availability disclosed to buyers — the difference between a commissioned system and a bankable product.",
+  judge:"Underwritable as an industrial-heat growth position conditional on one season of metered spread capture; the TPV product is a real option (demonstrated, production line running) but not the case. Price the demand-thesis drift explicitly: curtailment arbitrage and AI-load firm supply are different businesses with different power-price exposures, and the round was raised on the second.",
+  src:"Antora/POET releases 2026-05-19, 2026-07-30; Canary Media; Energy-Storage.news; Contrary Research; ARPA-E SCALEUP."},
 
  {id:"twelve",n:"Twelve",cat:"CO₂ electrolysis → synthetic aviation fuel",
-  spans:[{lo:7,hi:8,label:"first commercial plant operating"},{lo:5,hi:6,label:"economics at scale vs HEFA/fossil floor"}],
-  thesis:"CO₂ electrolysis is real chemistry with a real first plant; the diligence question is whether e-fuel unit economics clear a market that has cheaper decarbonization rungs below it.",
+  mid:7,gate:7,gateAxis:"adoption/policy (45Z) — moved backwards in 2025",
+  spans:[{lo:7,hi:8,label:"first commercial plant (AirPlant One)",gating:true}],
+  thesis:"CO₂ electrolysis is real chemistry with a real first plant — and a demand case that a policy change just repriced. The technology band is 7; the axis that gates the company is adoption, and in 2025 it moved the wrong way.",
   ev:[["2024-09","$645M announced, led by TPG Rise Climate, including up to $400M project equity for future AirPlants."],
-      ["2026-06","AirPlant One (Moses Lake, WA) opened 2026-06-10 — the first commercial-scale US E-Jet facility, ≈50,000 gal/yr; Alaska Airlines / IAG offtakes, Microsoft partnership."]],
-  basis:"An operating first commercial plant is TRL 7–8 for the plant subsystem; but at ≈50,000 gal/yr the scale-economics subsystem is still pilot-grade — the honest spread is wide, and the band (6) is the floor of the midpoint, same rule as the atlas's microbial-electro entry. The spread, not the band, is the finding.",
-  q:[["What is the all-in production cost per gallon at AirPlant One, and what fraction is electricity?","E-fuels are congealed electrons; if power is >60% of cost, the roadmap is a power-price bet wearing a chemistry badge."],
-     ["What are stack lifetime, degradation rate and replacement cost at continuous industrial duty?","Electrolyzer capex amortization is the second-largest term and the least public."],
-     ["Where does biogenic CO₂ supply at scale come from, at what price, with what accounting?","Feedstock CO₂ purity, price and provenance set both economics and the lifecycle claim buyers pay the premium for."],
-     ["What premium will aviation actually clear once SAF mandates bind — and does e-fuel compete with HEFA or with compliance penalties?","The demand side decides whether the cost curve has to reach fossil parity or only mandate parity."]],
-  fail:"Failure mode: the plant works and the product doesn't clear — chemistry succeeds, willingness-to-pay fails. Cost-reliability tradeoff: running stacks hard lowers capex per gallon and shortens stack life; the optimum is an operating-data question no model settles.",
-  move:"A second AirPlant reaching financial close on the strength of AirPlant One's disclosed operating cost — project equity converting to project finance is this category's rung 8→9.",
-  src:"PRNewswire 2024-09-19; company release / ESG Dive / SAF Investor, 2026-06."},
+      ["2025-12","Reduction in force reported 2025-12-23, tied to the rollback of SAF incentives (H.R.1 cut the SAF-specific 45Z advantage, Oct 2025) and the difficulty of completing the first commercial facility."],
+      ["2026-06","AirPlant One (Moses Lake, WA) opened 2026-06-10 — the first commercial-scale US E-Jet facility, ≈50,000 gal/yr, ASTM-certified fuel; Alaska Airlines / IAG offtakes, Microsoft partnership. A year later than once expected."]],
+  basis:"An operating first commercial plant is TRL 7–8 for the plant subsystem (gating, band 7): both rules agree, in-window. The scale economics are not banded as a TRL — that would smuggle cost into a demonstration axis (the Bench's §B2 rule); they gate on the adoption axis instead, and the atlas's category hedge is carried, not dropped: E-Jet recycles carbon into fuel that is burned — abatement, not permanent removal, unless paired with sequestration.",
+  ref:"Reference class: LanzaJet (alcohol-to-jet, in the same atlas category via LanzaTech), HEFA producers at the cost floor, Infinium (non-portfolio e-fuels). The category question is whether e-SAF competes with HEFA, with mandates, or with compliance penalties.",
+  q:[["What is the all-in cost per gallon at AirPlant One, what fraction is electricity, and at what power price does it clear the post-45Z demand case?","E-fuels are congealed electrons; if power is >60% of cost the roadmap is a power-price bet wearing a chemistry badge — and the policy leg of the price just moved."],
+     ["What are stack lifetime, degradation and replacement cost at continuous industrial duty?","Electrolyzer capex amortization is the second-largest term and the least public; running stacks hard trades $/gal against stack life, and the optimum is an operating-data question."],
+     ["Where does biogenic CO₂ at scale come from, at what price, with what accounting?","Feedstock purity, price and provenance set both the economics and the lifecycle claim the premium is paid for."],
+     ["After H.R.1, what demand exists at mandate parity rather than fossil parity — which mandates (EU ReFuelEU, UK SAF) bind for a US plant's offtake, and at what implied $/gal?","The card's capital question: the December reduction in force is the company answering it under duress."]],
+  policy:"The card's defining exposure, realized: H.R.1 (Oct 2025) cut the SAF-specific 45Z advantage; the December 2025 reduction in force cited exactly this. EU/UK mandates are now the demand floor for US e-SAF — a policy analysis, not a market one.",
+  fail:"Failure mode realized in part: the plant works and the domestic policy demand-leg was cut before scale. Remaining: stack economics at duty, and whether project equity for AirPlant Two survives a mandate-parity-only case.",
+  kill:"Kill: AirPlant One's cost per gallon cannot reach the post-45Z clearing price at any power price at or below the best contracted US clean PPA; or stack replacement economics at continuous duty consume the margin at mandate-parity prices.",
+  move:"AirPlant Two reaching financial close on AirPlant One's disclosed operating record under post-45Z demand assumptions — project equity converting to project finance in the policy environment that exists, not the one the 2024 round assumed.",
+  judge:"Not underwritable as a growth position on the current public record: plant opened, policy leg cut, force reduced citing exactly that. The diligence-room question is singular — does the next plant's project equity survive a mandate-parity demand case with disclosed AirPlant One costs? Until that answer exists, this is a milestone-financed position, not a growth check.",
+  src:"TPG release 2024-09-19; E&E News/Politico 2025-12-23; CATF 2025-10; PRNewswire / GreenAir News 2026-06."},
 
  {id:"electra",n:"Electra",cat:"low-temperature iron electrowinning",
-  spans:[{lo:6,hi:7,label:"demonstration plant scale"}],
-  thesis:"Steel's emissions are the blast furnace's, and the blast furnace is really an iron problem. Electra plates high-purity iron from ore in acid at low temperature — intermittency-tolerant, ore-flexible, and sized to slot into the existing EAF steel value chain.",
-  ev:[["2025-04","$186M Series B co-led by Capricorn Investment Group and Temasek (total then $214M); strategic investors across the ore-to-steel chain: BHP, Rio Tinto, Nucor, Roy Hill, Toyota Tsusho."],
-      ["2026-03","$30M J.P. Morgan venture debt; $50M Breakthrough Energy Catalyst award; Colorado's inaugural $8M clean-industry tax credit. Jefferson County, CO demonstration plant slated for operations mid-2026 at up to 500 t/yr; agreements with Meta and Nucor."]],
-  basis:"Pilot demonstrated, demonstration plant commissioning, first commercial facility in planning: TRL 6–7, band 6. The strategic cap table (miners + steelmakers on both ends) is diligence signal — the value chain has looked and stayed.",
-  q:[["What current density and cell-level energy consumption (kWh/t iron) does the demo plant sustain, and how does it degrade with real (impure) ores?","The pitch is ore flexibility; electrowinning economics are exquisitely sensitive to solution chemistry, and lab ore is not Pilbara fines."],
-     ["What is the anode/electrode lifetime and replacement economics at production current?","The classic hidden opex of every electrochemical route on this site — cement, MES, DAC alike."],
-     ["Does intermittency-tolerance survive contact with plant economics?","Load-following is claimed as a feature; capital sitting idle in cheap-power gaps is still capital. What utilization does the model need?"],
-     ["What does the iron cost per tonne have to be for an EAF operator to switch, and what does the demo plant project at commercial scale?","Nucor at the table suggests the answer is known internally; it is not public."]],
-  fail:"Failure mode: energy-per-tonne creep with real ores pushes cost above the green-premium DRI alternatives (H₂-DRI) at exactly the moment green-steel premiums are policy-soft. Cost-reliability tradeoff: chasing cheap intermittent power versus paying for firm power is the entire operating model — the same electron exposure as the rest of the window.",
-  move:"The Colorado plant hitting its 500 t/yr with disclosed kWh/t and uptime on at least two commercially relevant ore feeds — the number that converts strategic interest into a first commercial financing.",
-  src:"GlobeNewswire 2025-04-24 and 2026-03-10; Canary Media coverage."},
+  mid:6,gate:6,gateAxis:"—",
+  spans:[{lo:6,hi:7,label:"demonstration plant (500 t/yr)",gating:true}],
+  thesis:"Steel's emissions are the blast furnace's, and the blast furnace is really an iron problem. Electra plates high-purity iron from ore in acid at low temperature — ore-flexible, intermittency-tolerant, sized to slot into the EAF value chain. The cap table holds the ore majors on one end and steelmakers on the other; the record still lacks the one number that would justify the crowd.",
+  ev:[["2025-04","$186M Series B co-led by Capricorn Investment Group and Temasek (total then $214M); strategics across the ore-to-steel chain: BHP, Rio Tinto, Nucor, Roy Hill, Yamato Kogyo, Toyota Tsusho, INTERFER."],
+      ["2025-10","Demonstration facility (130,000 sq ft, Jefferson County, CO) unveiled 2025-10-21, with the $50M Breakthrough Energy Catalyst award, Colorado's inaugural $8M clean-industry tax credit — and two different kinds of purchase agreement, kept distinct: Meta is buying environmental attribute certificates (the first EAC sale in green iron); Nucor, Toyota Tsusho and INTERFER hold advance purchase agreements for the iron itself (qualification volumes)."],
+      ["2026-03","$30M J.P. Morgan venture debt (2026-03-10) — toward the first commercial facility, not the demo plant. Demo operations from mid-2026, fully operational Q3 2026, up to 500 t/yr."]],
+  basis:"Pilot demonstrated, demonstration plant commissioning, first commercial facility in planning: TRL 6–7, band 6 under both rules — the only card where the two rules and the atlas's cement-steel category band all agree without argument.",
+  ref:"Reference class in the data layer: Boston Metal (molten oxide electrolysis, >$500M raised, 1+ ton pilot — higher temperature, further from market on iron). Outside the book: H₂-DRI routes (Stegra) at green-premium economics, and DR-grade pellet + EAF as the parity target.",
+  q:[["What cell-level energy consumption (kWh/t iron) does the demo plant sustain on commercially relevant ores — and at what kWh/t and power price does Electra iron reach parity with DR-pellet + EAF?","State the number. Strategic presence is not evidence: the value chain has looked and stayed, but a growth check priced on the crowd's inference is a momentum trade in diligence costume."],
+     ["What is anode and electrode lifetime at production current density in acid service, and its replacement economics?","The classic hidden opex of every electrochemical route on this site — cement, MES, DAC alike."],
+     ["Does intermittency-tolerance survive plant economics — what utilization does the model need, and what does load-following do to cell life?","Capital idle in cheap-power gaps is still capital; the claimed feature has a utilization price."],
+     ["Does plated iron qualify in partner EAFs across at least two real ore feeds at spec?","Ore flexibility is the pitch; electrowinning is exquisitely sensitive to solution chemistry, and lab ore is not Pilbara fines."]],
+  policy:"Green-steel procurement is policy-soft in the US; the Meta EAC purchase is a voluntary-market first whose replicability is untested. Colorado's credit and the BE Catalyst award are committed; no federal dependence on the Sublime/Brimstone pattern.",
+  fail:"Failure mode: energy-per-tonne creep on real ores pushes cost above green-premium DRI alternatives exactly when green-steel premiums are policy-soft. Cost-reliability tradeoff: chasing cheap intermittent power versus paying for firm power is the operating model itself.",
+  kill:"Kill: demo-plant kWh/t on commercially relevant ores implies parity requires a power price below any contracted US industrial PPA; or plated iron fails EAF qualification on two of three partner feeds at production current density.",
+  move:"The Colorado plant fully operational (Q3 2026) publishing sustained kWh/t and uptime on at least two commercial ore feeds — the number that converts the strategic crowd into evidence.",
+  judge:"Watchlist-to-underwritable: unusual two-sided value-chain de-risking (ore majors in, steelmakers out, a first-of-kind EAC monetization layer), but the public record still lacks sustained kWh/t on real ore. Price the round as if parity requires the number, not the crowd — and structure the growth check on the Q3 2026 demo disclosures.",
+  src:"GlobeNewswire 2025-04-24, 2025-10-21, 2026-03-10; Latitude Media; Canary Media; Fastmarkets."},
 
  {id:"zanskar",n:"Zanskar",cat:"AI-led geothermal exploration & development",
-  spans:[{lo:7,hi:8,label:"exploration/discovery platform"},{lo:5,hi:6,label:"power-plant development"}],
-  thesis:"Geothermal's binding constraint was never the turbine, it was discovery risk. If AI-guided exploration reliably finds blind systems, the resource stops being a lottery — and the proof is drilled, not modelled.",
-  ev:[["2025-12","'Big Blind' announced — reported as the first blind geothermal system discovered and confirmed commercial by US industry in over 30 years: ≈250°F permeable reservoir at ≈2,700 ft, confirmed by two wells drilled Jul–Aug 2025."],
-      ["2026-01","$115M Series C led by Spring Lane Capital (≈$180M total equity); six 20-MW plants in development; reported control of sites totalling >700 MW potential."]],
-  basis:"The discovery platform has done the one thing that validates it — found a blind system confirmed by drilling — which is TRL 7–8 for that subsystem. Plant development is at 5–6: pipeline, not powerplants. Band 6 on the full 5–8 span, and the split is the point: this is a company whose two halves sit on opposite sides of the growth window.",
-  q:[["What is the platform's hit rate — wells drilled versus commercial confirmations — across the full exploration campaign, not the announced wins?","One confirmed blind system is an existence proof; underwriting needs the denominator. Survivorship is the failure mode of every exploration story."],
-     ["Do the six 20-MW plants pencil at hydrothermal drilling costs, and what temperature/flow do they need at the wellhead?","Conventional-depth hydrothermal at 250°F is a different (cheaper, proven) machine than EGS — that is the de-risked part; the project returns still turn on flow rates."],
-     ["Who bears drilling risk in the project structure — the company, project equity, or an insurance layer?","The answer determines whether the venture is a data company, a developer, or an underwriter of its own model."],
-     ["How does the platform's edge decay as public geophysical data and competitors' AI catch up?","Moat question, but with a technical core: is the edge the model, the proprietary data, or the land position it already converted?"]],
-  fail:"Failure mode: the platform finds heat but not permeability — geothermal's oldest disappointment — and the pipeline's economics die at the flow test. Cost-reliability tradeoff: drilling more confirmation wells buys certainty at the cost that makes projects unfinanceable; the platform's whole value claim is shrinking that spend.",
-  move:"Financial close and construction start on the first of the six plants at a disclosed resource-confirmation cost per MW meaningfully below industry precedent — the discovery edge showing up as a capital-cost line, not a press release.",
-  src:"GlobeNewswire 2026-01-21; Latitude Media / Heatmap, 2026-01; discovery release 2025-12."},
+  mid:6,gate:5,gateAxis:"—",
+  spans:[{lo:6,hi:7,label:"exploration/discovery platform (numerator only)"},
+         {lo:5,hi:6,label:"power-plant development",gating:true}],
+  thesis:"Geothermal's binding constraint was never the turbine, it was discovery risk. Zanskar has one drilled proof that its platform finds blind systems — a numerator with no disclosed denominator — attached to a six-plant developer that hasn't built a plant. Two companies share one cap table, and they sit on opposite sides of the growth window.",
+  ev:[["2025-12","'Big Blind' announced 2025-12-04 — reported as the first blind geothermal system discovered and confirmed commercial by US industry in over 30 years: ≈250°F permeable reservoir at ≈2,700 ft, western Nevada, confirmed by two wells drilled Jul–Aug 2025; analogous systems reported to support >100 MWe."],
+      ["2026-01","$115M Series C led by Spring Lane Capital (2026-01-21; ≈$180M total equity, oversubscribed); six 20-MW plants in development targeting commercial operations in 3–4 years; reported control of sites totalling >700 MW potential."]],
+  basis:"The discovery platform did the one thing that validates it — but one announced win with no disclosed campaign record is a numerator, and this card's own Q1 warns against banding on numerators: hedged to 6–7, not 7–8. Development is 5–6 (gating): pipeline, not powerplants. Midpoint rule: band 6, in-window. Gating rule: band 5, below it. The distance between the markers is the finding — a growth check here underwrites the developer, and the developer is pre-FOAK.",
+  ref:"Reference class: Fervo (the Bench's §9a) is geothermal's bankability yardstick — non-recourse project debt, contracted PPAs, an IPO. The distance between Zanskar and that yardstick is the whole diligence. Legacy exploration hit rates are the base rate the platform must beat, and they are not public either.",
+  q:[["What is the platform's full campaign record — wells and sites attempted versus commercial confirmations — not the announced wins?","One confirmed blind system is an existence proof; underwriting needs the denominator. Survivorship is the failure mode of every exploration story, including this card if it isn't careful."],
+     ["Do six 20-MW plants pencil at hydrothermal drilling costs — what wellhead temperature and flow does the pro forma need, and what did Big Blind's two wells actually flow?","Conventional-depth hydrothermal at 250°F is the cheap, proven machine (that is the de-risked part); project returns still die at the flow test."],
+     ["Who bears drilling risk in the project structure — company balance sheet, project equity, or an insurance layer — and at what cost of capital?","The answer determines whether this is a data company, a developer, or an underwriter of its own model."],
+     ["What is the resource-confirmation cost per MW on the pipeline, against industry precedent?","The platform's entire value claim is shrinking this line; it should be a disclosed number by the first financial close."]],
+  policy:"Geothermal enjoys rare bipartisan support and ITC eligibility; interconnection queues and transmission siting are the schedule risk. No federal-grant dependence in the public record.",
+  fail:"Failure mode: the platform finds heat but not permeability — geothermal's oldest disappointment — and the pipeline's economics die at the flow test. Cost-reliability tradeoff: more confirmation wells buy certainty at the cost that makes projects unfinanceable; the platform's value claim is shrinking exactly that spend.",
+  kill:"Kill: the full drilled record shows a commercial-confirmation rate indistinguishable from legacy exploration; or the first plant's confirmed flow rates cannot support a financeable PPA at hydrothermal drilling costs.",
+  move:"Financial close and construction start on plant one at a disclosed resource-confirmation cost per MW meaningfully below precedent — the discovery edge showing up as a capital-cost line, not a press release.",
+  judge:"Below the window on this page's gating rule, and honestly so: a growth check underwrites the six-plant developer (TRL 5–6, pre-FOAK), not the platform's one proof. The honest growth entry is structured on disclosure of the full hit-rate record — the platform's real asset — with Fervo's bankability sequence as the milestone map. As an exploration-data position it is earlier and more interesting than its Series C framing.",
+  src:"GlobeNewswire 2025-12-04, 2026-01-21; Canary Media; Latitude Media; Heatmap."},
 
  {id:"heirloom",n:"Heirloom Carbon",cat:"DAC — accelerated limestone mineralisation",
-  atlasCat:"dac",
-  spans:[{lo:6,hi:7,label:"mineralisation-loop DAC"}],
-  thesis:"The cheapest sorbent is a rock. Heirloom's bet is that limestone's kinetics can be accelerated enough that the sorbent cost DAC competitors carry disappears into a quarry invoice — and the fund co-led its Series B, so this card is diligence on a conviction already expressed.",
-  ev:[["2024-12","$150M Series B co-led by Future Positive and Lowercarbon Capital — the atlas's own badged entry — bringing cumulative capital above $200M."],
-      ["2026-07","Atlas record: two Louisiana plants planned at ≈320,000 t/yr combined; Microsoft offtake up to 315,000 t; DOE support for Project Cypress hit by the Oct 2025 rescissions (initial ≈$50M tranche), partial preservation reported 2026. Planned, not built — the badge discipline matters here."]],
-  basis:"The atlas's Bench places the mineralisation-loop route at TRL 6–7 inside a category banded 7: band 6 for the company-specific subsystem. Every figure in this card carries the atlas's badge vocabulary; nothing announced is treated as delivered.",
-  q:[["What cycle time and CO₂-uptake capacity does the calcium looping actually sustain outdoors, at seasonal humidity and temperature swings?","The accelerated-weathering claim is a kinetics claim; field kinetics decide the land and handling footprint per tonne."],
-     ["What is the delivered cost of the calcination step's heat, and is it electric at scale?","Calcination is the process's energy core and its residual emissions risk; the sub-$100/t target lives or dies here."],
-     ["How does the Louisiana buildout survive the DOE funding whiplash — what is the capital plan with and without restored federal support?","The atlas records the rescission as live policy risk; the diligence question is which milestones are policy-independent."],
-     ["What does the Microsoft offtake pay per tonne, and what cost does the first plant have to hit for positive unit margin?","Offtake price vs delivered cost is the whole bridge from TRL 7 to a fundable fleet."]],
-  fail:"Failure mode: field cycle-time degradation quietly multiplies land, handling and heat per tonne — a kinetics shortfall that looks like an opex problem. Cost-reliability tradeoff: faster cycles need hotter, more frequent calcination; the energy bill and the cost target pull in opposite directions.",
-  move:"First Louisiana plant delivering registry-verified tonnes at a disclosed cost trajectory — converting the best-badged offtake book in DAC into the category's missing evidence: delivered volume.",
-  src:"collapse-data.v2.js (dac entry, badges preserved); research synthesis July 2026."},
+  atlasCat:"dac",mid:6,gate:6,gateAxis:"cost (≈10× target) + policy",
+  spans:[{lo:6,hi:7,label:"mineralisation-loop DAC (operating at 1,000 t/yr)",gating:true}],
+  thesis:"The cheapest sorbent is a rock. Heirloom runs America's first commercial DAC facility and holds the category's best demand book — and a growth check here underwrites the 100× scale-up, which is a different object than the plant that exists. The fund co-led the Series B, so this card is diligence on a conviction already expressed.",
+  ev:[["2023-11","Tracy, CA: America's first commercial DAC facility, operating since Nov 2023 — ≈1,000 t/yr, renewables-powered, CO₂ mineralized into concrete via CarbonCure, delivered removals to buyers including Microsoft, Stripe, Shopify and Klarna. An earlier draft of this card omitted the operating plant entirely; it is the company's strongest fact."],
+      ["2024-12","$150M Series B co-led by Future Positive and Lowercarbon Capital (the atlas's own badged entry); cumulative capital above $200M; new investors incl. JAL, Mitsubishi, Siemens FS."],
+      ["2025-02","United Airlines Sustainable Flight Fund invested, with a right to purchase up to 500,000 t — a second blue-chip demand relationship alongside Microsoft's offtake of up to 315,000 t (2023-09)."],
+      ["2025-10","DOE whiplash, stated precisely: Project Cypress's initial ≈$50M tranches appeared on a termination list in Oct 2025; termination letters were never sent, and the DAC-hub projects were subsequently told they could proceed (reported late 2025–2026). Louisiana plants (≈320,000 t/yr combined) remain planned, not built."]],
+  basis:"An operating 1,000 t/yr commercial facility earns the top of the 6–7 span; the 100×-scale Louisiana buildout is unbuilt, so the span does not round up (house rule). Band 6 under both rules — in-window on demonstration, gated on the cost axis: the atlas's category anchors are ≈$600–1,000/t against a ≈$100/t target, and ≈1,186 t delivered by the entire DAC sector since 2023.",
+  ref:"Reference class: inside the category, Climeworks (Mammoth, 36,000 t/yr design, ≈81% of all DAC delivered, >10% layoffs 2025) and 1PointFive/Stratos (500,000 t/yr design, Occidental-owned). Inside the book: five earlier-stage DAC bets (Verdox, Noya, Carbyon, Clairity, Carbon Engineering's technology legacy) — Heirloom is the cluster's delivered-evidence leader.",
+  q:[["What cycle time and CO₂ uptake does the limestone loop sustain outdoors across seasons at Tracy — and what do those field kinetics imply for land, handling and heat per tonne at Louisiana scale?","The accelerated-weathering claim is a kinetics claim; two years of field data now exist and should be the diligence room's first request."],
+     ["What is the delivered cost per tonne at Tracy today, and the disclosed trajectory to the sub-$100/t target — with the calcination heat source named at each step?","Calcination is the energy core and the residual-emissions risk; the category anchor says the gap is ≈10×, and no offtake book closes a cost gap."],
+     ["What does the Louisiana capital plan look like with and without federal support — which milestones are policy-independent?","The Oct 2025 scare resolved favorably but demonstrated the dependence; the 2026 FOAK discriminant (§P5 read 5) was committed capex."],
+     ["What do the Microsoft and United agreements pay per tonne, and what delivered cost makes the first Louisiana plant gross-margin positive?","Offtake price versus delivered cost is the entire bridge from an operating 1,000 t/yr plant to a fundable fleet."]],
+  policy:"Live and demonstrated: DAC-hub funding slated for termination then preserved (2025–26). 45Q credit mechanics and hub cost-share are the swing terms in any Louisiana pro forma.",
+  fail:"Failure mode: field cycle-time degradation quietly multiplies land, handling and heat per tonne — a kinetics shortfall that presents as an opex problem at 100× scale. Cost-reliability tradeoff: faster cycles need hotter, more frequent calcination; the energy bill and the cost target pull opposite ways.",
+  kill:"Kill: Tracy field data shows no credible path below mid-hundreds $/t after the next design iteration; or the financed Louisiana scope slips again while Tracy kinetics hold — the sign the gap is chemistry-at-scale, not finance.",
+  move:"First Louisiana plant delivering registry-verified tonnes at a disclosed cost trajectory — converting the category's best demand book into the thing the whole category lacks at scale: delivered volume with a falling cost curve.",
+  judge:"The strongest delivered-evidence position in the fund's six-company DAC cluster: an operating commercial plant with verified removals while the sector total delivered is ≈1,186 t. Conditional underwrite: in-window on demonstration, gated on cost — and the growth check buys the 100× scale-up, whose pro forma is policy-entangled in exactly the way 2025 demonstrated. The demand book (Microsoft + United) is the category's best and does not resolve the cost axis.",
+  src:"Businesswire 2023-11-09, 2024-12-04; PRNewswire 2025-02; MIT Tech Review 2025-10; Heatmap; Carbon Herald; collapse-data.v2.js category anchors."},
 
  {id:"sublime",n:"Sublime Systems",cat:"electrochemical cement",
-  atlasCat:"cement-steel",
-  spans:[{lo:6,hi:7,label:"electrochemical cement"}],
-  thesis:"Cement's CO₂ is chemistry, not fuel — so Sublime replaces the kiln reaction itself with a low-temperature electrochemical route. The technology cleared its pilot; what is being diligenced now is a financing structure under live policy fire.",
-  ev:[["2026-07","Atlas record: >$200M raised (strategics: Holcim, CRH, Siam Cement); Microsoft offtake up to 622,500 tonnes; pilot production demonstrated."],
-      ["2025","DOE rescinded the $87M grant — Holyoke first plant paused, 10% layoff. The atlas marks this as the category's defining event: the binding constraint is first-plant finance, not science."]],
-  basis:"The atlas's cement-steel category states TRL 6–7 and bands 6; Sublime is the category's electrochemical-cement row at exactly that stage. Band 6, inside the window — with the caveat that the subsystem holding it there is financial, which is precisely what the posting means by translating technical uncertainty into capital decision implications.",
-  q:[["Which qualification path gets Sublime cement into structural use at volume — ASTM C1157 performance spec adoption, blending, or code-by-code approvals — and on what clock?","Cement is sold into the most conservative procurement chain in construction; qualification pace, not electrochemistry, sets the revenue date."],
-     ["What is the electrolyzer's energy per tonne of cementitious material, and its sensitivity to power price and capacity factor?","Same electron exposure as the rest of the window; cement's margins are thin enough that power price is existential."],
-     ["What does the Holyoke restart require — restored federal award, strategic capital from the cap table's cement majors, or offtake-backed debt?","Three different companies result. The strategics' willingness to fund the plant they'll one day license is the sharpest single diligence signal available."],
-     ["Does the process tolerate commodity feedstock variability at spec?","'True-zero' from non-carbonate feedstocks is the differentiator; feedstock logistics at plant scale is where it gets tested."]],
-  fail:"Failure mode: the qualification clock and the capital clock miss each other — the plant needs offtake-scale demand to finance, and offtake-scale demand needs plant-scale supply to qualify. Cost-reliability tradeoff: conservative (blended, spec-safe) product reaches market sooner at lower green premium; pure-play true-zero cement carries the full premium and the full qualification risk.",
-  move:"Financial close on the paused first plant, from any of the three sources — the atlas's own de-risking benchmark for the category ('awards restored or private offtakes cover the financing gap').",
-  src:"collapse-data.v2.js (cement-steel entry); research synthesis July 2026."},
+  atlasCat:"cement-steel",mid:6,gate:6,gateAxis:"FOAK finance — the realized gate",
+  spans:[{lo:6,hi:7,label:"electrochemical cement (pilot demonstrated)",gating:true}],
+  thesis:"Cement's CO₂ is chemistry, not fuel — Sublime replaces the kiln reaction with a low-temperature electrochemical route. The technology cleared its pilot; the first plant is paused on a rescinded grant. The TRL is not the risk here, and this card refuses to pretend it is: the gate is finance, labeled as finance.",
+  ev:[["2025-05","Microsoft binding offtake up to 622,500 t (2025-05-22), tied to Holyoke and a subsequent full-scale plant; >$200M raised with cement majors (Holcim, CRH, Siam Cement) as strategics."],
+      ["2025-06","DOE canceled the $87M grant (reported June 2025)."],
+      ["2025-12","Holyoke first plant — ≈30,000 t/yr design, kiloton-scale — construction paused with ~10% layoffs (2025-12-04)."],
+      ["2026-08","Status as of this page's date: still paused; company states it is pursuing multiple avenues to backfill the funding and working alternative scale-up plans. No financing close found."]],
+  basis:"Pilot production demonstrated, first plant designed and permitted but paused: TRL 6–7, band 6 under both rules — matching the atlas's category band. The pause does not lower the TRL (a paused financing is not a demonstration failure — the Bench's §B2 rule cuts both ways); it defines the companion-axis gate.",
+  ref:"Reference class in the data layer: Brimstone (lost a $189M DOE award the same year; different chemistry, same financing wall) and Boston Metal (same electrochemical family in steel). The de-risking benchmark is the atlas's own: awards restored or private offtakes covering the gap.",
+  q:[["Which qualification path gets Sublime cement into structural use at volume — ASTM C1157 performance-spec adoption, blending, or code-by-code approvals — and on what clock relative to the financing clock?","Cement is sold into construction's most conservative procurement chain; qualification pace, not electrochemistry, sets the revenue date — and the two clocks are now racing."],
+     ["What is the electrolyzer's energy per tonne of cementitious material and its sensitivity to power price and capacity factor?","Thin-margin commodity plus electron-denominated opex: the same exposure as half this page, in the least forgiving end market."],
+     ["What does the Holyoke restart actually require — restored award, strategic capital from the cement majors on the cap table, or offtake-backed debt — and what has each party said?","Three different companies result. The strategics' willingness to fund the plant they may one day license is the sharpest single diligence signal available."],
+     ["At ≈30,000 t/yr, Holyoke covers under 5% of the Microsoft offtake ceiling — what full-scale plant does the offtake actually assume, at what capex?","The offtake's scale reveals the real ask: Holyoke is the qualification vehicle, not the business."]],
+  policy:"The card's realized risk: $87M rescinded, plant paused, layoffs — the data layer's cement-steel entry marks the category's binding constraint as first-plant finance, and 2025 proved it on this company.",
+  fail:"Failure mode: the qualification clock and the capital clock miss each other — offtake-scale demand needs plant-scale supply to qualify, and the plant needs the demand to finance. Cost-reliability tradeoff: blended spec-safe product reaches market sooner at lower premium; pure-play true-zero carries the full premium and the full qualification risk.",
+  kill:"Kill: no financing close before the Microsoft offtake's Holyoke-linked milestones lapse; or qualification stalls at blended-use only, capping the premium the offtake was priced on.",
+  move:"Financial close on the paused plant from any of the three sources — the atlas's stated de-risking benchmark, functioning here as the term sheet.",
+  judge:"The technology band (6) is not the open question; capital formation is. Not underwritable as a conventional growth equity check today — underwritable as a structured position tied to the restart trigger, with the cement-major strategics' behavior as the live signal. If the strategics won't bridge their own future licensor, that is the diligence answer.",
+  src:"S&P Global 2025-12-11; Rep. Neal 2025-06-09; Markey statement; Businesswire 2024-01-09; Boston Real Estate Times; collapse-data.v2.js."},
 
  {id:"charm",n:"Charm Industrial",cat:"bio-oil geological injection (+ biochar)",
-  atlasCat:"biochar",
-  spans:[{lo:7,hi:8,label:"bio-oil injection CDR"}],
-  thesis:"Pyrolyze waste biomass into a carbon-dense liquid and pump it into wells that held oil for millions of years. Delivery-first CDR: small tonnes, real injections, growing buyer book.",
-  ev:[["2026-07","Atlas record: ≈$130M raised (cumulative, announced); Google deals including 100,000 tonnes of biochar (2025); operating deliveries since 2021 within the most-delivered durable-CDR category."]],
-  basis:"Commercial operations at modest scale within the atlas's TRL-8-banded biochar category, with the company-specific injection route slightly behind stationary biochar in operating history: TRL 7–8, band 7.",
-  q:[["What is the delivered cost per tonne today, and what does the learning curve claim per doubling of mobile-pyrolyzer fleet?","Distributed hardware fleets live or die on unit-cost curves; the fleet's real curve is the underwriting."],
-     ["What is the bio-oil's long-term phase behaviour in the injection formation, and what does the registry's permanence case rest on?","Injected bio-oil permanence is geologically argued rather than centuries-observed; the assurance question is this category's recurring one (the Bench's H6 in a different formation)."],
-     ["What is the sustainable feedstock radius economics — how far can residues travel before hauling eats the margin?","The atlas names biomass availability as the biochar category's hard ceiling; for mobile pyrolysis the ceiling is a radius."],
-     ["How does the buyer book concentrate — what fraction of forward volume is the top three buyers?","Frontier-era CDR demand is blue-chip but narrow; concentration is the demand-side risk badge."]],
-  fail:"Failure mode: unit costs plateau above the price the post-Frontier buyer pool will pay, leaving a working technology inside a market too thin to scale it. Cost-reliability tradeoff: mobile units chase cheap distributed feedstock at reliability cost; centralized plants invert the tradeoff and inherit the hauling bill.",
-  move:"A disclosed delivered-cost trajectory across fleet doublings, verified against registry issuances — the curve, not any single delivery, is what a growth check underwrites.",
-  src:"collapse-data.v2.js (biochar entry); research synthesis July 2026."},
+  atlasCat:"biochar",mid:7,gate:6,gateAxis:"—",
+  spans:[{lo:7,hi:8,label:"bio-oil injection operations"},
+         {lo:6,hi:7,label:"permanence & verification layer",gating:true}],
+  thesis:"Pyrolyze waste biomass into a carbon-dense liquid and pump it into formations that held oil for geological time. Delivery-first CDR with the receipts to show — verified, dual-protocol, debt-financed by its largest buyer. The gating subsystem is the permanence case, and the referee who signs it is in the same portfolio.",
+  ev:[["2023-05","Frontier $53M offtake for 112,000 t through 2030 — the buyer-book anchor."],
+      ["2024–25","Isometric issued Charm's first verified bio-oil credits (107.21 credits, delivered to JPMorgan, Shopify, Stripe) and later CCP-labeled biochar credits — the only supplier verified under two Isometric protocols. Cumulative deliveries on the order of 6,000–7,200+ t, reported as the most of any permanent-CDR supplier at the time; Google 100,000 t biochar deal (2025-01); Boeing partnership (2025-11)."],
+      ["2026-06","JPMorganChase: 61,500 t purchase plus a $20M debt facility to expand the Colorado facility (2026-06-04), bringing JPM's total with Charm to 90,000 t — buyer capital converting into producer balance sheet, the structure the rest of the window is waiting for."]],
+  basis:"Injection operations are commercial at modest scale: 7–8. The permanence and verification layer — Isometric protocols operating, durability geologically argued rather than centuries-observed — is 6–7, and it gates: every issued tonne is priced on it. Midpoint 7, gating 6, in-window under both rules. ≈$130M raised (atlas record, announced).",
+  ref:"Reference class in the data layer: Exomad Green (stationary biochar at 40×+ Charm's volume, with its own unresolved run-rate conflict) and Vaulted Deep (slurry injection, same referee). Charm's differentiation is the mobile-pyrolysis fleet and the injection route's durability claim.",
+  q:[["What is delivered cost per tonne at the Colorado facility now, and what did the last fleet doubling measurably do to it?","A measured curve, not a claimed one: distributed hardware fleets live or die on unit-cost curves, and the JPM debt facility implies a lender has seen one — the diligence room should see the same one."],
+     ["What monitoring exists on injected bio-oil's phase behaviour in-formation, and what would falsify the immobility case?","Permanence here is geologically argued; the atlas's biochar dossier names per-batch/assurance instrumentation as the category's thin layer, and injection inherits the question in a different formation."],
+     ["What is the sustainable feedstock radius — at what hauling distance does the margin die, and how much residue sits inside it?","The atlas names biomass availability as the category's hard ceiling; for mobile pyrolysis the ceiling is a radius, site by site."],
+     ["What fraction of the forward book is JPMorgan plus the next two buyers — and what does the book look like at post-Frontier prices?","Blue-chip but narrow: the buyer-concentration question, asked with the JPM 90,000 t position on the table."]],
+  policy:"Credit-market integrity policy (ICVCM/CCP labels, buyer-side standards) is the demand-side exposure; no federal grant dependence. The referee-independence question (§P5 read 3) is a policy-like risk specific to this cap table.",
+  fail:"Failure mode: fleet-doubling costs plateau above the post-Frontier clearing price — a working technology inside a market too thin to scale it. Cost-reliability tradeoff: mobile units chase cheap distributed feedstock at reliability cost; centralization inverts the tradeoff and inherits the hauling bill.",
+  kill:"Kill: the measured cost curve flattens above the post-Frontier clearing price for two consecutive fleet doublings; or formation monitoring contradicts the immobility case at any site — which reprices every issued tonne at once.",
+  move:"A disclosed delivered-cost trajectory across fleet doublings, verified against registry issuances — the curve, not any single delivery, is what a growth check underwrites; the JPM facility suggests it exists.",
+  judge:"In-window under both rules and the book's cleanest delivered-evidence-per-dollar position: verified credits, dual protocols, buyer debt. Underwritable on the JPM structure's evidence — with one caveat that belongs in the fund's own risk memo rather than Charm's: the verification layer pricing these tonnes is a sibling portfolio company, and independence between them is a diligence question the fund should be able to answer before an LP asks it.",
+  src:"Charm press 2026-06-04; ESG Dive; Isometric; Frontier 2023-05; TechCrunch 2025-11-14; Contrary Research; collapse-data.v2.js."},
 
  {id:"undo",n:"UNDO",cat:"enhanced rock weathering",
-  atlasCat:"erw",
-  spans:[{lo:5,hi:6,label:"deployment commercial; open-system MRV unsettled"}],
-  outOfWindow:true,
-  thesis:"The deliberate edge case: UNDO's spreading operation would pass a TRL 6–8 screen on sight — trucks, quarries, farms, a Microsoft deal structured with debt. The subsystem that holds it below the window is verification, and knowing that is the point of this card.",
-  ev:[["2025-04","$5M XPRIZE Carbon Removal runner-up (atlas-badged, verified)."],
-      ["2026-07","Atlas record: 28,900-tonne Microsoft deal — the first CDR deal structured with debt capital; category delivered volume runs roughly an order of magnitude behind contracted; CarbonPlan's four-orders-of-magnitude spread on experimental removal estimates stands."]],
-  basis:"The atlas bands the ERW category 5 (TRL 5–6, midpoint rounds down) with open-system MRV named as the binding constraint. UNDO inherits the category band: deployment subsystem 8–9, verification subsystem 3–5 — a company is only as far up the ladder as its gating subsystem. Dashed border on this card's band marks it below the posting's window.",
-  q:[["Whose measurement methodology does UNDO's issuance rest on, and what uncertainty does the registry accept per tonne?","The category's entire capital-decision risk is concentrated in this answer."],
-     ["What does the debt-structured Microsoft deal collateralize — delivery risk or verification risk — and who eats a registry methodology change?","A first-of-kind financing structure is also a first-of-kind risk allocation; the term sheet is the diligence document."],
-     ["What per-tonne MRV cost does the operation carry today, and does it fall with cohort scale (the Bench's H2 mechanism)?","If measurement cost doesn't compress, ERW's economics are a measurement business with a trucking operation attached."]],
-  fail:"Failure mode: a registry tightens tolerance or declines model-based cohort verification, repricing every contracted tonne at once — a policy-like risk with a geochemical core. Cost-reliability tradeoff: denser soil sampling buys credit integrity at a per-tonne cost that scales with exactly the smallholder deployments where the resource is largest.",
-  move:"Model-vs-measured agreement inside registry tolerance across two geographies on issued (not contracted) tonnes — the measurement that moves the whole category, not just this company, into the growth window.",
-  src:"collapse-data.v2.js (erw entry, XPRIZE badge); research synthesis July 2026."}
+  atlasCat:"erw",mid:6,gate:4,gateAxis:"—",
+  spans:[{lo:8,hi:9,label:"deployment (crush, haul, spread)"},
+         {lo:3,hi:5,label:"open-system MRV & issuance",gating:true}],
+  thesis:"UNDO's spreading operation would pass a TRL 6–8 screen on sight — trucks, quarries, 398 farms, a three-deal Microsoft relationship with debt behind it. The subsystem every contracted tonne is priced on is verification, at TRL 3–5. This card prints both readings; the distance between them is the finding.",
+  ev:[["2025-04","$5M XPRIZE Carbon Removal runner-up (atlas-badged: verified)."],
+      ["2025-10","Microsoft deal three: 28,900 t announced 2025-10-21, financed by debt from the Inlandsis Fund — following 5,000 t (2023) and 15,000 t (2024), ≈49,000 t cumulative. The atlas records it as the first debt-structured CDR deal; press calls the financing 'novel' — the superlative is treated with care, and Charm's JPM facility followed within months either way."],
+      ["2026","Deployment scale: >313,800 t of silicate rock spread across 398 farms / 54,400 acres, toward ≈69,000 t of eventual removal. Context that cuts the other way: the industry's first verified ERW credits went to InPlanet (Isometric, Jan 2025) — not UNDO; no UNDO registry issuance at scale found."]],
+  basis:"Both rules, printed: midpoint of the full 3–9 span is 6 — in-window, and an earlier draft of this page buried that. Gating rule: the MRV subsystem (3–5, per the atlas's ERW category whose binding constraint is open-system MRV, with CarbonPlan's four-orders-of-magnitude spread standing) bands 4 — far below the window. The gating rule is the honest one for a company whose forward book is priced entirely on its weakest subsystem; the midpoint rule is the honest one for its physical operation. A diligence page owes the reader both numbers and the reason they differ.",
+  ref:"Reference class in the data layer: Lithos (5,160 registry-certified t — the largest ERW issuance), Terradot (48,000+ t spread, ≈300,000 t contracted incl. Google), Mati (the $50M XPRIZE cohort-MRV model), InPlanet (first verified credits). UNDO leads on rock spread and financing structure, not on issuance.",
+  q:[["Whose measurement methodology does UNDO's future issuance rest on, and what per-tonne uncertainty will the registry accept?","The category's entire capital-decision risk concentrates here; InPlanet's first-issuance precedent defines the bar UNDO hasn't yet cleared publicly."],
+     ["What exactly does the Inlandsis debt collateralize — delivery risk or verification risk — and who absorbs a registry methodology change mid-term?","A novel financing structure is also a novel risk allocation; the term sheet is the diligence document."],
+     ["What is the per-tonne MRV cost today, and does the pooled-cohort model (the Bench's H2 mechanism, with its ≤$15/t validation bar) apply to UNDO's geographies?","If measurement cost doesn't compress, ERW is a measurement business with a trucking operation attached."],
+     ["Of the ≈69,000 t of eventual removal set up by rock already spread, what fraction will a registry issue, and when?","The spread-to-issued conversion rate is the company's real product; ≈49,000 t are already sold against it."]],
+  policy:"Registry and integrity policy is the exposure: a tolerance change reprices the contracted book (and §P5 read 3 notes the fund holds the registry side of this trade too). No government-grant dependence found.",
+  fail:"Failure mode: a registry declines model-based cohort verification or tightens tolerance, restoring per-parcel cost floors and repricing every contracted tonne at once — a policy-like risk with a geochemical core. Cost-reliability tradeoff: denser sampling buys credit integrity at a per-tonne cost that scales with exactly the smallholder deployments where the resource is largest.",
+  kill:"Kill: model-vs-measured divergence lands outside registry tolerance in the first issued cohort; or a registry requires per-parcel measurement for UNDO's geographies — the atlas's H2 kill criterion, applied to the company that most needs H2 to be true.",
+  move:"An issued — not contracted — cohort inside registry tolerance across two geographies. That measurement moves the whole category, not just this company, into the window.",
+  judge:"Not underwritable as a growth position until issuance exists: the contracted book runs ≈49,000 t sold against ≈0 issued, on a subsystem at TRL 3–5, with the sector's four-orders-of-magnitude measurement spread unresolved. The Inlandsis structure transfers verification risk; it does not remove it. The midpoint rule's '6' is real — the physical operation is excellent — and it is exactly the number a growth screen must refuse to buy on its own.",
+  src:"Newswire.ca 2025-10-21; ESG Dive; Regreener 2026; InPlanet/Isometric 2025-01; collapse-data.v2.js (erw entry; XPRIZE badge)."}
 ];
 
 /* ---------------------------------------------------------------------------
-   CONSISTENCY GATES
-   1. band self-check: floor(midpoint) of each card's spans
-   2. crosswalk: every SHELF entry marked `atlas` must occur in the data layer
+   CONSISTENCY GATES — all real: declared values vs. independent derivations.
+   1. shelf count: 101 companies + 2 nonprofits, asserted at load
+   2. card bands: mid = floor(midpoint(full span)); gate = floor(midpoint of
+      the single gating:true span); both compared to declared values
+   3. crosswalk scope: claimed name occurs inside the claimed category's OWN
+      records (intervention entry + its companies + hypotheses referencing it)
    --------------------------------------------------------------------------- */
-function derivedBand(spans){
-  var lo=Infinity,hi=-Infinity;
-  spans.forEach(function(s){ if(s.lo<lo)lo=s.lo; if(s.hi>hi)hi=s.hi; });
-  return Math.floor((lo+hi)/2);
-}
-CARDS.forEach(function(c){ c.band=derivedBand(c.spans); });
+var pageFails=[];
+(function gates(){
+  var np=SHELF.filter(function(c){return c.d==="np";}).length;
+  var cos=SHELF.length-np;
+  if(cos!==101||np!==2) pageFails.push("shelf count drifted: "+cos+" companies + "+np+
+    " nonprofits transcribed; the fund page read 2026-08-10 lists 101 + 2");
+  CARDS.forEach(function(c){
+    var lo=Infinity,hi=-Infinity,g=null;
+    c.spans.forEach(function(s){ if(s.lo<lo)lo=s.lo; if(s.hi>hi)hi=s.hi; if(s.gating)g=s; });
+    var mid=Math.floor((lo+hi)/2);
+    var gate=g?Math.floor((g.lo+g.hi)/2):mid;
+    if(mid!==c.mid) (c.fails=c.fails||[]).push("midpoint band: declared "+c.mid+", derived "+mid);
+    if(gate!==c.gate) (c.fails=c.fails||[]).push("gating band: declared "+c.gate+", derived "+gate);
+    if(c.spans.filter(function(s){return s.gating;}).length!==1)
+      (c.fails=c.fails||[]).push("exactly one span must be marked gating");
+  });
+})();
 
-var DL = window.COLLAPSE_DATA ? JSON.stringify(window.COLLAPSE_DATA) : "";
-var ATLAS_KEYS = {  /* shelf name → string that must occur in the data layer */
-  "Charm":"Charm Industrial", "Heirloom":"Heirloom", "Undo":"UNDO",
-  "Vaulted":"Vaulted Deep", "Carbon Engineering":"Carbon Engineering",
-  "Twelve":"Twelve", "Isometric":"Isometric", "Sublime":"Sublime"
-};
-var xfails=[];
-SHELF.forEach(function(c){
-  if(c.atlas){
-    var key=ATLAS_KEYS[c.n]||c.n;
-    if(DL.indexOf(key)===-1) xfails.push(c.n+" claimed in atlas but '"+key+"' not found in data layer");
+var D=window.COLLAPSE_DATA;
+function scopeJSON(catId){
+  if(!D) return "";
+  if(/^H\d+$/.test(catId)){
+    var h=D.hypotheses.filter(function(x){return x.id===catId;})[0];
+    return h?JSON.stringify(h):"";
   }
+  var iv=D.interventions.filter(function(x){return x.id===catId;})[0];
+  var cos=[].concat(D.companies.tier1,D.companies.tier2,D.companies.tier3)
+    .filter(function(c){return c.category===catId;});
+  var hyp=D.hypotheses.filter(function(h){return (h.relatedInterventions||[]).indexOf(catId)>=0;});
+  return JSON.stringify([iv,cos,hyp]);
+}
+var XROWS=[
+  {n:"Heirloom",key:"Heirloom",cat:"dac",badges:"Series B: announced · Lowercarbon co-lead: recorded verbatim",
+   note:"Two Louisiana plants planned (≈320,000 t/yr combined); Microsoft offtake up to 315,000 t; DOE policy risk marked live. This page's card adds the operating Tracy facility the atlas entry does not itemize."},
+  {n:"Sublime",key:"Sublime",cat:"cement-steel",badges:"capital: announced · DOE rescission: recorded",
+   note:">$200M raised; Microsoft offtake up to 622,500 t; $87M DOE grant rescinded 2025 — the category's first-plant-finance case study."},
+  {n:"Charm Industrial",key:"Charm Industrial",cat:"biochar",badges:"capital: announced",
+   note:"≈$130M cumulative; Google deals incl. 100,000 t biochar (2025). This page's card adds the 2026 JPMorgan purchase-plus-debt structure and the Isometric-verified delivery record."},
+  {n:"UNDO",key:"UNDO",cat:"erw",badges:"XPRIZE: verified · Microsoft deal: announced",
+   note:"The badges differ by claim and are kept apart: the $5M prize is verified; the 28,900 t debt-financed deal is announced. 'First debt-structured CDR deal' is the atlas's record; the superlative is handled with care on the card."},
+  {n:"Vaulted Deep",key:"Vaulted Deep",cat:"biochar",badges:"XPRIZE: verified",
+   note:"$8M XPRIZE runner-up; organic-waste slurry injection; first ≈2,000 t verified by Isometric — a sibling portfolio company (§P5 read 3)."},
+  {n:"Carbon Engineering",key:"Carbon Engineering",cat:"dac",badges:"credits sold: verified share · Stratos: announced",
+   note:"In the atlas via 1PointFive/Stratos (500,000 t/yr design; ≈52% of DAC credits sold); acquired by Occidental (reported ≈$1.1B, 2023) — fossil-ownership caveat carried in the atlas."},
+  {n:"Twelve",key:"Twelve",cat:"microbial-electro",badges:"listed: announced",
+   note:"In the atlas's electro-CO₂-conversion row (venture amount undisclosed in its sources at the time). This page's card adds the dated 2024–26 record, including the plant opening and the December 2025 reduction in force."},
+  {n:"Isometric",key:"Isometric",cat:"H6",badges:"named actor",
+   note:"Named in the atlas's hypothesis engine (H6, per-batch permanence) as a registry actor — and transactionally on both sides of the book: it verified Charm's and Vaulted's credits."}
+];
+XROWS.forEach(function(r){
+  var scope=scopeJSON(r.cat);
+  if(!scope) pageFails.push("crosswalk: claimed scope '"+r.cat+"' not found in data layer for "+r.n);
+  else if(scope.indexOf(r.key)===-1)
+    pageFails.push("crosswalk: '"+r.key+"' does not occur inside the data layer's '"+r.cat+"' records");
 });
-if(DL.indexOf("Lowercarbon Capital")===-1)
-  xfails.push("the Heirloom/Lowercarbon citation this page leans on was not found in the data layer");
+if(D&&JSON.stringify(D).indexOf("Lowercarbon Capital")===-1)
+  pageFails.push("the Heirloom/Lowercarbon citation this page leans on was not found in the data layer");
+if(!D) pageFails.push("data layer failed to load — crosswalk claims unchecked");
 
 /* ---------------------------------------------------------------------------
-   §P1 — the window strip
+   §P1 — the dual-rule window strip
    --------------------------------------------------------------------------- */
 (function windowStrip(){
-  var mL=40,mR=200,mT=52,mB=26,W=960,rowH=30;
-  var inWin=CARDS.filter(function(c){return !c.outOfWindow;});
+  var mL=40,mR=210,mT=56,mB=30,W=980,rowH=34;
   var H=mT+CARDS.length*rowH+mB;
   var rungX=function(r){return mL+(r-1)*((W-mL-mR)/8);};
   var s=['<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+W+' '+H+'" width="100%">'];
-  /* the window */
   s.push('<rect x="'+(rungX(6)-16)+'" y="'+(mT-26)+'" width="'+(rungX(8)-rungX(6)+32)+
     '" height="'+(H-mT-mB+34)+'" fill="#3E6B7A" fill-opacity=".12" stroke="#3E6B7A" stroke-dasharray="3 4"/>');
   s.push('<text x="'+rungX(7)+'" y="'+(mT-34)+'" text-anchor="middle" font-family="IBM Plex Mono,monospace" '+
@@ -776,24 +997,30 @@ if(DL.indexOf("Lowercarbon Capital")===-1)
   }
   CARDS.forEach(function(c,i){
     var y=mT+i*rowH+rowH/2;
-    var lo=Infinity,hi=-Infinity;
-    c.spans.forEach(function(sp){if(sp.lo<lo)lo=sp.lo;if(sp.hi>hi)hi=sp.hi;});
-    if(hi>lo) s.push('<line x1="'+rungX(lo)+'" y1="'+y+'" x2="'+rungX(hi)+'" y2="'+y+
-      '" stroke="rgba(23,19,14,.35)"/>');
     c.spans.forEach(function(sp,k){
       var yy=y+(c.spans.length>1?(k-(c.spans.length-1)/2)*7:0);
       s.push('<rect x="'+(rungX(sp.lo)-6)+'" y="'+(yy-3.5)+'" width="'+(rungX(sp.hi)-rungX(sp.lo)+12)+
-        '" height="7" rx="3.5" fill="'+(c.outOfWindow?'#9C4A22':'#3E6B7A')+'" fill-opacity=".6">'+
-        '<title>'+esc(c.n)+' — '+esc(sp.label)+': TRL '+sp.lo+(sp.hi>sp.lo?'–'+sp.hi:'')+'</title></rect>');
+        '" height="7" rx="3.5" fill="'+(sp.gating?'#3E6B7A':'#8FB8C7')+'" fill-opacity=".65">'+
+        '<title>'+esc(c.n)+' — '+esc(sp.label)+': TRL '+sp.lo+(sp.hi>sp.lo?'–'+sp.hi:'')+
+        (sp.gating?' (gating subsystem)':'')+'</title></rect>');
     });
-    var bx=rungX(c.band);
-    s.push('<path d="M '+bx+' '+(y-7)+' L '+(bx+7)+' '+y+' L '+bx+' '+(y+7)+' L '+(bx-7)+' '+y+' Z" fill="#17130E"/>');
+    var mx=rungX(c.mid);
+    s.push('<path d="M '+mx+' '+(y-7)+' L '+(mx+7)+' '+y+' L '+mx+' '+(y+7)+' L '+(mx-7)+' '+y+
+      ' Z" fill="#17130E"><title>'+esc(c.n)+' — midpoint rule: band '+c.mid+'</title></path>');
+    var gx=rungX(c.gate);
+    s.push('<circle cx="'+gx+'" cy="'+y+'" r="6.5" fill="none" stroke="'+(c.gate<6?'#9C4A22':'#17130E')+
+      '" stroke-width="2"><title>'+esc(c.n)+' — gating rule: band '+c.gate+'</title></circle>');
     s.push('<a href="#card-'+c.id+'"><text x="'+(rungX(9)+22)+'" y="'+(y+4)+'" font-family="IBM Plex Mono,monospace" '+
-      'font-size="11.5" fill="#17130E">'+esc(c.n)+(c.outOfWindow?' ⌄':'')+'</text></a>');
+      'font-size="11.5" fill="'+(c.gate<6?'#9C4A22':'#17130E')+'">'+esc(c.n)+'</text></a>');
   });
   s.push('</svg>');
   document.getElementById('window').outerHTML=s.join('').replace('<svg ',
-    '<svg id="window" role="img" aria-label="Profiled companies placed on the TRL ladder with the growth window 6–8 shaded" ');
+    '<svg id="window" role="img" aria-label="Profiled companies on the TRL ladder under both banding rules, growth window 6–8 shaded" ');
+  var inMid=CARDS.filter(function(c){return c.mid>=6&&c.mid<=8;}).length;
+  var inGate=CARDS.filter(function(c){return c.gate>=6&&c.gate<=8;}).length;
+  document.getElementById('twoCounts').textContent=
+    "in-window population: "+inMid+" of "+CARDS.length+" under the midpoint rule · "+
+    inGate+" of "+CARDS.length+" under the gating rule — the window is a function of the rule";
 })();
 
 /* ---------------------------------------------------------------------------
@@ -802,11 +1029,9 @@ if(DL.indexOf("Lowercarbon Capital")===-1)
 (function shelf(){
   var host=document.getElementById('shelfHost');
   var out=[];
-  var total=0;
   Object.keys(DOMAINS).forEach(function(d){
     var rows=SHELF.filter(function(c){return c.d===d;});
     if(!rows.length) return;
-    total+=rows.length;
     out.push('<div class="dom"><p class="dom-h"><span>'+esc(DOMAINS[d])+'</span><span>'+
       rows.length+'</span></p><div class="chips">'+
       rows.map(function(c){
@@ -818,33 +1043,27 @@ if(DL.indexOf("Lowercarbon Capital")===-1)
         return '<div class="'+cls+'">'+(c.prof?'<a href="#card-'+c.prof+'">'+inner+'</a>':inner)+'</div>';
       }).join('')+'</div></div>');
   });
-  host.innerHTML=out.join('');
   var np=SHELF.filter(function(c){return c.d==='np';}).length;
+  var countFails=pageFails.filter(function(m){return m.indexOf("shelf count")===0;});
+  host.innerHTML=countFails.map(function(m){
+    return '<p class="gate-fail">count gate: '+esc(m)+'</p>';}).join('')+out.join('');
   document.getElementById('shelfEyebrow').textContent=
-    '§P2 · the shelf · '+(total-np)+' companies + '+np+' nonprofits, as listed 2026-08-10';
+    '§P2 · the shelf · '+(SHELF.length-np)+' companies + '+np+' nonprofits, counted at load';
 })();
 
 /* ---------------------------------------------------------------------------
    §P3 — the crosswalk
    --------------------------------------------------------------------------- */
 (function xwalk(){
-  var rows=[
-    {n:"Heirloom",cat:"dac",badge:"announced",note:"Series B co-led by Lowercarbon itself — recorded verbatim in the data layer; two Louisiana plants planned, Microsoft offtake up to 315,000 t, live DOE policy risk."},
-    {n:"Sublime",cat:"cement-steel",badge:"announced",note:">$200M raised; Microsoft offtake up to 622,500 t; $87M DOE grant rescinded 2025 — the category's first-plant-finance case study."},
-    {n:"Charm Industrial",cat:"biochar",badge:"announced",note:"≈$130M cumulative; Google deals incl. 100,000 t biochar (2025); the delivery-first operator in the most-delivered durable-CDR category."},
-    {n:"UNDO",cat:"erw",badge:"verified",note:"$5M XPRIZE runner-up (verified); 28,900 t Microsoft deal — the first CDR deal structured with debt capital."},
-    {n:"Vaulted Deep",cat:"biochar",badge:"verified",note:"$8M XPRIZE runner-up (verified); organic-waste slurry injection into geologic storage."},
-    {n:"Carbon Engineering",cat:"dac",badge:"announced",note:"In the atlas via 1PointFive/Stratos (500,000 t/yr design, ≈52% of DAC credits sold); acquired by Occidental (reported ≈$1.1B, 2023) — fossil-ownership caveat carried in the atlas."},
-    {n:"Twelve",cat:"microbial-electro",badge:"announced",note:"Listed in the atlas's electro-CO₂-conversion row (venture amount undisclosed in its sources at the time); this page's card adds the dated 2024–26 record."},
-    {n:"Isometric",cat:"— (hypothesis H6 actor)",badge:"—",note:"Named in the atlas's hypothesis engine as a registry actor in the per-batch permanence thesis — the verification layer the fund is long."}
-  ];
-  var fails=xfails.map(function(m){return '<p class="gate-fail">crosswalk gate: '+esc(m)+'</p>';}).join('');
+  var fails=pageFails.filter(function(m){return m.indexOf("crosswalk")===0||m.indexOf("data layer")>=0||m.indexOf("Heirloom/Lowercarbon")>=0;})
+    .map(function(m){return '<p class="gate-fail">scope gate: '+esc(m)+'</p>';}).join('');
   document.getElementById('xwalkHost').innerHTML=fails+
-    '<div class="xwalk-scroll"><table class="xwalk"><thead><tr><th>company</th><th>atlas category</th><th>atlas badge</th><th>what the atlas records</th></tr></thead><tbody>'+
-    rows.map(function(r){
+    '<div class="xwalk-scroll"><table class="xwalk"><thead><tr><th>company</th><th>atlas category</th><th>badges, per claim</th><th>what the atlas records</th></tr></thead><tbody>'+
+    XROWS.map(function(r){
       var link=/^[a-z-]+$/.test(r.cat)?'<a href="collapse-trl.html#bench-'+r.cat+'">'+r.cat+' · Bench dossier →</a>':esc(r.cat);
-      return '<tr><td>'+esc(r.n)+'</td><td>'+link+'</td><td><span class="xbadge">'+esc(r.badge)+
-        '</span></td><td style="font-size:.83rem">'+esc(r.note)+'</td></tr>';
+      return '<tr><td>'+esc(r.n)+'</td><td>'+link+'</td><td>'+
+        r.badges.split(" · ").map(function(b){return '<span class="xbadge">'+esc(b)+'</span>';}).join('<br>')+
+        '</td><td style="font-size:.83rem">'+esc(r.note)+'</td></tr>';
     }).join('')+'</tbody></table></div>';
 })();
 
@@ -858,33 +1077,45 @@ if(DL.indexOf("Lowercarbon Capital")===-1)
       return '<li>'+esc(q[0])+'<span class="why">why it is prioritized: '+esc(q[1])+'</span></li>';}).join('');
     var evs=c.ev.map(function(e){
       return '<li><span class="e-date">'+esc(e[0])+'</span><span>'+esc(e[1])+'</span></li>';}).join('');
+    var subs=c.spans.map(function(s){
+      return '<tr><td class="s-band">TRL '+s.lo+(s.hi>s.lo?'–'+s.hi:'')+'</td><td>'+esc(s.label)+
+        (s.gating?' <span class="s-gate">· gating</span>':'')+'</td></tr>';}).join('');
+    var fails=(c.fails||[]).map(function(m){
+      return '<p class="gate-fail">band gate: '+esc(m)+'</p>';}).join('');
     return '<details class="card" id="card-'+esc(c.id)+'">'+
       '<summary>'+
-        '<span><span class="k-sec">card '+(i+1)+' of '+CARDS.length+' · '+esc(c.cat)+
-          (c.outOfWindow?' · below the window, deliberately':'')+'</span><br>'+
+        '<span><span class="k-sec">card '+(i+1)+' of '+CARDS.length+' · '+esc(c.cat)+'</span><br>'+
           '<span class="k-name">'+esc(c.n)+'</span></span>'+
-        '<span class="k-band'+(c.outOfWindow?' out':'')+'">band '+c.band+' / 9<small>editorial</small></span>'+
+        '<span class="k-band">◆ '+c.mid+'<small>midpoint</small></span>'+
+        '<span class="k-band k-band--gate'+(c.gate<6?' below':'')+'">○ '+c.gate+'<small>gating</small></span>'+
         '<span class="k-pull"><span class="shut">open card</span><span class="open">close</span></span>'+
         '<span class="k-thesis"><b>thesis:</b> '+esc(c.thesis)+'</span>'+
       '</summary>'+
-      '<div class="k-body"><div class="k-grid"><div>'+
-        '<p class="k-k">stage evidence — dated, badge discipline inherited</p>'+
+      '<div class="k-body">'+fails+'<div class="k-grid"><div>'+
+        '<p class="k-k">stage evidence — dated; badge discipline inherited</p>'+
         '<ul class="ev">'+evs+'</ul>'+
-        '<p class="k-k">band basis</p><p class="k-v">'+esc(c.basis)+'</p>'+
+        '<p class="k-k">subsystem spans & band basis</p>'+
+        '<table class="subsys">'+subs+'</table>'+
+        (c.gateAxis&&c.gateAxis!=="—"?'<p class="k-v" style="margin-top:6px"><b>companion-axis gate:</b> '+esc(c.gateAxis)+' — not a TRL, not smuggled into one.</p>':'')+
+        '<p class="k-v">'+esc(c.basis)+'</p>'+
+        '<p class="k-k">reference class</p><p class="k-v">'+esc(c.ref)+'</p>'+
         (c.atlasCat?'<p class="k-k">category context</p><p class="k-v"><a href="collapse-trl.html#bench-'+
           esc(c.atlasCat)+'">the Bench’s '+esc(c.atlasCat)+' dossier — subsystem ladder, supply chain, binding constraint →</a></p>':'')+
       '</div><div>'+
         '<p class="k-k">critical technical questions, in priority order</p>'+
         '<ol class="qlist">'+qs+'</ol>'+
+        '<p class="k-k">policy exposure</p><p class="k-v">'+esc(c.policy)+'</p>'+
         '<div class="k-warn"><p class="k-k">failure mode &amp; cost-reliability tradeoff</p>'+
-        '<p class="k-v">'+esc(c.fail)+'</p></div>'+
+        '<p class="k-v">'+esc(c.fail)+'</p>'+
+        '<p class="k-k">kill criterion</p><p class="k-v">'+esc(c.kill)+'</p></div>'+
         '<p class="k-k">the measurement that changes the underwriting</p>'+
         '<p class="k-v">'+esc(c.move)+'</p>'+
+        '<div class="k-judge"><p class="k-k">capital judgment</p><p class="k-v">'+esc(c.judge)+'</p></div>'+
         '<p class="k-src">sources: '+esc(c.src)+'</p>'+
       '</div></div></div></details>';
   }).join('');
   document.getElementById('cardsEyebrow').textContent=
-    '§P4 · the diligence cards · '+CARDS.length+' profiles, posting-format';
+    '§P4 · the diligence cards · '+CARDS.length+' profiles ending in judgments';
   function openHash(){
     var id=location.hash.replace('#','');
     if(!id) return;
