@@ -24,6 +24,12 @@ content in different visual languages, plus a switcher page to compare them:
 - `collapse-data.v2.js` — shared data layer all four variants render from
   (tipping-system thresholds, funding ledger, company atlas, hypothesis
   engine; last updated 2026-07-30)
+- `collapse-trl.html` — **The Bench**, the readiness deep-dive linked from the
+  lead page's assay field and ledger: the TRL framework itself (origins, rung
+  definitions, what the scale does not measure), the atlas's banding method,
+  a per-category ladder of stated maturity spans, ten subsystem/engineering/
+  supply-chain dossiers, and capital-by-rung analysis — all rendered from
+  `collapse-data.v2.js` with a runtime consistency gate against its `trlBand`s
 
 None of the above are deployed — `/` still serves `collapse-tech.html`. Open
 `collapse-v2-index.html` locally (see below) to browse the variants.

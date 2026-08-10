@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Collapse Earth — The Bench</title>
+<meta name="description" content="A readiness deep-dive beneath the assay field: how every TRL band on the lead page was assigned, what the scale does and does not measure, and a subsystem, engineering and supply-chain breakdown of each intervention category. Research and opinion, not investment advice.">
+<!-- Unlisted while its citation gates are open — same discipline as The Seam's
+     pre-ship gates. Remove noindex only after the verify pass. -->
+<meta name="robots" content="noindex">
+<meta name="color-scheme" content="light dark">
+<!-- nine rungs, climbed bottom to top: lab bench at carbon, deployment at firn -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 9 9'%3E%3Crect y='0' width='9' height='1' fill='%23F5F1E8'/%3E%3Crect y='1' width='8' height='1' fill='%23EDE6DA'/%3E%3Crect y='2' width='7' height='1' fill='%23E2D8C6'/%3E%3Crect y='3' width='6' height='1' fill='%23D6C4A0'/%3E%3Crect y='4' width='5' height='1' fill='%23C8973F'/%3E%3Crect y='5' width='4' height='1' fill='%23BC8637'/%3E%3Crect y='6' width='3' height='1' fill='%239C4A22'/%3E%3Crect y='7' width='2' height='1' fill='%233A1C0E'/%3E%3Crect y='8' width='1' height='1' fill='%2317130E'/%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<!-- The shared data layer is the single authority for every maturity string and
+     trlBand on this page. Nothing here restates a band by hand without being
+     checked against it at runtime — see the CONSISTENCY GATE in the script. -->
+<script src="collapse-data.v2.js"></script>
+
+<style>
+/* ===========================================================================
+   COLLAPSE EARTH — "THE BENCH"
+   A readiness deep-dive beneath the lead page's assay field. The lead prints
+   one ordinal per intervention category ("TRL n"); this page is the instrument
+   that number came out of. Structure of the descent:
+
+     · the scale itself — where TRL comes from and what each rung demands;
+     · what the number does NOT say — the four companion axes it silently drops;
+     · house rules — the banding method the data layer actually uses, quoted;
+     · the ladder — every category's stated maturity span on nine discrete
+       rungs, drawn from the shared data layer, never from prose on this page;
+     · ten dossiers — subsystem readiness, engineering constraint, supply
+       chain, binding constraint, and the one measurement that moves each
+       category a rung;
+     · where the money sits — capital per rung, summed with the data layer's
+       own rules (stream === "capital", nothing inside a cumulative row).
+
+   Sibling of collapse-methane-mines.html (The Seam) and child of
+   collapse-v2-coresample.html. Tokens, grain, chip and drawer idioms are
+   carried over unchanged — see those files' headers for the rationale.
+   What differs here:
+     · ONE light ground for the working sections and a carbon footing for
+       methods — this is a reference instrument, not a scroll narrative;
+     · TRL bands are rendered ONLY on discrete rungs. The data layer forbids
+       presenting trlBand on a continuous axis, averaging it, summing it or
+       differencing it, and this page keeps that contract everywhere,
+       including in the charts;
+     · every dossier's subsystem rows are EDITORIAL ENGINEERING ASSESSMENTS
+       and say so. Quantities appear only where the data layer or its named
+       sources state them; everything else stays qualitative on purpose.
+
+   WORD BUDGET: default-visible target ≤2,600 on basis B (all rendered text,
+   SVG included, closed <details> contributing only summaries) — the lead's
+   basis, measured with the same script family. The ten dossiers ship closed;
+   their depth is one interaction away, never deleted.
+   =========================================================================== */
+
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0}
+img,svg{display:block;max-width:100%}
+button{font:inherit;color:inherit;background:none;border:0;margin:0;padding:0;cursor:pointer}
+table{border-collapse:collapse}
+
+:root{
+  /* family grounds */
+  --firn:#F5F1E8;
+  --bone:#EDE6DA;   --bone-d:#E2D8C6;
+  --ochre:#C8973F;  --ochre-d:#BC8637;
+  --rust:#9C4A22;   --rust-d:#3A1C0E;
+  --carbon:#17130E; --carbon-d:#0B0906;
+
+  /* inks, per ground */
+  --ink:#17130E;
+  --ink-2:#5C4B37;
+  --inv:#F4EFE6;
+  --inv-2:#EADDC9;
+
+  /* label stock + accents (family palette, unchanged) */
+  --kraft:#D6C4A0; --kraft-hi:#E3D5B8; --kraft-edge:#A8906A;
+  --kraft-ink:#2B2118;
+  --ice:#3E6B7A;   --ice-lt:#8FB8C7; --ice-dk:#33596A;
+  --ember:#D2653C; --ember-dk:#B8391A; --ember-lt:#F6A97F;
+
+  --fg:var(--ink);
+  --fg-2:var(--ink-2);
+  --accent:var(--ice);
+  --alert:var(--ember-dk);
+  --rule:rgba(23,19,14,.22);
+  --rule-hi:rgba(23,19,14,.44);
+  --plate:rgba(23,19,14,.045);
+
+  --gut:clamp(20px,4.2vw,64px);
+  --maxw:1120px;
+  --ease:cubic-bezier(.22,.61,.36,1);
+
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --disp:"Syne","Syne Fallback",system-ui,sans-serif;
+  --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+}
+
+body{
+  background:var(--firn);
+  color:var(--fg);
+  font-family:var(--serif);
+  font-size:clamp(1rem,.96rem + .18vw,1.0625rem);
+  line-height:1.62;
+  font-optical-sizing:auto;
+}
+
+/* material tooth — same two grain layers as the family */
+.grain{position:fixed;inset:-10%;pointer-events:none;z-index:70;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='220' height='220' filter='url(%23g)'/></svg>");
+  background-size:220px 220px}
+.grain--dark{mix-blend-mode:multiply;opacity:.28}
+.grain--lift{mix-blend-mode:screen;opacity:.05}
+
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 var(--gut)}
+
+/* mast */
+.mast{border-bottom:1px solid var(--rule-hi);background:var(--bone)}
+.mast .wrap{display:flex;flex-wrap:wrap;gap:8px 22px;align-items:baseline;
+  padding-top:14px;padding-bottom:14px;font-family:var(--mono);font-size:.72rem;
+  letter-spacing:.14em;text-transform:uppercase}
+.mast a{color:var(--accent);text-decoration:none;border-bottom:1px solid currentColor}
+.mast a:hover{color:var(--ice-dk)}
+.mast .id{font-weight:600}
+.mast .spacer{flex:1}
+
+/* hero */
+.hero{padding:clamp(44px,8vh,90px) 0 clamp(30px,5vh,54px)}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--fg-2);margin:0 0 10px}
+h1{font-family:var(--disp);font-weight:800;line-height:1.02;margin:0 0 18px;
+  font-size:clamp(2.3rem,5.4vw,4.1rem);letter-spacing:-.015em}
+.lede{max-width:66ch;font-size:clamp(1.05rem,1rem + .3vw,1.2rem);margin:0}
+.lede b{font-weight:600}
+.hero .note{max-width:66ch}
+
+/* section chrome */
+section.bench{padding:clamp(34px,6vh,70px) 0;border-top:1px solid var(--rule)}
+h2{font-family:var(--disp);font-weight:700;font-size:clamp(1.5rem,2.6vw,2.1rem);
+  line-height:1.1;margin:6px 0 14px;letter-spacing:-.01em}
+h3{font-family:var(--disp);font-weight:700;font-size:1.05rem;margin:26px 0 8px}
+p{margin:0 0 14px;max-width:70ch}
+.note{font-size:.83rem;color:var(--fg-2)}
+a{color:var(--accent)}
+a:hover{color:var(--ice-dk)}
+
+/* rung table (§B1) */
+.rungs{width:100%;margin:18px 0 6px;font-size:.9rem}
+.rungs th{font-family:var(--mono);font-size:.68rem;letter-spacing:.13em;
+  text-transform:uppercase;text-align:left;color:var(--fg-2);
+  padding:0 14px 8px 0;border-bottom:1px solid var(--rule-hi)}
+.rungs td{vertical-align:top;padding:10px 14px 10px 0;border-bottom:1px solid var(--rule)}
+.rungs td:first-child{font-family:var(--mono);font-weight:600;white-space:nowrap}
+.rungs .rdef{font-weight:600}
+.rungs .rev{color:var(--fg-2);font-size:.83rem}
+.rungs .rex{font-size:.83rem}
+.rungs .rex a{text-decoration:none;border-bottom:1px solid currentColor}
+@media(max-width:760px){
+  .rungs,.rungs tbody,.rungs tr,.rungs td{display:block}
+  .rungs thead{display:none}
+  .rungs td{padding:2px 0;border:0}
+  .rungs tr{padding:12px 0;border-bottom:1px solid var(--rule);display:block}
+}
+
+/* companion-axes plates (§B2) */
+.axes{display:grid;gap:1px;background:var(--rule-hi);margin:20px 0 8px;
+  border:1px solid var(--rule-hi);
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr))}
+.axis{background:var(--bone);padding:16px 18px}
+.axis h4{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;
+  text-transform:uppercase;margin:0 0 8px}
+.axis p{font-size:.85rem;margin:0}
+
+/* pull-quote of the house rules (§B3) */
+.rulebox{border-left:3px solid var(--accent);background:var(--plate);
+  padding:16px 20px;margin:18px 0;max-width:74ch}
+.rulebox p{font-size:.9rem;margin:0 0 10px}
+.rulebox p:last-child{margin:0}
+.rulebox .q{font-style:italic}
+.rulebox .cite{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--fg-2)}
+
+/* the ladder (§B4) */
+.ladder-scroll{overflow-x:auto;margin:20px 0 6px;border:1px solid var(--rule-hi);
+  background:var(--bone)}
+#ladder{min-width:760px}
+.ld-note{font-size:.83rem;color:var(--fg-2);max-width:74ch}
+
+/* dossiers (§B5) */
+.doss{border:1px solid var(--rule-hi);border-bottom:0;background:var(--bone)}
+.doss:last-of-type{border-bottom:1px solid var(--rule-hi)}
+.doss>summary{list-style:none;cursor:pointer;display:grid;gap:4px 16px;
+  grid-template-columns:minmax(0,1fr) auto auto;align-items:center;
+  padding:14px 18px}
+.doss>summary::-webkit-details-marker{display:none}
+.doss>summary:hover{background:var(--plate)}
+.d-sec{font-family:var(--mono);font-size:.68rem;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--fg-2)}
+.d-name{font-family:var(--disp);font-weight:700;font-size:1.02rem;line-height:1.25}
+.d-band{font-family:var(--mono);font-size:.72rem;font-weight:600;white-space:nowrap;
+  border:1.5px solid var(--ink);padding:5px 9px;letter-spacing:.06em}
+.d-band small{display:block;font-weight:400;font-size:.62rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--fg-2)}
+.d-pull{font-family:var(--mono);font-size:.66rem;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--accent);white-space:nowrap}
+.doss[open] .d-pull .shut{display:none}
+.doss:not([open]) .d-pull .open{display:none}
+.d-bind{grid-column:1/-1;font-size:.85rem;color:var(--fg-2);max-width:80ch}
+.d-bind b{color:var(--fg);font-weight:600}
+@media(max-width:700px){.doss>summary{grid-template-columns:minmax(0,1fr) auto}
+  .d-pull{display:none}}
+.d-body{padding:6px 18px 24px;border-top:1px solid var(--rule)}
+.d-grid{display:grid;gap:clamp(16px,2.4vw,30px);grid-template-columns:minmax(0,1fr)}
+@media(min-width:900px){.d-grid{grid-template-columns:minmax(0,1.12fr) minmax(0,.88fr)}}
+.d-k{font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--fg-2);margin:18px 0 6px}
+.d-v{font-size:.9rem;margin:0 0 4px;max-width:70ch}
+.d-warn{border-left:3px solid var(--alert);padding-left:12px}
+.d-warn .d-k{color:var(--alert)}
+
+/* subsystem readiness rows inside a dossier */
+.subsys{width:100%;font-size:.85rem;margin:4px 0 2px}
+.subsys td{vertical-align:top;padding:7px 12px 7px 0;border-bottom:1px solid var(--rule)}
+.subsys tr:last-child td{border-bottom:0}
+.subsys .s-band{font-family:var(--mono);font-weight:600;white-space:nowrap}
+.subsys .s-name{font-weight:600}
+.subsys .s-ev{color:var(--fg-2);font-size:.81rem}
+
+/* supply-chain bill */
+.bill{margin:2px 0 0;padding:0;list-style:none;font-size:.85rem}
+.bill li{padding:7px 0;border-bottom:1px solid var(--rule);display:grid;
+  gap:2px 14px;grid-template-columns:minmax(0,1fr)}
+.bill li:last-child{border-bottom:0}
+.bill .b-item{font-family:var(--mono);font-size:.78rem;font-weight:600;
+  letter-spacing:.02em}
+.bill .b-note{color:var(--fg-2);font-size:.81rem}
+.bill .b-choke{color:var(--alert);font-family:var(--mono);font-size:.66rem;
+  letter-spacing:.12em;text-transform:uppercase}
+
+/* consistency-gate stamp: only ever rendered on failure */
+.gate-fail{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;
+  text-transform:uppercase;color:#fff;background:var(--ember-dk);
+  padding:6px 10px;display:inline-block;margin:0 0 10px}
+
+/* capital strip (§B6) */
+.cap-scroll{overflow-x:auto;margin:20px 0 6px;border:1px solid var(--rule-hi);
+  background:var(--bone)}
+#capstrip{min-width:760px}
+
+/* methods footing */
+.footing{background:var(--carbon);color:var(--inv);
+  padding:clamp(40px,7vh,80px) 0 clamp(50px,8vh,90px);margin-top:clamp(40px,7vh,80px)}
+.footing h2{color:var(--inv)}
+.footing p{color:var(--inv-2)}
+.footing a{color:var(--ice-lt)}
+.footing a:hover{color:#B7D6E2}
+.footing .eyebrow{color:var(--inv-2)}
+.srcs{margin:14px 0 0;padding:0;list-style:none}
+.srcs li{padding:9px 0;border-bottom:1px solid rgba(244,239,230,.18);
+  font-size:.83rem;display:grid;gap:3px 14px;grid-template-columns:auto minmax(0,1fr)}
+.srcs .s-date{font-family:var(--mono);font-size:.72rem;color:var(--inv-2);white-space:nowrap}
+.footing .disc{border:1px solid rgba(244,239,230,.28);padding:14px 18px;
+  font-size:.85rem;max-width:74ch;margin-top:26px}
+
+/* generic drawer (used in framework sections) */
+details.fn{border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
+  margin:14px 0}
+details.fn>summary{list-style:none;cursor:pointer;padding:10px 0;
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--accent)}
+details.fn>summary::-webkit-details-marker{display:none}
+details.fn[open]>summary .shut{display:none}
+details.fn:not([open])>summary .open{display:none}
+details.fn .fn-body{padding:2px 0 14px}
+
+::selection{background:var(--ochre);color:var(--carbon)}
+</style>
+</head>
+<body>
+
+<div class="grain grain--dark" aria-hidden="true"></div>
+<div class="grain grain--lift" aria-hidden="true"></div>
+
+<header class="mast">
+  <div class="wrap">
+    <span class="id">Collapse Earth · The Bench</span>
+    <span>readiness instrument</span>
+    <span class="spacer"></span>
+    <a href="/">↑ the core sample</a>
+    <a href="collapse-methane-mines.html">The Seam →</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <p class="eyebrow">beneath the assay field · a deep-dive on one ordinal</p>
+    <h1>The Bench</h1>
+    <p class="lede">Every intervention category on the lead page prints one number for
+      readiness: <b>a TRL band</b>. This page is the instrument that number came out
+      of — where the scale comes from, what evidence each rung actually demands, what
+      the number silently drops, and then, category by category, the <b>subsystem
+      readiness, engineering constraint and supply chain</b> underneath each band.</p>
+    <p class="note" style="margin-top:16px">Bands and maturity statements are read live
+      from the shared data layer (<span style="font-family:var(--mono);font-size:.78rem">collapse-data.v2.js</span>)
+      — the same file the lead page renders from. Nothing on this page restates a band
+      by hand: every dossier is checked against the data layer at load, and a mismatch
+      renders a visible failure stamp rather than a silently wrong number.</p>
+  </div>
+</section>
+
+<!-- =========================================================================
+     §B1 — THE SCALE ITSELF
+     ========================================================================= -->
+<section class="bench" id="scale">
+  <div class="wrap">
+    <p class="eyebrow">§B1 · the scale</p>
+    <h2>Nine rungs, one question each</h2>
+    <p>Technology Readiness Levels began as an internal NASA discipline in the 1970s,
+      were formalised as a seven-level scale in 1989, and reached their canonical
+      nine-level form in John Mankins' 1995 white paper. The US Department of Defense
+      adopted the scale for acquisition in the early 2000s, ISO 16290 fixed the space
+      definitions in 2013, and the European Commission generalised the nine levels to
+      all technologies in Horizon 2020 (2014). The IEA later stretched the ladder to
+      eleven levels for energy technology, because in energy a working product is not
+      the end of the story — integration and proof of stability at scale are rungs of
+      their own.</p>
+    <p>Each rung is best read as a <b>question the evidence has to answer</b>, not a
+      grade. The examples in the right column are drawn from this atlas's own dataset.</p>
+
+    <table class="rungs">
+      <thead><tr><th>rung</th><th>what it asserts</th><th>evidence standard</th><th>from this dataset</th></tr></thead>
+      <tbody>
+        <tr><td>TRL 1</td><td class="rdef">Basic principles observed</td>
+          <td class="rev">Peer-reviewed science says the mechanism exists.</td>
+          <td class="rex">Tropospheric chlorine chemistry oxidises methane — the premise behind iron-salt-aerosol proposals.</td></tr>
+        <tr><td>TRL 2</td><td class="rdef">Concept formulated</td>
+          <td class="rev">A paper design applies the mechanism to a use; no experimental proof of that application.</td>
+          <td class="rex">Open-atmosphere methane removal concepts — modelled, never isolated in the open atmosphere (<a href="#bench-methane-removal">dossier §1</a>).</td></tr>
+        <tr><td>TRL 3</td><td class="rdef">Proof of concept</td>
+          <td class="rev">Critical function demonstrated analytically or experimentally at lab bench.</td>
+          <td class="rex">Microbial electrosynthesis to carboxylic acids — assessed at TRL 3/4, lab scale (Trends in Biotechnology, 2024).</td></tr>
+        <tr><td>TRL 4</td><td class="rdef">Validated in the lab</td>
+          <td class="rev">Components work together in a low-fidelity breadboard.</td>
+          <td class="rex">The MES frontier's current ceiling: "requiring process optimisation before an industrial prototype" (<a href="#bench-microbial-electro">dossier §7</a>).</td></tr>
+        <tr><td>TRL 5</td><td class="rdef">Validated in relevant environment</td>
+          <td class="rev">The breadboard survives realistic conditions — real seawater, real barn air, real soil.</td>
+          <td class="rex">Ambient Carbon's MEPS container on a 250-cow dairy barn, removing up to 90% of methane (2025).</td></tr>
+        <tr><td>TRL 6</td><td class="rdef">Prototype demonstrated in relevant environment</td>
+          <td class="rev">A system-level prototype, not a component rig, performs in the field.</td>
+          <td class="rex">Boston Metal's 1+ ton of steel/iron at pilot scale via molten oxide electrolysis (2025).</td></tr>
+        <tr><td>TRL 7</td><td class="rdef">Prototype demonstrated in operational environment</td>
+          <td class="rev">Near-final scale and form, operating where it will actually be used.</td>
+          <td class="rex">DAC's commercially operating plants — at roughly ten times the target cost (<a href="#bench-dac">dossier §5</a>).</td></tr>
+        <tr><td>TRL 8</td><td class="rdef">System complete and qualified</td>
+          <td class="rev">The actual system, proven through test and demonstration; first-of-kind commercial units.</td>
+          <td class="rex">Biochar: commercially operating at scale, permanence assurance still the maturing edge (<a href="#bench-biochar">dossier §6</a>).</td></tr>
+        <tr><td>TRL 9</td><td class="rdef">Proven in successful operations</td>
+          <td class="rev">Repeated, routine commercial operation — and in energy, bankability: lenders price it.</td>
+          <td class="rex">Enhanced geothermal: IPO plus the first non-recourse project debt in the field's history (<a href="#bench-clean-firm-power">dossier §9a</a>).</td></tr>
+      </tbody>
+    </table>
+    <p class="note">Wording above is condensed from the EC Horizon 2020 General Annex G
+      definitions, which generalise NASA's; the space-heritage originals are in ISO
+      16290:2013 and Mankins (1995). The IEA's extension adds TRL 10 (commercial and
+      competitive, still needing integration effort) and TRL 11 (proof of stability
+      reached) — a reminder that for climate technology, rung 9 is a beginning.</p>
+  </div>
+</section>
+
+<!-- =========================================================================
+     §B2 — WHAT THE NUMBER DOES NOT SAY
+     ========================================================================= -->
+<section class="bench" id="silences">
+  <div class="wrap">
+    <p class="eyebrow">§B2 · the silences</p>
+    <h2>Four things a TRL will not tell you</h2>
+    <p>TRL measures <i>demonstration maturity</i> — how far the evidence chain runs from
+      principle to routine operation. It is silent about almost everything an investor,
+      an engineer or a policymaker also needs. Four companion axes exist precisely
+      because of those silences, and this page's dossiers report against all four.</p>
+    <div class="axes">
+      <div class="axis"><h4>cost — no axis at all</h4>
+        <p>A technology can hold TRL 7 while costing ten times its viability target —
+          that is DAC's exact position in this dataset: commercially operating plants,
+          ≈$600–1,000/t against a ≈$100/t target. TRL counts working plants, not
+          working economics.</p></div>
+      <div class="axis"><h4>manufacturability — MRL</h4>
+        <p>The US DoD keeps a separate ten-level Manufacturing Readiness Level scale
+          because a one-off prototype proves nothing about producing at rate. In this
+          dataset the gap is visible as contracted-versus-delivered tonnage: DAC has
+          delivered ≈0.05% of what it has contracted.</p></div>
+      <div class="axis"><h4>adoption — ARL / CRI</h4>
+        <p>The US DOE's Adoption Readiness Levels (2022) and ARENA's Commercial
+          Readiness Index (2014) score demand, value proposition and market openness.
+          Blue carbon shows why: the ecology is mature, yet only ≈10 of ≈81 projects
+          were actively issuing credits as of Oct 2025.</p></div>
+      <div class="axis"><h4>the valley — TRL 4–7</h4>
+        <p>The well-documented "valley of death": too applied for research grants, too
+          unproven for project finance. §B6 below plots this dataset's own capital
+          against the rungs — the trough in the middle of the ladder is not a
+          metaphor, it is the shape of the data.</p></div>
+    </div>
+    <details class="fn">
+      <summary><span class="shut">two structural critiques worth carrying</span><span class="open">close</span></summary>
+      <div class="fn-body">
+        <p class="note"><b>System versus component.</b> A TRL attaches to a specific
+          system in a specific environment. Quoting one number for a category
+          containing many subsystems silently takes either the best or the worst of
+          them. This is the failure the data layer calls out by name in the
+          microbial-electro entry — "conflating them is the field's main honesty
+          failure" — and it is why every dossier below decomposes its category into
+          subsystem rows rather than defending a single rung.</p>
+        <p class="note" style="margin-bottom:0"><b>No downgrade convention.</b> TRL
+          practice has no standard way to move a technology <i>down</i> the ladder when
+          evidence turns against it. This dataset handles that editorially: ice
+          intervention is banded at its evidence (TRL 1), not its hardware trials, because
+          the two most recent independent assessments are negative. Where the prose
+          hedges, the band goes down — never up.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- =========================================================================
+     §B3 — HOUSE RULES
+     ========================================================================= -->
+<section class="bench" id="rules">
+  <div class="wrap">
+    <p class="eyebrow">§B3 · house rules</p>
+    <h2>How this atlas assigns a band</h2>
+    <p>The lead page's assay field sizes its markers by <span style="font-family:var(--mono);font-size:.85em">trlBand</span>,
+      an integer 1–9 stored in the shared data layer. The rules it is assigned under
+      are written into that file as load-bearing comments; the operative ones are
+      quoted here verbatim, because they are the method:</p>
+    <div class="rulebox">
+      <p class="q">"Both are editorial ordinals. They are bands, not measurements,
+        and they must never be presented on a continuous numeric axis, averaged,
+        summed, differenced, or quoted as a quantity."</p>
+      <p class="q">"trlBand — integer 1–9, the approximate TRL midpoint of the
+        maturity string. Where maturity gives a range, the midpoint is used and a
+        midpoint falling on a half rounds down: this page never rounds readiness
+        upward."</p>
+      <p class="q">"Two categories state a genuinely wide internal spread …
+        collapsing those to one number loses real information, so the per-entry
+        comment records what was collapsed and the full maturity string stays the
+        authority."</p>
+      <p class="cite">collapse-data.v2.js — interventions preamble</p>
+    </div>
+    <p>Three consequences follow, and this page inherits all of them. First, the charts
+      here place bands on <b>discrete rungs only</b> — no continuous TRL axis exists
+      anywhere on this site. Second, <b>rounding is asymmetric by design</b>: a
+      category stating "TRL 6–7" is banded 6, not 7. Third, for the two categories with
+      a wide internal spread, the single band is the least informative number on the
+      page — which is exactly why the dossiers below exist.</p>
+  </div>
+</section>
+
+<!-- =========================================================================
+     §B4 — THE LADDER
+     ========================================================================= -->
+<section class="bench" id="ladder-sec">
+  <div class="wrap">
+    <p class="eyebrow" id="ladderEyebrow">§B4 · the ladder</p>
+    <h2>Every stated maturity span, on nine rungs</h2>
+    <p>Each row is one intervention category. The bars are the TRL spans the data
+      layer's maturity strings actually state — including the internal route spreads
+      the single band collapses. The diamond is the stored band (midpoint, rounded
+      down). Categories are ordered by band, least ready first.</p>
+    <div class="ladder-scroll"><svg id="ladder" role="img"
+      aria-label="Chart: stated TRL spans per intervention category on nine discrete rungs, with the stored band marked"></svg></div>
+    <p class="ld-note">Rungs are ordinal — the horizontal spacing carries no interval
+      meaning, and no value between rungs exists. Where a category shows more than one
+      bar, its maturity string names distinct routes at genuinely different stages; the
+      thin connector marks the span the stored band is the midpoint of. Open the
+      category's dossier for the decomposition.</p>
+  </div>
+</section>
+
+<!-- =========================================================================
+     §B5 — THE DOSSIERS
+     ========================================================================= -->
+<section class="bench" id="dossiers">
+  <div class="wrap">
+    <p class="eyebrow" id="dossEyebrow">§B5 · the dossiers</p>
+    <h2>Ten categories, taken apart</h2>
+    <p>Each dossier decomposes its category into subsystem readiness rows, then reports
+      the engineering constraint that gates scale-up, the supply chain with its
+      chokepoints flagged, the binding constraint holding the band where it is, and the
+      one measurement that would move it a rung. <b>Register, stated once for all
+      ten:</b> subsystem rows and supply-chain reads are editorial engineering
+      assessments in the same sense as the data layer's bands — the argument is in the
+      prose, the row is a handle on it. Quantities appear only where the data layer or
+      its named sources state them; everything else is deliberately qualitative.</p>
+    <div id="dossHost"></div>
+  </div>
+</section>
+
+<!-- =========================================================================
+     §B6 — WHERE THE MONEY SITS
+     ========================================================================= -->
+<section class="bench" id="money">
+  <div class="wrap">
+    <p class="eyebrow">§B6 · capital against the rungs</p>
+    <h2>Where the money sits on the ladder</h2>
+    <p>Disclosed capital actually raised per category — summed under the data layer's
+      own rules (equity or debt with <span style="font-family:var(--mono);font-size:.85em">stream:&nbsp;"capital"</span>,
+      excluding every row inside another row's cumulative total; offtakes, prizes,
+      grants, targets and sector roll-ups never counted) — placed at each category's
+      band. Hedges survive the sum: a ≥ means at least one entry is a floor or an
+      amount is undisclosed, and a blank is not a zero.</p>
+    <div class="cap-scroll"><svg id="capstrip" role="img"
+      aria-label="Chart: disclosed capital raised per category, placed at each category's TRL band"></svg></div>
+    <p class="ld-note" id="capNote"></p>
+  </div>
+</section>
+
+<!-- =========================================================================
+     METHODS & SOURCES
+     ========================================================================= -->
+<section class="footing" id="methods">
+  <div class="wrap">
+    <p class="eyebrow">bedrock · methods &amp; sources</p>
+    <h2>Methods &amp; sources</h2>
+    <p>Bands, maturity strings, funding entries, delivered tonnages and caveats are read
+      at load from <span style="font-family:var(--mono);font-size:.85rem">collapse-data.v2.js</span>,
+      the shared data layer of this site, whose source of record for funding and company
+      claims is the internal research synthesis
+      (<span style="font-family:var(--mono);font-size:.85rem">collapse-tech-research.md</span>, July 2026).
+      The consistency gate on this page re-derives every dossier's band from its stated
+      route spans under the house rules (§B3) and compares the result against the data
+      layer; a disagreement renders a visible failure stamp on the dossier.</p>
+    <details class="fn" style="border-color:rgba(244,239,230,.25)">
+      <summary style="color:var(--ice-lt)"><span class="shut">framework literature — the readiness scales themselves</span><span class="open">close</span></summary>
+      <div class="fn-body">
+        <ul class="srcs">
+          <li><span class="s-date">1989</span><span>Sadin, Povinelli &amp; Rosen, "The NASA technology push towards future space mission systems", Acta Astronautica 20 — the original seven-level scale.</span></li>
+          <li><span class="s-date">1995</span><span>Mankins, J.&nbsp;C., "Technology Readiness Levels: A White Paper", NASA Office of Space Access and Technology — the canonical nine-level definitions.</span></li>
+          <li><span class="s-date">2011</span><span>US DoD, Technology Readiness Assessment (TRA) Guidance — acquisition practice; companion Manufacturing Readiness Level Deskbook (OSD Manufacturing Technology Program).</span></li>
+          <li><span class="s-date">2013</span><span>ISO 16290:2013, Space systems — definition of the Technology Readiness Levels and their criteria of assessment.</span></li>
+          <li><span class="s-date">2014</span><span>European Commission, Horizon 2020 Work Programme General Annex G — the nine-level generalisation used EU-wide; ARENA, Commercial Readiness Index for Renewable Energy Sectors — the adoption-side companion.</span></li>
+          <li><span class="s-date">2020</span><span>IEA, ETP Clean Energy Technology Guide — the extension of the scale to TRL 10–11 for energy technologies.</span></li>
+          <li><span class="s-date">2022</span><span>US DOE Office of Technology Transitions, Adoption Readiness Levels (ARL) framework — commercial-adoption risk alongside technical readiness.</span></li>
+        </ul>
+        <p class="note" style="color:var(--inv-2);margin-top:12px">Framework citations
+          are to the published editions named; condensed rung wording in §B1 follows the
+          Horizon 2020 annex. They ground the framework sections only — no claim about a
+          specific intervention rests on them.</p>
+      </div>
+    </details>
+    <details class="fn" style="border-color:rgba(244,239,230,.25)">
+      <summary style="color:var(--ice-lt)"><span class="shut">dataset sources — every claim about an intervention</span><span class="open">close</span></summary>
+      <div class="fn-body">
+        <ul class="srcs" id="dataSrcs"></ul>
+      </div>
+    </details>
+    <div class="disc">
+      <p style="margin:0 0 8px"><b>This is a research position, not investment advice.</b></p>
+      <p class="note" style="color:var(--inv-2);margin:0" id="discMeta"></p>
+    </div>
+  </div>
+</section>
+
+<script>
+/* ===========================================================================
+   THE BENCH — script
+   Reads window.COLLAPSE_DATA (the shared layer) and renders:
+     · the ladder (§B4) from ROUTES + D.interventions
+     · ten dossiers (§B5) from BENCH + D.interventions
+     · the capital strip (§B6) computed with the data layer's summing rules
+   CONSISTENCY GATE: for every category, floor(midpoint(min lo, max hi)) of the
+   ROUTES spans must equal the data layer's trlBand, and every BENCH dossier
+   must cover an existing intervention id (and vice versa). Failures render
+   visible stamps — this page refuses to be silently wrong about a band.
+   =========================================================================== */
+(function () {
+"use strict";
+var D = window.COLLAPSE_DATA;
+if (!D) { document.getElementById("dossHost").innerHTML =
+  "<p class='gate-fail'>data layer failed to load — nothing on this page can be trusted without it</p>"; return; }
+
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function byId(id){return D.interventions.filter(function(iv){return iv.id===id;})[0];}
+
+/* ---------------------------------------------------------------------------
+   ROUTES — each category's stated TRL spans, transcribed from the maturity
+   strings in the data layer (the authority). "commercial" transcribes as rung
+   9 (proven in operations), matching the data layer's own reading — its
+   methane-removal comment calls 5 "the midpoint of the full 1–9 span".
+   The gate below re-derives each band from these spans; edit the maturity
+   string first, then this table, and the gate catches a divergence.
+   --------------------------------------------------------------------------- */
+var ROUTES = {
+  "methane-removal":[
+    {lo:1,hi:3,label:"open-atmosphere"},
+    {lo:4,hi:5,label:"point-source pilot"},
+    {lo:9,hi:9,label:"enteric additives (commercial, in-ration)"}],
+  "ocean-cdr":[{lo:4,hi:5,label:"pilots operating"}],
+  "erw":[{lo:5,hi:6,label:"registry tonnes delivered"}],
+  "blue-carbon-peatland":[{lo:6,hi:7,label:"restoration mature; MRV the bottleneck"}],
+  "dac":[{lo:7,hi:7,label:"plants operating at ≈10× target cost"}],
+  "biochar":[{lo:8,hi:8,label:"commercial at scale"}],
+  "microbial-electro":[
+    {lo:9,hi:9,label:"gas fermentation (commercial)"},
+    {lo:3,hi:4,label:"microbial electrosynthesis"}],
+  "ice-intervention":[{lo:1,hi:2,label:"small field tests; negative assessments"}],
+  "clean-firm-power":[{lo:8,hi:9,label:"operating, project-financeable"}],
+  "cement-steel":[{lo:6,hi:7,label:"pilot production demonstrated"}]
+};
+
+/* the house rule, §B3: midpoint of the full stated span, halves round DOWN */
+function derivedBand(spans){
+  var lo=Infinity,hi=-Infinity;
+  spans.forEach(function(s){ if(s.lo<lo)lo=s.lo; if(s.hi>hi)hi=s.hi; });
+  return Math.floor((lo+hi)/2);
+}
+
+/* ---------------------------------------------------------------------------
+   BENCH — the dossier content. Editorial engineering assessments; quantities
+   only where the data layer or its named sources state them. `sub` rows carry
+   their own band spans (display-only ordinals, same contract as trlBand).
+   `moves` ties to the hypothesis engine's kill/validation criteria and the
+   research doc's stated benchmarks — nothing invented here.
+   --------------------------------------------------------------------------- */
+var BENCH = {
+
+"methane-removal":{secLabel:"§1",
+ sub:[
+  {b:"1–3",n:"Open-atmosphere iron-salt aerosol",e:"Mechanism plausible in lab and models; never isolated in the open atmosphere. No governed field trial has been run (hypothesis H9). Side-effect budget — chlorine, ozone — unresolved."},
+  {b:"4–5",n:"Point-source photochemical (MEPS)",e:"40-ft container on a 250-cow dairy barn removed up to 90% of methane (2025); a Danone-funded ≈30× scale-up is announced, not built."},
+  {b:"4–5",n:"Point-source biological (methanotrophs)",e:"Windfall Bio pilot-stage, targeting dilute ventilation-air methane at 0.2–1%; The Seam's sheet M-004 draws why sub-1% is the band biology gets handed directly."},
+  {b:"9",n:"Enteric additives, in-ration",e:"Bovaer (3-NOP) EU-approved at ≈30% reduction; Rumin8 trials report ≈86–95% with Brazilian regulatory approval. Commercial where a daily ration exists."},
+  {b:"4–6",n:"Enteric delivery to pasture herds",e:"The majority of the global herd never sees a daily ration; slow-release bolus routes are pre-commercial (hypothesis H8)."}],
+ eng:"The category's physics is the dilute-stream problem. Concentrations below the flammable envelope (methane in air burns at 5–15% v/v; mine-practice safety factors hold streams far below the lower limit) mean enormous air volumes must be moved and contacted per tonne destroyed, so cost is dominated by air-handling energy rather than exotic inputs — hypothesis H1's exact mechanism. Richer streams cannot simply be diluted to a treatable strength, because the dilution path crosses the flammable envelope even when both endpoints are safe.",
+ supply:[
+  {i:"UV sources + chlorine handling",n:"commodity photochemistry hardware; the constraint is byproduct management, not procurement"},
+  {i:"containerised process units",n:"the delivered pilot is literally a 40-ft container — a manufacturable form factor if demand appears"},
+  {i:"microbial inocula & media",n:"methanotroph cultures; biology scales by bed volume, which is the cost"},
+  {i:"active-compound synthesis (enteric)",n:"3-NOP and synthetic anti-methanogenics; per-jurisdiction regulatory approval is the real lead time",c:"regulatory chokepoint"},
+  {i:"governance (open atmosphere)",n:"no permitting framework exists for a designed atmospheric release",c:"absent — gates the whole route"}],
+ bind:"Not one constraint but three, by route: open-atmosphere is gated by science and governance; point-source by energy per tonne; enteric by the delivery route to pasture herds.",
+ moves:"For open atmosphere: one pre-registered, independently monitored field trial published either way (H9 — a public-good milestone, not a company). For point-source: a site-year at a dairy or VAM shaft with verified ≥80% destruction and all-in cost <$150/tCO₂e-eq on a credible path to $50 (H1). For enteric: ≥60% dose retention over ≥90 days on pasture (H8)."},
+
+"ocean-cdr":{secLabel:"§2",
+ sub:[
+  {b:"5–6",n:"Electrochemical stacks (acid/base splitting, electrodialysis)",e:"Pilots operating: Project Macoma (Port Angeles, 2025), a 100 t/yr system at PNNL Sequim, Equatic-1 in Singapore at ≈3,650 t/yr design capacity."},
+  {b:"4–5",n:"Mineral alkalinity dosing",e:"Planetary Technologies delivered the first net OAE credits — 138 tonnes (Nov 2024); Vesta holds the first US federal permit for a standalone ocean CDR pilot (2024)."},
+  {b:"3–4",n:"Plume attribution / MRV",e:"Governance-grade attribution machinery — coupled tracer-plus-model with an explicit uncertainty budget — does not yet exist (hypothesis H7). This row is the category's floor."}],
+ eng:"The chemistry is the settled part: added alkalinity shifts carbonate speciation and the ocean stores the carbon as bicarbonate on a >10,000-year timescale. The engineering problem is measurement, because the induced flux is a small perturbation on a large, noisy, advecting background and the plume dilutes below detection within kilometres. Electrode and membrane durability in seawater, and energy per tonne, are real but secondary — attribution is what a registry pays against.",
+ supply:[
+  {i:"bipolar membranes & electrodes",n:"specialised electrochemical components; seawater service life is the engineering unknown"},
+  {i:"alkaline feedstock",n:"magnesium hydroxide, olivine, or made on-site electrochemically — bulk mineral logistics at scale"},
+  {i:"coastal siting & outfall access",n:"pilots piggyback on existing intakes/outfalls; permits are precedent-setting, one at a time",c:"permitting chokepoint"},
+  {i:"clean electricity",n:"the operating cost; co-location logic mirrors DAC's"},
+  {i:"tracer + sensor networks (MRV)",n:"shared scientific infrastructure, not a per-operator asset — nobody's balance sheet naturally builds it",c:"the binding gap"}],
+ bind:"Attribution, not chemistry (H7). Contracted volume runs two to three orders of magnitude ahead of verified delivery: up to 350,000 tonnes contracted against an initial 1,333 delivered (Ebb–Microsoft), 138 tonnes for the first net OAE credits.",
+ moves:"Two field seasons of tracer-anchored attribution at ≤±25% uncertainty on ≥10,000 tonnes, accepted in a published registry methodology (H7 validation); the research synthesis's benchmark is a company delivering — not contracting — >100,000 tonnes with settled MRV."},
+
+"erw":{secLabel:"§3",
+ sub:[
+  {b:"8–9",n:"Deployment (crush, haul, spread)",e:"Rides infrastructure that already exists — quarry fines and farm spreading equipment. Terradot has spread 48,000+ tonnes of rock over 1,800 hectares."},
+  {b:"5–6",n:"Registry issuance",e:"Lithos delivered 5,160 registry-certified tonnes (Dec 2025), described as the largest ERW issuance to date — real, and roughly an order of magnitude behind contracted volume."},
+  {b:"3–5",n:"Open-system MRV",e:"CarbonPlan: experimental removal estimates vary by four orders of magnitude. The stated binding constraint in the data layer."},
+  {b:"3–4",n:"Cohort-model MRV for smallholders",e:"Calibrated weathering model anchored by sparse cohort sampling (hypothesis H2) — the methodology is not settled with any registry."}],
+ eng:"Cost structure is dominated by measurement, not material: basalt fines are an existing quarry by-product and spreading uses existing agricultural equipment, which is why deployment sits rungs above verification. Soil-sampling MRV scales with the number of fields rather than tonnage, so small parcels pay the highest per-tonne measurement cost — the exact inversion of where the largest land resource is.",
+ supply:[
+  {i:"basalt / silicate fines",n:"quarry by-product; abundant, low-value, transport-cost-limited"},
+  {i:"milling & crushing energy",n:"grind size trades weathering rate against energy input"},
+  {i:"haulage (truck / rail)",n:"rock is heavy and cheap — radius from quarry to field sets the economics"},
+  {i:"spreaders & farm partnerships",n:"standard agricultural equipment; the farmer relationship is the deployment channel"},
+  {i:"soil labs + geochemical models",n:"per-parcel sampling is the cost floor MRV compression has to break",c:"the binding cost"}],
+ bind:"Open-system MRV. The data layer's own words: \"verified registry tonnes delivered; open-system MRV is the binding constraint\" — and contracted volume still exceeds delivered by roughly an order of magnitude.",
+ moves:"One registry-issued cohort of ≥1,000 smallholder parcels with all-in MRV cost ≤$15/tonne and model-vs-measured agreement inside registry tolerance in at least two geographies (H2 validation). The kill criterion is just as concrete: a registry requiring per-parcel measurement restores the cost floor and ends the thesis."},
+
+"blue-carbon-peatland":{secLabel:"§4",
+ sub:[
+  {b:"8–9",n:"Restoration ecology & practice",e:"Mangrove restoration and peatland rewetting are mature practice; the data layer: \"the ecology is well understood and the restoration methods are mature\"."},
+  {b:"6–7",n:"Carbon-finance methodology",e:"Working precedents exist — UK Peatland Code (~361 projects / ~52,000 ha), Germany's MoorFutures — but as of Oct 2025 only ≈10 of ≈81 blue-carbon projects were actively issuing credits."},
+  {b:"4–6",n:"Credit-grade measurement",e:"Satellites see surface wetness and vegetation, not the water table; projects fall back on modelled proxies and buyers discount accordingly (hypothesis H5)."},
+  {b:"1–3",n:"Kelp & macroalgae crediting",e:"Methodologically uncreditable — permanence unproven; Running Tide's wind-down is the category's object lesson."}],
+ eng:"Peatland emissions are close to a monotonic function of mean annual water-table depth — which is why rewetting works, and why the measurement question reduces to knowing the water table. Dense in-situ dipwell telemetry converts a modelled estimate into a measured one; the engineering is unglamorous (sensors, calibration, data handling) and the economics only close if it is amortised across a portfolio rather than bought project by project.",
+ supply:[
+  {i:"dipwell / water-table sensors",n:"mature hardware; H5's claim is that the business model, not the sensor, is missing"},
+  {i:"telemetry networks & data handling",n:"continuous records are what a registry methodology upgrade would depend on"},
+  {i:"satellite tasking",n:"complements ground truth; cannot replace it for the variable that matters"},
+  {i:"land agreements & field labour",n:"restoration is land-deal-limited and season-limited, not equipment-limited"},
+  {i:"registry methodologies",n:"the S&P blue-carbon assessment hit a record $29.30/tCO₂e (Aug 2025) precisely because rigorous MRV is scarce",c:"scarcity is the price signal"}],
+ bind:"Credit-grade measurement. Mature ecology, working precedents, and a market under 1% of voluntary carbon credits with ≈99% of claimed removals from mangroves — the bottleneck is what can be measured to a buyer's standard, and it is the stated technology opportunity.",
+ moves:"1,000 ha under continuous water-table telemetry for two years, a registry-recognised methodology upgrade that depends on it, and a documented per-tonne premium exceeding amortised sensing cost (H5 validation)."},
+
+"dac":{secLabel:"§5",
+ sub:[
+  {b:"7–8",n:"Solid-sorbent capture",e:"Orca and Mammoth operating in Iceland (Mammoth design capacity 36,000 t/yr); Climeworks leads deliveries at ≈81% of all DAC delivered — on tiny absolute volumes."},
+  {b:"7",n:"Liquid-solvent capture",e:"Stratos (West Texas) designed for 500,000 t/yr — under construction, announced not delivered; 1PointFive leads credits sold at ≈52%."},
+  {b:"6–7",n:"Mineralisation-loop capture",e:"Heirloom's accelerated limestone route: >$200M raised, two Louisiana plants planned at ≈320,000 t/yr combined — planned, not built."},
+  {b:"8–9",n:"CO₂ transport, injection & storage",e:"Mature oil-and-gas-heritage practice; in Iceland, basalt mineralisation. Not the gating subsystem."},
+  {b:"8–9",n:"MRV",e:"The category's quiet advantage: captured tonnes are metered at a stack, not inferred from an open system — the strongest measurement position in this dataset."}],
+ eng:"Thermodynamics sets the floor: capturing CO₂ at ≈420 ppm from ambient air demands moving vast air volumes and regenerating sorbent with significant heat and power, so cost is energy-dominated and falls only with contactor engineering, sorbent cycling life, and cheap clean energy. The plants work; they cost ≈$600–1,000/t against a ≈$100/t target. TRL 7 with a 10× cost gap is the cleanest illustration in this dataset that readiness and viability are different axes.",
+ supply:[
+  {i:"sorbents / solvents",n:"amine chemistry and engineered minerals; cycling degradation sets replacement rate"},
+  {i:"contactor fabrication",n:"the manufacturable unit; cost falls with production rate, MRL-style, if demand materialises"},
+  {i:"clean firm energy",n:"the dominant operating input — siting follows power price, which is why Iceland and West Texas",c:"the cost driver"},
+  {i:"injection wells & storage sites",n:"permitted geological storage; mature but slow to permit"},
+  {i:"policy-dependent capital",n:"US DOE terminated initial ≈$50M tranches for Project Cypress and the South Texas hub (Oct 2025); some funding later preserved in 2026",c:"live policy risk"}],
+ bind:"Cost, not readiness. Delivered volume tells the story the TRL cannot: ≈1,186 tonnes delivered by six suppliers since 2023 — about 0.05% of contracted volume — while the category leads all CDR in capital raised.",
+ moves:"The research synthesis's benchmark is blunt: DAC moves up sharply if any player demonstrably hits ≈$100/t at commercial scale. Nothing else on this dossier's list matters until that number moves."},
+
+"biochar":{secLabel:"§6",
+ sub:[
+  {b:"9",n:"Pyrolysis production",e:"Commercially operating at scale: Exomad Green has delivered over 320,000 tonnes cumulatively (≈84% carbon content, >1,000-year stability, Puro.earth certified)."},
+  {b:"8–9",n:"Feedstock logistics",e:"Forestry residues and agricultural waste; Varaha converts invasive Prosopis juliflora — feedstock is a sourcing operation, not a technology risk."},
+  {b:"6–7",n:"MRV protocols",e:"Puro and Isometric methodologies functioning and still maturing — the data layer's \"maturing edge\"."},
+  {b:"4–6",n:"Per-batch permanence assurance",e:"Registries apply conservative portfolio-level permanence factors; an inline H:C-ratio assay per batch (hypothesis H6) is early instrumentation."}],
+ eng:"Permanence scales with the aromatic condensation of the carbon, which is set by peak pyrolysis temperature and residence time — and varies batch to batch with feedstock moisture and composition. Because registries price at portfolio-level factors, every producer is effectively priced at its worst credible batch. The engineering opportunity is therefore an instrument, not a bigger kiln: inline quality assay tied to a per-batch permanence band.",
+ supply:[
+  {i:"biomass residues",n:"the data layer names it plainly: \"sustainable biomass availability is the ceiling on the category\"",c:"the hard ceiling"},
+  {i:"pyrolysis kilns / units",n:"proven equipment across scales; capacity is not the constraint"},
+  {i:"drying energy & handling",n:"feedstock moisture drives both energy budget and product quality variance"},
+  {i:"distribution to application",n:"soil application closes the loop; logistics are conventional"},
+  {i:"assay instrumentation",n:"H:C ratio calibrated against reference oxidation — the measurement layer delivered volume has outrun",c:"thin measurement layer"}],
+ bind:"Two, honestly stated: sustainable biomass supply caps the category's size, and permanence variance caps its price. The unresolved run-rate conflict on the category's largest producer (company ≈260,000 t/yr vs S&P Global ≈120,000 mtCO₂e/yr — flagged, not averaged) shows how thin the measurement layer still is.",
+ moves:"A registry-approved per-batch permanence band in commercial use at ≥50,000 t/yr, with assay-to-reference agreement inside ±20% on three distinct feedstocks (H6 validation)."},
+
+"microbial-electro":{secLabel:"§7",
+ sub:[
+  {b:"9",n:"Gas fermentation",e:"LanzaTech: six commercial facilities, 30M+ gallons of ethanol since 2021, public via SPAC (Feb 2023). The commercial end of the category."},
+  {b:"5–7",n:"Electrolyzer-based CO₂ conversion",e:"Twelve, Dioxide Materials — early commercial scaling of electrochemical CO₂-to-products; venture amounts not disclosed in the sources."},
+  {b:"3–4",n:"Microbial electrosynthesis",e:"Assessed at TRL 3/4 in peer-reviewed literature (Trends in Biotechnology, 2024): lab scale, requiring process optimisation before an industrial prototype."},
+  {b:"2–4",n:"Downstream separation for dilute C4+ acids",e:"The hidden gate: hypothesis H4's kill criterion fires if separation energy exceeds 40% of product value at ≥100 L — no product price rescues that."}],
+ eng:"MES economics reduce to three terms — faradaic efficiency into the target molecule, areal current density, and product price. Acetate and methane sit at commodity prices that demand efficiencies and densities MES has never demonstrated; chain-elongated products (butyrate, caproate) carry specialty prices, so identical reactor performance clears the electricity cost floor. The unlock is product selection and downstream separation, not a step change in the biofilm (H4). The category-level honesty rule is the data layer's own: conflating the commercial leader with the research frontier \"is the field's main honesty failure\".",
+ supply:[
+  {i:"industrial gas streams",n:"steel-mill off-gas and similar — LanzaTech's feedstock is someone else's flue",c:"partner-gated"},
+  {i:"bioreactors & gas handling",n:"fermentation at commercial scale is proven; electrochemical reactors at scale are not"},
+  {i:"electrodes, cathode materials, membranes",n:"MES biofilm-on-cathode performance is the lab-scale variable"},
+  {i:"industrial electricity price",n:"the denominator of every electron-economics term in H4"},
+  {i:"separation / downstream processing",n:"dilute aqueous products are expensive to pull out — the subsystem TEAs go quiet about",c:"the quiet gate"}],
+ bind:"For the frontier half: faradaic efficiency × current density × product price against the electricity floor, plus separation. For the commercial half: profitability pressure and grant dependency, already flagged in the atlas. The single band (6) is the least informative number in this dataset — the spread is 3–9.",
+ moves:"A third-party-reviewed techno-economic assessment built on ≥1,000 hours of continuous operation at ≥100 L, ≥60% faradaic efficiency to a single C4+ product, positive gross margin at industrial power prices (H4 validation) — the research synthesis's benchmark for the field's first validated case."},
+
+"ice-intervention":{secLabel:"§8",
+ sub:[
+  {b:"3–4",n:"Pumping hardware",e:"Field-trialled at Cambridge Bay (Real Ice) and Svalbard/Newfoundland (Arctic Reflections). The hardware pumps; that was never the question."},
+  {b:"1–2",n:"Durable thickening effect",e:"No trial has demonstrated a winter thickness gain that survives the following melt season — the measurement the negative assessments turn on."},
+  {b:"1–2",n:"Ecological monitoring & governance",e:"Nascent; the 2024 preprint by 42 glaciologists and the Sept 2025 study (interventions ≥$10B each, not viable, potentially harmful) are the current authority."}],
+ eng:"The physics working against the concept: pumped surface water freezes on top, but added surface ice insulates the ice beneath and suppresses basal growth, and thicker, snow-loaded ice can flood and change its own albedo — so a winter gain need not survive the summer. This is why the category is banded at its evidence (TRL 1) rather than its hardware (3–4): the subsystem that matters is the effect, and the effect is unproven.",
+ supply:[
+  {i:"pumps, drones, platforms",n:"modest hardware; procurement is not the issue"},
+  {i:"Arctic logistics windows",n:"short seasons, remote sites, high cost per operation"},
+  {i:"energy in remote cold",n:"every scheme's quiet line item"},
+  {i:"monitoring instrumentation",n:"treated-vs-control mass balance is the entire evidentiary question",c:"the missing measurement"},
+  {i:"governance & consent",n:"no framework; Indigenous and ecological consultation unresolved",c:"absent"}],
+ bind:"Feasibility itself. This is the one dossier where the binding constraint is not a subsystem but the hypothesis: the two most recent independent assessments are negative, and the data layer frames the category as break-glass research with a stated exit — not an investable category.",
+ moves:"A pre-registered multi-season trial with treated and control plots and end-of-melt-season mass balance published either way (H10). Success is a durable, replicated positive net effect; the honest alternative outcome is public retirement of the approach rather than a rebrand."},
+
+"clean-firm-power":{secLabel:"§9a",
+ sub:[
+  {b:"9",n:"Horizontal drilling & completions",e:"Borrowed whole from shale — rigs, crews, PDC bits, pad drilling. The transfer is the category's founding insight."},
+  {b:"8–9",n:"Fibre-optic sensing & reservoir monitoring",e:"Downhole DTS/DAS sensing adapted from oil and gas; the instrument that makes engineered reservoirs legible."},
+  {b:"7–8",n:"Engineered-reservoir creation & sustain",e:"Cape Station: first 100 MW in 2026, scaling to 500 MW by 2028, permitted to 2 GW. Multi-decade reservoir behaviour is the remaining open curve."},
+  {b:"9",n:"Bankability",e:"The rung most categories never reach: ≈$2.2B IPO (May 2026) plus ≈$421M non-recourse project debt — the first for enhanced geothermal anywhere."}],
+ eng:"The engineering bet was that shale's toolkit — horizontal drilling, multi-stage stimulation, fibre-optic diagnostics — transfers to hot dry rock, making the resource a function of drilling cost rather than geological luck. Cape Station's contracted PPAs (Southern California Edison, Shell Energy) turn that bet into revenue. What remains genuinely unproven at multi-decade horizon is reservoir sustain: thermal drawdown and induced-seismicity management over a project's full financed life.",
+ supply:[
+  {i:"drill rigs & crews",n:"shared labour pool with oil and gas — counter-cyclical availability, competitive in a boom",c:"shared with o&g"},
+  {i:"PDC bits, casing, steel",n:"commodity oilfield supply chain at oilfield prices"},
+  {i:"fibre optics & downhole sensors",n:"mature; the differentiating instrument, not the bottleneck"},
+  {i:"grid interconnection",n:"the queue is the schedule risk for every clean-firm project in the US",c:"queue chokepoint"},
+  {i:"PPA counterparties",n:"fully contracted offtake is what made the debt non-recourse"}],
+ bind:"None at category level — included in the atlas as the counterexample: proof that frontier climate technology can clear a conventional bankability test. The data layer's caveat points sideways instead: adjacent clean-firm categories (long-duration storage, industrial heat, fusion) are earlier and thinner.",
+ moves:"The category has already made the move the others are waiting on. The rung that remains is the IEA's eleventh — proof of stability: engineered reservoirs holding output across decades, at more sites than one."},
+
+"cement-steel":{secLabel:"§9b",
+ sub:[
+  {b:"6–7",n:"Electrochemical cement",e:"Sublime Systems: pilot production demonstrated, Microsoft offtake up to 622,500 tonnes; the Holyoke first plant paused after DOE rescinded its $87M grant (2025)."},
+  {b:"6",n:"Molten oxide electrolysis steel",e:"Boston Metal: 1+ ton of steel/iron at pilot scale (2025); first commercial plant in Brazil aimed at critical metals, not yet steel at scale."},
+  {b:"5–6",n:"Alternative-chemistry cement",e:"Brimstone: calcium-silicate route co-producing alumina; raising for a $378M demo plant — a target, not money closed; lost a $189M DOE award (2025)."}],
+ eng:"Cement and steel are roughly 15% of global CO₂ between them, and the emissions are chemical, not energetic — CO₂ comes off the calcination reaction and the blast-furnace reduction itself, so no amount of clean power fixes them. Electrochemical routes attack the reaction: low-temperature electrolytic decomposition of calcium sources, and direct electrolytic reduction of iron oxide. Both are demonstrated at pilot; both now face the classic first-of-a-kind plant problem, where the risk is capital formation rather than chemistry.",
+ supply:[
+  {i:"clean electricity at industrial scale",n:"the routes trade fossil heat for electrons; power price sets the operating economics"},
+  {i:"electrode / anode materials",n:"inert-anode performance and lifetime at production current densities is the scale-up variable"},
+  {i:"first-of-a-kind plant finance",n:"the data layer: \"the binding constraint is first-plant finance rather than science\"",c:"the binding constraint"},
+  {i:"offtake counterparties",n:"Microsoft (Sublime, up to 622,500 t) and Amazon (Brimstone) — private demand partially covering the policy gap"},
+  {i:"incumbent integration",n:"strategic investors (Holcim, CRH, ArcelorMittal, Tata) are the distribution channel into a conservative industry"}],
+ bind:"First-plant finance, compounded by live policy risk: DOE rescissions in 2025 removed $87M (Sublime) and $189M (Brimstone) — the data layer marks both, and marks the de-risking path: awards restored or private offtakes covering the gap.",
+ moves:"A financed, operating first commercial plant in either chemistry. The research synthesis's benchmark: the category de-risks if DOE awards are restored or private offtakes cover the financing gap — the move is financial close, not a lab result."}
+};
+
+/* ---------------------------------------------------------------------------
+   CONSISTENCY GATE
+   --------------------------------------------------------------------------- */
+var gateMsgs = {};
+D.interventions.forEach(function(iv){
+  var spans = ROUTES[iv.id], msgs = [];
+  if(!spans){ msgs.push("no ROUTES entry on this page for '"+iv.id+"'"); }
+  else if(derivedBand(spans)!==iv.trlBand){
+    msgs.push("band mismatch: page spans derive "+derivedBand(spans)+
+      ", data layer stores "+iv.trlBand+" — the data layer is the authority");
+  }
+  if(!BENCH[iv.id]) msgs.push("no dossier on this page for '"+iv.id+"'");
+  if(msgs.length) gateMsgs[iv.id]=msgs;
+});
+Object.keys(BENCH).forEach(function(id){
+  if(!byId(id)) (gateMsgs[id]=gateMsgs[id]||[]).push(
+    "dossier '"+id+"' has no matching intervention in the data layer");
+});
+
+/* ---------------------------------------------------------------------------
+   §B4 — THE LADDER (vanilla SVG; discrete rungs, ordinal only)
+   --------------------------------------------------------------------------- */
+(function ladder(){
+  var order = D.interventions.slice().sort(function(a,b){
+    return a.trlBand-b.trlBand || (a.section<b.section?-1:1); });
+  var mL=250,mR=30,mT=44,mB=16,rowH=44,W=980;
+  var H=mT+order.length*rowH+mB;
+  var rungX=function(r){ return mL+(r-1)*((W-mL-mR)/8); };
+  var svg=['<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+W+' '+H+'" width="100%">'];
+  var i,r;
+  /* rung columns */
+  for(r=1;r<=9;r++){
+    svg.push('<line x1="'+rungX(r)+'" y1="'+(mT-8)+'" x2="'+rungX(r)+'" y2="'+(H-mB)+
+      '" stroke="rgba(23,19,14,.16)" stroke-dasharray="1 4"/>');
+    svg.push('<text x="'+rungX(r)+'" y="'+(mT-18)+'" text-anchor="middle" '+
+      'font-family="IBM Plex Mono,monospace" font-size="11" font-weight="600" fill="#5C4B37">'+r+'</text>');
+  }
+  svg.push('<text x="'+rungX(1)+'" y="14" font-family="IBM Plex Mono,monospace" font-size="10" '+
+    'letter-spacing="1.5" fill="#5C4B37">TRL RUNG (ORDINAL — SPACING CARRIES NO INTERVAL MEANING)</text>');
+  for(i=0;i<order.length;i++){
+    var iv=order[i], spans=ROUTES[iv.id]||[], y=mT+i*rowH+rowH/2;
+    var lo=Infinity,hi=-Infinity;
+    spans.forEach(function(s){ if(s.lo<lo)lo=s.lo; if(s.hi>hi)hi=s.hi; });
+    /* row label, linked to the dossier */
+    svg.push('<a href="#bench-'+iv.id+'"><text x="'+(mL-14)+'" y="'+(y+4)+'" text-anchor="end" '+
+      'font-family="IBM Plex Mono,monospace" font-size="11.5" fill="#17130E">'+
+      esc(iv.section)+' · '+esc(iv.name.length>26?iv.name.slice(0,25)+'…':iv.name)+'</text></a>');
+    /* connector across the full stated span */
+    if(isFinite(lo)&&hi>lo) svg.push('<line x1="'+rungX(lo)+'" y1="'+y+'" x2="'+rungX(hi)+'" y2="'+y+
+      '" stroke="rgba(23,19,14,.35)" stroke-width="1"/>');
+    /* one bar per stated route span */
+    spans.forEach(function(s,k){
+      var x0=rungX(s.lo)-7,x1=rungX(s.hi)+7, yy=y+(spans.length>1?(k-(spans.length-1)/2)*9:0);
+      svg.push('<rect x="'+x0+'" y="'+(yy-4)+'" width="'+(x1-x0)+'" height="8" rx="4" '+
+        'fill="'+(iv.investable===false?'#9C4A22':'#3E6B7A')+'" fill-opacity="'+(spans.length>1?.55:.75)+'">'+
+        '<title>'+esc(iv.name)+' — '+esc(s.label)+': TRL '+s.lo+(s.hi>s.lo?'–'+s.hi:'')+'</title></rect>');
+    });
+    /* the stored band, as a diamond */
+    var bx=rungX(iv.trlBand);
+    svg.push('<path d="M '+bx+' '+(y-8)+' L '+(bx+8)+' '+y+' L '+bx+' '+(y+8)+' L '+(bx-8)+' '+y+
+      ' Z" fill="#17130E"><title>stored band: '+iv.trlBand+' (midpoint of the stated span, rounded down)</title></path>');
+  }
+  /* legend */
+  var ly=H-2;
+  svg.push('</svg>');
+  document.getElementById('ladder').outerHTML=svg.join('').replace('<svg ',
+    '<svg id="ladder" role="img" aria-label="Stated TRL spans per category on nine discrete rungs" ');
+})();
+
+/* ---------------------------------------------------------------------------
+   §B5 — THE DOSSIERS
+   --------------------------------------------------------------------------- */
+(function dossiers(){
+  var order = D.interventions.slice().sort(function(a,b){
+    return a.trlBand-b.trlBand || (a.section<b.section?-1:1); });
+  var html = order.map(function(iv){
+    var d=BENCH[iv.id];
+    var fails=(gateMsgs[iv.id]||[]).map(function(m){
+      return '<p class="gate-fail">consistency gate: '+esc(m)+'</p>';}).join('');
+    if(!d) return '<details class="doss" id="bench-'+esc(iv.id)+'"><summary>'+
+      '<span><span class="d-sec">'+esc(iv.section)+'</span><br><span class="d-name">'+
+      esc(iv.name)+'</span></span></summary><div class="d-body">'+fails+'</div></details>';
+    var subs=d.sub.map(function(s){
+      return '<tr><td class="s-band">TRL '+esc(s.b)+'</td><td><span class="s-name">'+
+        esc(s.n)+'</span><br><span class="s-ev">'+esc(s.e)+'</span></td></tr>';}).join('');
+    var bill=d.supply.map(function(s){
+      return '<li><span class="b-item">'+esc(s.i)+(s.c?' <span class="b-choke">· '+esc(s.c)+'</span>':'')+
+        '</span><span class="b-note">'+esc(s.n)+'</span></li>';}).join('');
+    return '<details class="doss" id="bench-'+esc(iv.id)+'">'+
+      '<summary>'+
+        '<span><span class="d-sec">'+esc(d.secLabel)+
+          (iv.investable===false?' · '+esc(iv.framing||'not investable'):'')+
+          '</span><br><span class="d-name">'+esc(iv.name)+'</span></span>'+
+        '<span class="d-band">band '+iv.trlBand+' / 9<small>stored ordinal</small></span>'+
+        '<span class="d-pull"><span class="shut">open dossier</span><span class="open">close</span></span>'+
+        '<span class="d-bind"><b>binding:</b> '+esc(d.bind.split(".")[0])+'.</span>'+
+      '</summary>'+
+      '<div class="d-body">'+fails+
+        '<div class="d-grid"><div>'+
+          '<p class="d-k">stated maturity — the authority for this category</p>'+
+          '<p class="d-v">'+esc(iv.maturity)+'</p>'+
+          '<p class="d-k">subsystem readiness — editorial engineering assessment</p>'+
+          '<table class="subsys">'+subs+'</table>'+
+          '<p class="d-k">engineering constraint</p>'+
+          '<p class="d-v">'+esc(d.eng)+'</p>'+
+        '</div><div>'+
+          '<p class="d-k">supply chain — chokepoints flagged</p>'+
+          '<ul class="bill">'+bill+'</ul>'+
+          '<div class="d-warn"><p class="d-k">binding constraint</p>'+
+          '<p class="d-v">'+esc(d.bind)+'</p></div>'+
+          '<p class="d-k">what moves it one rung</p>'+
+          '<p class="d-v">'+esc(d.moves)+'</p>'+
+          '<p class="d-k">on the lead page</p>'+
+          '<p class="d-v"><a href="/#iv-'+esc(iv.id)+'">full ledger entry — funding, badges, caveats →</a>'+
+          (iv.fieldwork?'<br><a href="'+esc(iv.fieldwork.href)+'">'+esc(iv.fieldwork.label)+' →</a>':'')+'</p>'+
+        '</div></div>'+
+      '</div></details>';
+  }).join('');
+  document.getElementById('dossHost').innerHTML=html;
+  document.getElementById('dossEyebrow').textContent=
+    '§B5 · the dossiers · '+order.length+' categories';
+  document.getElementById('ladderEyebrow').textContent=
+    '§B4 · the ladder · '+order.length+' categories × 9 rungs';
+  /* deep-link: open the addressed dossier */
+  function openHash(){
+    var id=location.hash.replace('#','');
+    if(!id) return;
+    var el=document.getElementById(id);
+    if(el&&el.tagName==='DETAILS'){ el.open=true; el.scrollIntoView(); }
+  }
+  window.addEventListener('hashchange',openHash); openHash();
+})();
+
+/* ---------------------------------------------------------------------------
+   §B6 — CAPITAL AGAINST THE RUNGS
+   Summed with the data layer's exact rules; hedges preserved.
+   --------------------------------------------------------------------------- */
+(function capstrip(){
+  function capitalRaised(iv){
+    return iv.funding.filter(function(f){
+      return f.stream==="capital" && !f.withinCumulative && f.amount!=null;
+    }).reduce(function(n,f){return n+f.amount;},0);
+  }
+  function hedged(iv,total){
+    var rows=iv.funding.filter(function(f){
+      return f.stream==="capital" && !f.withinCumulative;});
+    var missing=rows.some(function(f){return f.amount==null;});
+    var atLeast=rows.some(function(f){return f.qualifier==="at-least";})||missing;
+    var approx=rows.some(function(f){return f.qualifier==="approximately";});
+    return (atLeast?"≥ ":approx?"≈ ":"")+money(total);
+  }
+  function money(n){
+    if(n>=1e9) return "$"+(Math.round(n/1e8)/10)+"B";
+    if(n>=1e6) return "$"+Math.round(n/1e6)+"M";
+    return "$"+n;
+  }
+  var mL=250,mR=30,mT=44,mB=16,rowH=40,W=980;
+  var order=D.interventions.slice().sort(function(a,b){
+    return a.trlBand-b.trlBand || (a.section<b.section?-1:1); });
+  var H=mT+order.length*rowH+mB;
+  var rungX=function(r){ return mL+(r-1)*((W-mL-mR)/8); };
+  var max=0; order.forEach(function(iv){var c=capitalRaised(iv); if(c>max)max=c;});
+  var svg=['<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+W+' '+H+'" width="100%">'];
+  var r,i;
+  for(r=1;r<=9;r++){
+    svg.push('<line x1="'+rungX(r)+'" y1="'+(mT-8)+'" x2="'+rungX(r)+'" y2="'+(H-mB)+
+      '" stroke="rgba(23,19,14,.16)" stroke-dasharray="1 4"/>');
+    svg.push('<text x="'+rungX(r)+'" y="'+(mT-18)+'" text-anchor="middle" '+
+      'font-family="IBM Plex Mono,monospace" font-size="11" font-weight="600" fill="#5C4B37">'+r+'</text>');
+  }
+  svg.push('<text x="'+rungX(1)+'" y="14" font-family="IBM Plex Mono,monospace" font-size="10" '+
+    'letter-spacing="1.5" fill="#5C4B37">DISCLOSED CAPITAL RAISED, PLACED AT EACH CATEGORY’S BAND (AREA ∝ CAPITAL)</text>');
+  for(i=0;i<order.length;i++){
+    var iv=order[i], y=mT+i*rowH+rowH/2, c=capitalRaised(iv);
+    svg.push('<a href="#bench-'+iv.id+'"><text x="'+(mL-14)+'" y="'+(y+4)+'" text-anchor="end" '+
+      'font-family="IBM Plex Mono,monospace" font-size="11.5" fill="#17130E">'+
+      esc(iv.section)+' · '+esc(iv.name.length>26?iv.name.slice(0,25)+'…':iv.name)+'</text></a>');
+    var bx=rungX(iv.trlBand);
+    if(c>0){
+      var rad=5+23*Math.sqrt(c/max);
+      svg.push('<circle cx="'+bx+'" cy="'+y+'" r="'+rad.toFixed(1)+'" fill="#3E6B7A" fill-opacity=".55" '+
+        'stroke="#17130E" stroke-width="1"><title>'+esc(iv.name)+' — '+esc(hedged(iv,c))+
+        ' disclosed capital at band '+iv.trlBand+'</title></circle>');
+      svg.push('<text x="'+(bx+rad+7)+'" y="'+(y+4)+'" font-family="IBM Plex Mono,monospace" '+
+        'font-size="10.5" fill="#17130E">'+esc(hedged(iv,c))+'</text>');
+    } else {
+      svg.push('<text x="'+bx+'" y="'+(y+4)+'" text-anchor="middle" '+
+        'font-family="IBM Plex Mono,monospace" font-size="11" fill="#9C4A22">×'+
+        '<title>'+esc(iv.name)+' — no dollar figure disclosed; a blank is not a zero</title></text>');
+      svg.push('<text x="'+(bx+12)+'" y="'+(y+4)+'" font-family="IBM Plex Mono,monospace" '+
+        'font-size="10.5" fill="#5C4B37">no figure disclosed</text>');
+    }
+  }
+  svg.push('</svg>');
+  document.getElementById('capstrip').outerHTML=svg.join('').replace('<svg ',
+    '<svg id="capstrip" role="img" aria-label="Disclosed capital raised per category at its TRL band" ');
+  document.getElementById('capNote').textContent=
+    "Read the shape, not the pairs: disclosed capital concentrates at the top rungs — "+
+    "the categories that have already crossed the mid-ladder valley — while every category "+
+    "banded 1–5 sits at tens of millions or shows no disclosed figure at all. Circle area "+
+    "is proportional to capital; the × marks categories whose sources disclose no dollar "+
+    "figure, which is not the same as zero. Bands remain ordinal: nothing here is averaged, "+
+    "summed across categories, or read as a quantity.";
+})();
+
+/* ---------------------------------------------------------------------------
+   footer data: sources list + disclaimer, straight from the data layer
+   --------------------------------------------------------------------------- */
+(function footer(){
+  document.getElementById('dataSrcs').innerHTML=D.meta.sources.map(function(s){
+    return '<li><span class="s-date">'+esc(s.date)+'</span><span>'+esc(s.label)+
+      (s.verify?' <em style="color:var(--ember-lt);font-style:normal;font-family:var(--mono);font-size:.66rem;letter-spacing:.1em"> · VERIFY BEFORE PRINT</em>':'')+
+      '</span></li>';}).join('');
+  document.getElementById('discMeta').textContent=
+    D.meta.disclaimer+" Data layer last updated "+D.meta.updated+
+    ". Subsystem rows and supply-chain reads on this page are editorial engineering "+
+    "assessments — bands in the same sense as the data layer's ordinals: the argument "+
+    "is in the prose, the row is a handle on it.";
+})();
+
+})();
+</script>
+</body>
+</html>
