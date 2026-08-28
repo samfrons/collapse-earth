@@ -1,0 +1,2070 @@
+/* ===========================================================================
+   COLLAPSE EARTH — "THE SEAM"
+   A field study beneath Core Sample §1. The lead page drills a core through
+   the whole Earth system; this page drills into one seam. Scroll is descent
+   into a closed coal mine: surface works, the inventory, the shaft, the
+   working face, the company at depth.
+
+   Sibling of the Core Sample lead page. The tokens, the stratum-owns-its-ink
+   rule, the tray, the tooltip, the disclosure idiom and the contrast
+   discipline are carried over unchanged — see that file's header for the full
+   rationale on each. What differs here:
+     · the rail reads METRES BELOW SURFACE on a SCHEMATIC shaft, and says so;
+     · contact bands are CSS strata only — zero media on this page;
+     · every emissions figure is modelled and stamped as such. The gap between
+       modelled and measured is not a footnote here, it is the thesis.
+
+   WORD BUDGET: default-visible target ≤2,600 on basis B (all rendered text,
+   SVG included, closed <details> contributing only summaries) — measured with
+   the same script family as the lead; the delta is what travels.
+   RAISED from 2,400 on 2026-08-01, Sam's call, when sheet 4 (M-004) landed at
+   2,469. The budget exists to stop TEXT WALLS, and what pushed the count over
+   was a chart with a live readout, not prose — the remaining trims available
+   were the plot's axis numbers and the accessible live mirror, i.e. gaming the
+   counter rather than tightening the writing. The real backstop against
+   overwhelming a reader is the height budget below, which is unchanged.
+   HEIGHT BUDGET: ≤12,000px at 1440 wide. This is now the binding constraint
+   (11,761px as of sheet 4) — treat it as the one that must not move.
+   =========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  margin: 0;
+}
+img,
+video,
+svg {
+  display: block;
+  max-width: 100%;
+}
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+}
+table {
+  border-collapse: collapse;
+}
+
+:root {
+  /* strata grounds — the descent */
+  --firn: #f5f1e8;
+  --bone: #ede6da;
+  --bone-d: #e2d8c6;
+  --ochre: #c8973f;
+  --ochre-d: #bc8637;
+  --rust: #9c4a22;
+  --rust-d: #3a1c0e;
+  --carbon: #17130e;
+  --carbon-d: #0b0906;
+
+  /* inks, per ground */
+  --ink: #17130e;
+  --ink-2: #5c4b37;
+  --ink-o2: #2e2317;
+  --inv: #f4efe6;
+  --inv-2: #eaddc9;
+
+  /* label stock + accents */
+  --kraft: #d6c4a0;
+  --kraft-hi: #e3d5b8;
+  --kraft-lo: #c9b693;
+  --kraft-edge: #a8906a;
+  --kraft-ink: #2b2118;
+  --kraft-ink-2: #2f2113;
+  --kraft-kill: #2e1409;
+  --kraft-val: #16303b;
+  --kraft-stamp: #5a1a0c;
+  --ice: #3e6b7a;
+  --ice-lt: #8fb8c7;
+  --ice-dk: #33596a;
+  --ember: #d2653c;
+  --ember-dk: #b8391a;
+  /* pixel audit: ember at 2.4:1 on the dark-washed rust plates — the tint
+     serves dark grounds the way --ice-lt serves them for ice */
+  --ember-lt: #f6a97f;
+
+  --fg: var(--ink);
+  --fg-2: var(--ink-2);
+  --accent: var(--ice);
+  --alert: var(--ember-dk);
+  --rule: rgba(23, 19, 14, 0.22);
+  --rule-hi: rgba(23, 19, 14, 0.44);
+  --plate: rgba(23, 19, 14, 0.045);
+
+  --rail: 88px;
+  --gut: clamp(20px, 4.2vw, 64px);
+  --maxw: 1200px;
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  --mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --disp: 'Syne', 'Syne Fallback', system-ui, sans-serif;
+  --serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+}
+/* ink is owned by the stratum — never by scroll position (see lead's header) */
+.s-firn,
+.s-bone {
+  --fg: var(--ink);
+  --fg-2: var(--ink-2);
+  --accent: var(--ice);
+  --alert: var(--ember-dk);
+  --rule: rgba(23, 19, 14, 0.22);
+  --rule-hi: rgba(23, 19, 14, 0.44);
+  --plate: rgba(23, 19, 14, 0.045);
+}
+.s-ochre {
+  --fg: var(--ink);
+  --fg-2: var(--ink-o2);
+  --accent: #1f4152;
+  --alert: #2a0f06;
+  --rule: rgba(23, 19, 14, 0.3);
+  --rule-hi: rgba(23, 19, 14, 0.54);
+  --plate: rgba(23, 19, 14, 0.07);
+}
+.s-rust,
+.s-carbon {
+  --fg: var(--inv);
+  --fg-2: var(--inv-2);
+  /* alert is ember-lt here, not ember: this page puts alert TEXT on raw rust
+     (module-bill warn fields), where bare ember measures 1.6:1 */
+  --accent: var(--ice-lt);
+  --alert: var(--ember-lt);
+  --rule: rgba(244, 239, 230, 0.24);
+  --rule-hi: rgba(244, 239, 230, 0.46);
+  --plate: rgba(244, 239, 230, 0.05);
+}
+
+body {
+  background: var(--firn);
+  color: var(--fg);
+  font-family: var(--serif);
+  font-size: clamp(1rem, 0.96rem + 0.18vw, 1.0625rem);
+  line-height: 1.62;
+  font-optical-sizing: auto;
+  transition: color 0.5s var(--ease);
+}
+
+/* material tooth — same two grain layers as the lead */
+.grain {
+  position: fixed;
+  inset: -10%;
+  pointer-events: none;
+  z-index: 70;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='220' height='220' filter='url(%23g)'/></svg>");
+  background-size: 220px 220px;
+}
+.grain--dark {
+  mix-blend-mode: multiply;
+  opacity: 0.3;
+}
+.grain--lift {
+  mix-blend-mode: screen;
+  opacity: 0.055;
+}
+
+/* ===========================================================================
+   SHAFT-GAUGE RAIL — the lead's depth gauge, re-read as a mine shaft.
+   SCHEMATIC: the depth profile is illustrative and the rail says so. No claim
+   on this page rests on a depth figure.
+   =========================================================================== */
+#gauge {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: var(--rail);
+  z-index: 50;
+  background: linear-gradient(180deg, #17130e 0%, #100d09 62%, #0b0906 100%);
+  color: var(--inv);
+  border-right: 1px solid rgba(244, 239, 230, 0.17);
+  display: flex;
+  flex-direction: column;
+  font-family: var(--mono);
+}
+#gauge::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 1px;
+  background: linear-gradient(180deg, rgba(244, 239, 230, 0.3), rgba(244, 239, 230, 0.04));
+}
+.gauge-head {
+  padding: 14px 10px 10px;
+  border-bottom: 1px solid rgba(244, 239, 230, 0.16);
+  flex: 0 0 auto;
+}
+.gauge-brand {
+  font-size: 0.5rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(244, 239, 230, 0.62);
+  margin: 0 0 9px;
+  line-height: 1.4;
+}
+.gauge-read {
+  display: block;
+}
+.gauge-num {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+.gauge-unit {
+  font-size: 0.5rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(244, 239, 230, 0.6);
+  display: block;
+  margin-top: 1px;
+}
+.gauge-stratum {
+  margin-top: 11px;
+  font-size: 0.5rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ice-lt);
+  line-height: 1.5;
+}
+.gauge-col {
+  flex: 1 1 auto;
+  min-height: 0;
+  position: relative;
+}
+.gauge-col svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.gauge-foot {
+  flex: 0 0 auto;
+  padding: 8px 10px 12px;
+  border-top: 1px solid rgba(244, 239, 230, 0.16);
+  font-size: 0.45rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: rgba(244, 239, 230, 0.5);
+  line-height: 1.55;
+}
+.g-lam {
+  stroke: rgba(244, 239, 230, 0.3);
+  stroke-width: 0.6;
+}
+.g-lam--minor {
+  stroke: rgba(244, 239, 230, 0.13);
+}
+.g-tick {
+  stroke: rgba(244, 239, 230, 0.7);
+  stroke-width: 1;
+}
+.g-tickmin {
+  stroke: rgba(244, 239, 230, 0.34);
+  stroke-width: 0.8;
+}
+.g-label {
+  fill: rgba(244, 239, 230, 0.74);
+  font-family: var(--mono);
+  font-size: 6.4px;
+  letter-spacing: 0.06em;
+}
+.g-contact {
+  stroke: rgba(244, 239, 230, 0.55);
+  stroke-width: 0.8;
+  stroke-dasharray: 2 2;
+}
+.g-water {
+  stroke: var(--ice-lt);
+  stroke-width: 1;
+  stroke-dasharray: 3 2.4;
+}
+.g-water-t {
+  fill: var(--ice-lt);
+  font-family: var(--mono);
+  font-size: 5.6px;
+  letter-spacing: 0.09em;
+}
+.g-cursor line {
+  stroke: var(--inv);
+  stroke-width: 1.2;
+}
+.g-cursor path {
+  fill: none;
+  stroke: var(--inv);
+  stroke-width: 1.2;
+}
+.g-cursor circle {
+  fill: var(--ice-lt);
+  stroke: var(--carbon);
+  stroke-width: 0.8;
+}
+.g-core-edge {
+  fill: none;
+  stroke: rgba(244, 239, 230, 0.5);
+  stroke-width: 0.9;
+}
+
+/* ===========================================================================
+   PAGE FRAME + STRATA
+   =========================================================================== */
+#core {
+  margin-left: var(--rail);
+}
+.stratum {
+  position: relative;
+  isolation: isolate;
+  color: var(--fg);
+}
+.wrap {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding-inline: var(--gut);
+}
+
+.s-firn {
+  background: linear-gradient(180deg, #f7f4ee 0%, var(--firn) 55%, #f0eade 100%);
+}
+.s-bone {
+  background: linear-gradient(180deg, var(--bone) 0%, var(--bone-d) 100%);
+}
+.s-ochre {
+  background: linear-gradient(180deg, var(--ochre) 0%, var(--ochre-d) 100%);
+}
+.s-rust {
+  background: linear-gradient(180deg, var(--rust) 0%, #6e2f14 46%, var(--rust-d) 100%);
+}
+.s-carbon {
+  background: linear-gradient(180deg, var(--carbon) 0%, var(--carbon-d) 100%);
+}
+
+.act {
+  padding-block: clamp(64px, 9vh, 120px) clamp(72px, 11vh, 140px);
+}
+
+/* ===========================================================================
+   TYPE
+   =========================================================================== */
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+  margin: 0;
+}
+.eyebrow b {
+  font-weight: 600;
+  color: var(--fg);
+}
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--disp);
+  font-weight: 700;
+  margin: 0;
+  text-wrap: balance;
+}
+h1 {
+  font-size: clamp(2.9rem, 10.5vw, 7rem);
+  line-height: 0.86;
+  letter-spacing: -0.045em;
+  font-weight: 800;
+}
+h2 {
+  font-size: clamp(1.7rem, 4.4vw, 3rem);
+  line-height: 0.98;
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+h3 {
+  font-size: clamp(1.1rem, 1.9vw, 1.45rem);
+  line-height: 1.14;
+  letter-spacing: -0.012em;
+  font-weight: 600;
+}
+h4 {
+  font-size: 1rem;
+  line-height: 1.25;
+  letter-spacing: -0.006em;
+  font-weight: 600;
+}
+p {
+  margin: 0 0 1em;
+  max-width: 70ch;
+}
+p:last-child {
+  margin-bottom: 0;
+}
+a {
+  color: inherit;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  text-decoration-color: var(--rule-hi);
+}
+a:hover {
+  text-decoration-color: currentColor;
+}
+.lede {
+  font-size: clamp(1.15rem, 1.05rem + 0.6vw, 1.5rem);
+  line-height: 1.44;
+  max-width: 44ch;
+}
+.note {
+  font-size: 0.875rem;
+  line-height: 1.56;
+  color: var(--fg-2);
+  max-width: 64ch;
+}
+.mono {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+}
+.num {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+.sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.rule {
+  border: 0;
+  border-top: 1px solid var(--rule-hi);
+  margin: 0;
+}
+.hair {
+  border: 0;
+  border-top: 1px solid var(--rule);
+  margin: 0;
+}
+
+.act-head {
+  display: grid;
+  gap: clamp(14px, 2vw, 22px);
+  grid-template-columns: minmax(0, 1fr);
+  margin-bottom: clamp(30px, 4.5vh, 54px);
+}
+@media (min-width: 900px) {
+  .act-head {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    align-items: end;
+  }
+}
+.act-head .eyebrow {
+  grid-column: 1/-1;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--rule-hi);
+}
+.act-numeral {
+  font-family: var(--disp);
+  font-weight: 800;
+  font-size: 0.8em;
+  letter-spacing: 0.02em;
+}
+
+/* ===========================================================================
+   HERO — surface works
+   =========================================================================== */
+#hero {
+  padding-block: clamp(46px, 7vh, 86px) clamp(56px, 8vh, 104px);
+}
+.hero-grid {
+  display: grid;
+  gap: clamp(26px, 4vw, 50px);
+  grid-template-columns: minmax(0, 1fr);
+}
+@media (min-width: 940px) {
+  .hero-grid {
+    grid-template-columns: minmax(0, 1.14fr) minmax(0, 0.86fr);
+    align-items: start;
+  }
+}
+.hero-title {
+  margin: 0.18em 0 0.34em;
+}
+.hero-title span {
+  display: block;
+}
+.hero-title .t2 {
+  color: var(--fg-2);
+}
+.hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  padding-block: 10px;
+  border-top: 1px solid var(--rule-hi);
+  border-bottom: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+}
+
+.readout {
+  border: 1px solid var(--rule-hi);
+  background: var(--plate);
+  padding: clamp(14px, 1.9vw, 20px);
+}
+.readout-k {
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+  margin: 0;
+}
+.readout-top {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+.readout-val {
+  font-family: var(--mono);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(2rem, 4.6vw, 2.9rem);
+  line-height: 0.88;
+  letter-spacing: -0.04em;
+}
+.readout-unit {
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+  max-width: 15ch;
+  line-height: 1.5;
+}
+.readout-note {
+  margin-top: 10px;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--fg-2);
+}
+.readout-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: minmax(0, 1fr);
+}
+@media (min-width: 560px) {
+  .readout-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .readout-grid .readout:first-child {
+    grid-column: 1/-1;
+  }
+}
+
+/* the modelled-not-measured stamp — kraft register, used wherever a modelled
+   figure leads a surface */
+.mod-stamp {
+  display: inline-block;
+  transform: rotate(-1.6deg);
+  border: 2px solid var(--kraft-stamp);
+  color: var(--kraft-stamp);
+  padding: 4px 8px;
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  background: var(--kraft-hi);
+}
+/* on dark strata the stamp sits on its own kraft plate — ember on washed rust
+   measured 2.4:1, and a stamp that fails contrast is a stamp that lies */
+.s-rust .mod-stamp,
+.s-carbon .mod-stamp {
+  background: var(--kraft-hi);
+  border-color: var(--kraft-stamp);
+  color: var(--kraft-stamp);
+}
+
+.hero-anthro {
+  margin-top: clamp(22px, 3vh, 34px);
+  padding-top: 14px;
+  border-top: 1px solid var(--rule-hi);
+  display: grid;
+  gap: 6px;
+}
+.hero-anthro strong {
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--alert);
+  font-weight: 600;
+}
+
+/* the deadline clock — hero SVG strip (built in a later pass; slot reserved) */
+.clock {
+  margin-top: 16px;
+  border: 1px solid var(--rule-hi);
+  background: var(--plate);
+  padding: clamp(12px, 1.6vw, 16px);
+}
+/* Instrument SVGs are sized by their own viewBox aspect ratio. This is a CSS
+   property, not an SVG attribute — `height="auto"` on the element is invalid and
+   the browser logs it, even though the cascade then does the right thing. */
+.clock svg,
+.twin-plot svg,
+.field-scroll svg,
+.blueprint svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* ===========================================================================
+   CONTACT BANDS — CSS strata only on this page: the base gradient carries the
+   colour transition and a layered-rock texture is drawn in gradients. Zero
+   media bytes. The label plate is opaque, as on the lead (≥12.8:1 regardless
+   of ground).
+   =========================================================================== */
+.contact {
+  position: relative;
+  height: clamp(230px, 36vh, 410px);
+  overflow: hidden;
+  isolation: isolate;
+}
+.contact-base {
+  position: absolute;
+  inset: 0;
+}
+.contact--A .contact-base {
+  background: linear-gradient(180deg, var(--bone-d) 0%, var(--ochre) 100%);
+}
+.contact--B .contact-base {
+  background: linear-gradient(180deg, var(--ochre-d) 0%, var(--rust) 100%);
+}
+.contact--C .contact-base {
+  background: linear-gradient(180deg, var(--rust-d) 0%, var(--carbon) 100%);
+}
+/* photographic strata, as on the lead: footage multiplies into the gradient so
+   the rock layering literally is the colour transition */
+.contact-media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  mix-blend-mode: multiply;
+  filter: grayscale(0.62) contrast(1.22);
+}
+.contact--C .contact-media {
+  mix-blend-mode: screen;
+  opacity: 0.5;
+  filter: grayscale(0.3) contrast(1.1);
+}
+.contact-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(11, 9, 8, 0.34) 0%, rgba(11, 9, 8, 0) 62%);
+}
+.contact--C .contact-scrim {
+  background: linear-gradient(90deg, rgba(11, 9, 8, 0.6) 0%, rgba(11, 9, 8, 0.1) 70%);
+}
+/* kept as the no-media / reduced-motion fallback texture */
+.contact-tex {
+  position: absolute;
+  inset: 0;
+  mix-blend-mode: multiply;
+  opacity: 0.55;
+  background:
+    repeating-linear-gradient(178deg, rgba(23, 19, 14, 0.16) 0 2px, transparent 2px 11px),
+    repeating-linear-gradient(181deg, transparent 0 23px, rgba(23, 19, 14, 0.22) 23px 26px),
+    repeating-linear-gradient(179deg, transparent 0 47px, rgba(23, 19, 14, 0.13) 47px 53px);
+}
+.contact--C .contact-tex {
+  mix-blend-mode: screen;
+  opacity: 0.16;
+  background:
+    repeating-linear-gradient(178deg, rgba(244, 239, 230, 0.5) 0 1px, transparent 1px 12px),
+    repeating-linear-gradient(181deg, transparent 0 29px, rgba(244, 239, 230, 0.4) 29px 31px);
+}
+.contact-label {
+  position: absolute;
+  left: var(--gut);
+  bottom: var(--gut);
+  max-width: min(46ch, calc(100% - var(--gut) * 2));
+  background: rgba(11, 9, 8, 0.88);
+  padding: clamp(13px, 1.6vw, 20px);
+  border-left: 2px solid var(--inv);
+}
+.contact-chip {
+  display: inline-block;
+  background: var(--inv);
+  color: var(--carbon);
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  font-weight: 500;
+  letter-spacing: 0.19em;
+  text-transform: uppercase;
+  padding: 5px 9px;
+  line-height: 1.4;
+}
+.contact-name {
+  font-family: var(--disp);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: clamp(1rem, 2.4vw, 1.6rem);
+  line-height: 1.06;
+  letter-spacing: 0.01em;
+  margin: 11px 0 0;
+  color: var(--inv);
+}
+.contact-sub {
+  margin: 7px 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--inv-2);
+  max-width: 42ch;
+}
+.contact-flip {
+  display: inline-block;
+  margin-top: 11px;
+  background: var(--inv);
+  color: var(--carbon);
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 4px 8px;
+}
+
+/* ===========================================================================
+   DOSSIER TRAY — the right-sliding pane, carried over verbatim from the lead.
+   On this page it is the MINE DOSSIER and the module/assumptions pane.
+   =========================================================================== */
+.dos-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 88;
+  background: rgba(11, 9, 8, 0.62);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.32s var(--ease);
+}
+.dos-scrim[data-open='1'] {
+  opacity: 1;
+  pointer-events: auto;
+}
+/* the class display beats the hidden attribute's UA rule, so restate it —
+   without this the closed tray's grip pokes a 10px sliver into the viewport
+   (latent on the lead too; fixed there in the linkage pass) */
+.dossier[hidden],
+.dos-scrim[hidden] {
+  display: none;
+}
+
+.dossier {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 90;
+  width: min(560px, 92vw);
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, #1c1712 0%, var(--carbon) 30%, var(--carbon-d) 100%);
+  color: var(--inv);
+  border-left: 1px solid rgba(244, 239, 230, 0.28);
+  box-shadow: -24px 0 60px -20px rgba(11, 9, 8, 0.85);
+  transform: translateX(101%);
+  transition: transform 0.38s var(--ease);
+  overscroll-behavior: contain;
+}
+.dossier[data-open='1'] {
+  transform: none;
+}
+.dossier::before {
+  content: '';
+  position: absolute;
+  left: -1px;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, rgba(244, 239, 230, 0.42), rgba(244, 239, 230, 0.06));
+}
+.dos-grip {
+  position: absolute;
+  left: -16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 74px;
+  background: var(--carbon);
+  border: 1px solid rgba(244, 239, 230, 0.28);
+  border-right: 0;
+  display: grid;
+  place-items: center;
+  gap: 3px;
+  align-content: center;
+  pointer-events: none;
+}
+.dos-grip i {
+  display: block;
+  width: 5px;
+  height: 1px;
+  background: rgba(244, 239, 230, 0.5);
+}
+
+.dossier-hd {
+  flex: 0 0 auto;
+  padding: clamp(16px, 2.2vw, 22px) clamp(18px, 2.4vw, 26px) 14px;
+  background: linear-gradient(168deg, var(--kraft-hi), var(--kraft) 60%, var(--kraft-lo));
+  color: var(--kraft-ink);
+  border-bottom: 2px solid var(--kraft-edge);
+  display: grid;
+  gap: 10px;
+}
+.dossier-hd .dossier-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 14px;
+}
+.dossier-tier {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--kraft-ink-2);
+  margin: 0 0 5px;
+}
+#dosName {
+  color: var(--kraft-ink);
+}
+.dossier-close {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border: 1px solid var(--kraft-ink);
+  padding: 6px 9px;
+  color: var(--kraft-ink);
+  flex: 0 0 auto;
+  background: rgba(255, 255, 255, 0.34);
+}
+.dossier-close:hover {
+  background: var(--kraft-ink);
+  color: var(--kraft-hi);
+}
+.dossier-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: clamp(14px, 2vw, 20px) clamp(18px, 2.4vw, 26px) clamp(28px, 4vw, 40px);
+  --fg: var(--inv);
+  --fg-2: var(--inv-2);
+  --rule: rgba(244, 239, 230, 0.22);
+  --rule-hi: rgba(244, 239, 230, 0.44);
+  --accent: var(--ice-lt);
+  --alert: var(--ember);
+}
+.dossier-empty {
+  color: var(--inv-2);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+.dos-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+  border: 1px solid var(--rule-hi);
+  padding: 7px 11px;
+}
+.dos-tab:hover {
+  color: var(--fg);
+  border-color: var(--fg);
+}
+.dl {
+  margin: 0;
+}
+.dl-row {
+  padding: 11px 0;
+  border-bottom: 1px solid var(--rule);
+  display: grid;
+  gap: 3px;
+}
+.dl-row:last-child {
+  border-bottom: 0;
+}
+.dl-k {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+}
+.dl-v {
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+.dl-v .num {
+  font-weight: 600;
+}
+.thr-line {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  flex-wrap: wrap;
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+}
+.thr-line .c {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+.thr-line .r {
+  font-size: 0.8125rem;
+  color: var(--fg-2);
+}
+.flag {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 3px 7px;
+  border: 1px solid currentColor;
+}
+.flag--contested {
+  color: var(--alert);
+}
+.src-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 5px;
+}
+.src-list li {
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: var(--fg-2);
+  padding-left: 14px;
+  position: relative;
+}
+.src-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 8px;
+  height: 1px;
+  background: var(--rule-hi);
+}
+
+/* tooltip (shared, single element) */
+#tip {
+  position: fixed;
+  z-index: 80;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, -118%);
+  transition: opacity 0.12s linear;
+  background: var(--carbon);
+  color: var(--inv);
+  border: 1px solid rgba(244, 239, 230, 0.28);
+  padding: 9px 11px;
+  max-width: 290px;
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+}
+#tip b {
+  display: block;
+  font-family: var(--disp);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  margin-bottom: 4px;
+  text-transform: none;
+}
+#tip.on {
+  opacity: 1;
+}
+
+/* noscript */
+.ns {
+  border: 1px solid var(--rule-hi);
+  padding: clamp(16px, 2.4vw, 26px);
+  margin-top: 26px;
+  background: var(--plate);
+}
+.ns table {
+  width: 100%;
+  font-size: 0.8125rem;
+}
+.ns caption {
+  text-align: left;
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+  padding-bottom: 9px;
+}
+.ns th,
+.ns td {
+  text-align: left;
+  padding: 7px 12px 7px 0;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+}
+.ns th {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+  font-weight: 500;
+}
+
+/* ===========================================================================
+   CHART LANGUAGE — fd-* classes carried from the lead's assay field, shared by
+   the seam field, the decline chart, the routing chart and the ladder.
+   =========================================================================== */
+.field-scroll {
+  overflow-x: auto;
+}
+.field-scroll svg {
+  display: block;
+  min-width: 760px;
+  width: 100%;
+  height: auto;
+}
+.fd-hd {
+  font-family: var(--mono);
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  fill: var(--fg-2);
+}
+.s-ochre .fd-hd {
+  fill: var(--ink-o2);
+}
+.fd-axis line {
+  stroke: currentColor;
+  stroke-width: 0.8;
+}
+.fd-axis text {
+  font-family: var(--mono);
+  font-size: 8.4px;
+  letter-spacing: 0.06em;
+  fill: var(--fg-2);
+}
+.fd-band {
+  fill: rgba(23, 19, 14, 0.05);
+}
+.s-rust .fd-band,
+.s-carbon .fd-band {
+  fill: rgba(244, 239, 230, 0.05);
+}
+.fd-bandnum {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  fill: var(--fg);
+  font-variant-numeric: tabular-nums;
+}
+.fd-break {
+  stroke: currentColor;
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+}
+.fd-gutter {
+  fill: url(#hatchGutter);
+  stroke: currentColor;
+  stroke-width: 1.4;
+  stroke-dasharray: 4 2.6;
+}
+.fd-disc {
+  fill: var(--carbon);
+  stroke: var(--kraft-hi);
+  stroke-width: 1.4;
+}
+.fd-disc--flag {
+  fill: var(--kraft-stamp);
+}
+.fd-ring {
+  fill: none;
+  stroke: var(--kraft-stamp);
+  stroke-width: 1.2;
+  stroke-opacity: 0.85;
+}
+.fd-num {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  font-weight: 600;
+  fill: var(--inv);
+  letter-spacing: 0;
+}
+.fd-name {
+  font-family: var(--serif);
+  font-size: 11.5px;
+  fill: var(--fg);
+}
+.fd-val {
+  font-family: var(--mono);
+  font-size: 9.2px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  fill: var(--fg);
+  font-variant-numeric: tabular-nums;
+}
+.fd-mk {
+  cursor: pointer;
+}
+.fd-mk:hover .fd-hit,
+.fd-mk:focus-visible .fd-hit {
+  fill: rgba(23, 19, 14, 0.075);
+}
+.fd-mk:focus-visible {
+  outline: none;
+}
+.fd-mk:focus-visible .fd-disc {
+  stroke: #1f4152;
+  stroke-width: 3;
+}
+.fd-hit {
+  fill: transparent;
+}
+.fd-callout {
+  margin: 14px 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  max-width: 76ch;
+  border-left: 3px solid var(--fg);
+  padding-left: 12px;
+}
+
+/* ===========================================================================
+   DISCLOSURE — native <details> throughout, as on the lead.
+   =========================================================================== */
+summary {
+  cursor: pointer;
+  list-style: none;
+  display: block;
+}
+summary::-webkit-details-marker {
+  display: none;
+}
+summary::marker {
+  content: '';
+}
+summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.pull {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex: 0 0 auto;
+  font-family: var(--mono);
+  font-size: 0.4375rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+  white-space: nowrap;
+}
+.pull i {
+  display: block;
+  width: 15px;
+  height: 9px;
+  position: relative;
+  border: 1px solid currentColor;
+  border-radius: 1px;
+}
+.pull i::before,
+.pull i::after {
+  content: '';
+  position: absolute;
+  background: currentColor;
+  transition:
+    transform 0.22s var(--ease),
+    opacity 0.22s var(--ease);
+}
+.pull i::before {
+  left: 3px;
+  right: 3px;
+  top: 3px;
+  height: 1px;
+}
+.pull i::after {
+  left: 50%;
+  top: 2px;
+  bottom: 2px;
+  width: 1px;
+  margin-left: -0.5px;
+}
+details[open] > summary .pull i::after {
+  transform: scaleY(0);
+  opacity: 0;
+}
+details[open] > summary .pull {
+  color: var(--fg);
+}
+summary:hover .pull {
+  color: var(--fg);
+}
+.pull-open {
+  display: none;
+}
+details[open] > summary .pull-open {
+  display: inline;
+}
+details[open] > summary .pull-shut {
+  display: none;
+}
+
+.fn {
+  margin-top: 12px;
+}
+.fn > summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+  border: 1px solid var(--rule-hi);
+  padding: 6px 9px;
+}
+.fn > summary:hover {
+  color: var(--fg);
+  border-color: var(--fg);
+}
+.fn-body {
+  margin-top: 12px;
+}
+.fn-body .note {
+  font-size: 0.8125rem;
+}
+/* on rust the drawer body sits on the dark plate the charts use — alert ink
+   on the raw mid-gradient measured 3.7:1 */
+.s-rust .fn-body {
+  background: rgba(11, 9, 8, 0.32);
+  border: 1px solid var(--rule);
+  padding: 14px 16px;
+}
+
+.meth-dz {
+  border-top: 1px solid var(--rule);
+}
+.meth-dz > summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px 18px;
+  padding: 15px 0;
+  flex-wrap: wrap;
+}
+.meth-dz-right {
+  display: flex;
+  align-items: center;
+  gap: 8px 14px;
+  flex-wrap: wrap;
+}
+.meth-dz > summary h4 {
+  font-size: 0.9375rem;
+}
+.meth-dz-n {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+  white-space: normal;
+  max-width: 34ch;
+}
+.meth-dz-body {
+  padding-bottom: 22px;
+}
+
+.field {
+  padding-top: 13px;
+  border-top: 1px solid var(--rule);
+  margin-top: 13px;
+}
+.field:first-child {
+  border-top: 0;
+  margin-top: 0;
+  padding-top: 0;
+}
+.field-k {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+  margin: 0 0 5px;
+}
+.field-v {
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  margin: 0;
+  max-width: 64ch;
+}
+.field--warn .field-k {
+  color: var(--alert);
+}
+
+/* ===========================================================================
+   KRAFT TAGS — kill criteria in Act IV, module bill drawers, mine tags.
+   =========================================================================== */
+.tags {
+  display: grid;
+  gap: clamp(20px, 2.8vw, 32px);
+  margin-top: clamp(28px, 4vh, 44px);
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+}
+.tag {
+  background: linear-gradient(168deg, var(--kraft-hi) 0%, var(--kraft) 34%, var(--kraft-lo) 100%);
+  color: var(--kraft-ink);
+  position: relative;
+  padding: 0 0 16px;
+  box-shadow:
+    0 1px 0 var(--kraft-edge),
+    0 14px 30px -14px rgba(11, 9, 8, 0.8);
+  border: 1px solid var(--kraft-edge);
+}
+.tag::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 3px;
+  background: repeating-linear-gradient(90deg, var(--kraft-edge) 0 3px, transparent 3px 7px);
+  opacity: 0.7;
+}
+.tag-punch {
+  position: absolute;
+  top: 13px;
+  left: 16px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--rust-d);
+  box-shadow:
+    inset 0 1px 2px rgba(0, 0, 0, 0.6),
+    0 1px 0 var(--kraft-hi);
+}
+.tag-wire {
+  position: absolute;
+  top: 20px;
+  left: 31px;
+  width: 52px;
+  height: 1px;
+  background: var(--kraft-edge);
+  transform: rotate(-11deg);
+  transform-origin: left center;
+}
+.tag-hd {
+  padding: 13px 18px 12px 42px;
+  border-bottom: 1px solid var(--kraft-edge);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.tag-id {
+  font-family: var(--mono);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+.tag-claim {
+  margin: 0;
+  padding: 14px 18px;
+  font-family: var(--disp);
+  font-weight: 600;
+  font-size: clamp(0.95rem, 1.25vw, 1.08rem);
+  line-height: 1.3;
+  letter-spacing: -0.012em;
+}
+.tag-k {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  font-weight: 500;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+  color: var(--kraft-ink-2);
+  margin: 0 0 5px;
+}
+.tag-v {
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  margin: 0;
+}
+.tag-f {
+  padding: 13px 18px 0;
+  border-top: 1px solid rgba(168, 144, 106, 0.5);
+}
+.tag-f--kill {
+  background: rgba(156, 74, 34, 0.13);
+  padding-bottom: 13px;
+  border-top: 1px solid var(--rust);
+}
+.tag-f--kill .tag-k {
+  color: var(--kraft-kill);
+}
+.tag-stamp {
+  margin: 0 18px 0;
+  transform: rotate(-2.4deg);
+  display: inline-block;
+  border: 2px solid var(--kraft-stamp);
+  color: var(--kraft-stamp);
+  padding: 5px 9px;
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  position: relative;
+  top: -8px;
+  background: var(--kraft-hi);
+}
+
+/* ===========================================================================
+   THE TWIN — Act II bench, charts and controls
+   =========================================================================== */
+.twin-grid {
+  display: grid;
+  gap: clamp(18px, 2.4vw, 30px);
+  grid-template-columns: minmax(0, 1fr);
+}
+@media (min-width: 980px) {
+  .twin-grid {
+    grid-template-columns: minmax(0, 0.44fr) minmax(0, 0.56fr);
+  }
+}
+.bench {
+  background: linear-gradient(168deg, var(--kraft-hi), var(--kraft) 60%, var(--kraft-lo));
+  border: 1px solid var(--kraft-edge);
+  color: var(--kraft-ink);
+  padding: clamp(13px, 1.8vw, 18px);
+  display: grid;
+  gap: 14px;
+}
+.bench-k {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+  color: var(--kraft-ink-2);
+  margin: 0 0 7px;
+}
+.seg {
+  display: flex;
+  gap: 0;
+  border: 1px solid var(--kraft-ink);
+}
+.seg label {
+  flex: 1 1 0;
+  position: relative;
+  text-align: center;
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 8px 4px;
+  border-left: 1px solid var(--kraft-ink);
+}
+.seg label:first-child {
+  border-left: 0;
+}
+.seg input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.seg label:has(input:checked) {
+  background: var(--kraft-ink);
+  color: var(--kraft-hi);
+}
+.seg label:has(input:focus-visible) {
+  outline: 2px solid var(--kraft-val);
+  outline-offset: 2px;
+}
+.bench-note {
+  font-size: 0.6875rem;
+  line-height: 1.5;
+  color: var(--kraft-ink-2);
+  margin: 0;
+}
+.twin-readout {
+  border: 1px solid var(--rule-hi);
+  background: var(--plate);
+  padding: clamp(13px, 1.8vw, 18px);
+  margin-top: 14px;
+}
+.twin-readout .num {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+.twin-plot {
+  border: 1px solid var(--rule-hi);
+  background: rgba(247, 244, 238, 0.3);
+  padding: clamp(10px, 1.4vw, 16px);
+}
+/* On the dark strata the plot plate goes dark, not light: a 30% cream wash
+   over rust puts cream chart labels near 2:1. Same rule as the lead's plates —
+   the ground serves the ink that will sit on it. */
+.s-rust .twin-plot,
+.s-carbon .twin-plot {
+  background: rgba(11, 9, 8, 0.32);
+}
+/* The engineering sheets are BLUEPRINTS — a Prussian-blue plate pinned onto
+   the rust stratum, its own material the way the kraft tags are. Faint
+   drafting grid; paper-white ink. */
+.blueprint {
+  background:
+    repeating-linear-gradient(0deg, rgba(226, 240, 248, 0.05) 0 1px, transparent 1px 26px),
+    repeating-linear-gradient(90deg, rgba(226, 240, 248, 0.05) 0 1px, transparent 1px 26px),
+    linear-gradient(180deg, #16324a 0%, #0f2438 100%) !important;
+  border: 1px solid rgba(226, 240, 248, 0.4) !important;
+}
+.blueprint .readout-k {
+  color: #a9c6d8;
+}
+
+/* On ochre the charts are UNBOXED — they float on the stratum under an
+   eyebrow and a hairline, as the lead's assay field does. The box was the
+   dashboard tell. */
+.s-ochre .twin-plot {
+  border: 0;
+  border-top: 1px solid var(--rule-hi);
+  background: transparent;
+  padding: 14px 0 0;
+}
+.inst-eyebrow {
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+  margin: clamp(26px, 4vh, 44px) 0 10px;
+}
+.inst-eyebrow b {
+  color: var(--fg);
+}
+.twin-stub {
+  border: 1px dashed var(--rule-hi);
+  padding: 18px;
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+}
+.counters {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 170px), 1fr));
+}
+.counter {
+  border: 1px solid var(--rule-hi);
+  background: var(--plate);
+  padding: 12px 13px;
+}
+.counter b {
+  display: block;
+  font-family: var(--mono);
+  font-size: 1.05rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  margin-top: 5px;
+}
+.counter small {
+  display: block;
+  font-size: 0.6875rem;
+  line-height: 1.45;
+  color: var(--fg-2);
+  margin-top: 5px;
+}
+.playrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+}
+.playrow input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  flex: 1 1 auto;
+  height: 26px;
+  background: transparent;
+  display: block;
+}
+.playrow input[type='range']::-webkit-slider-runnable-track {
+  height: 3px;
+  background: var(--ink);
+  opacity: 0.85;
+}
+.playrow input[type='range']::-moz-range-track {
+  height: 3px;
+  background: var(--ink);
+  opacity: 0.85;
+}
+.playrow input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 15px;
+  height: 22px;
+  margin-top: -10px;
+  background: var(--carbon);
+  border: 1px solid var(--bone);
+  border-radius: 1px;
+  box-shadow: 0 0 0 1px var(--ink);
+}
+.playrow input[type='range']::-moz-range-thumb {
+  width: 15px;
+  height: 22px;
+  background: var(--carbon);
+  border: 1px solid var(--bone);
+  border-radius: 1px;
+  box-shadow: 0 0 0 1px var(--ink);
+}
+.playrow .mono {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  min-width: 4ch;
+  text-align: right;
+}
+
+/* the unit plate — Act III */
+.unit-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 14px;
+}
+.uchip {
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: 1px solid var(--rule-hi);
+  padding: 8px 11px;
+  color: var(--fg-2);
+  text-align: left;
+  line-height: 1.45;
+}
+.uchip b {
+  display: block;
+  font-weight: 600;
+  color: var(--fg);
+  letter-spacing: 0.14em;
+}
+.uchip[aria-pressed='true'] {
+  background: var(--inv);
+  color: var(--carbon);
+  border-color: var(--inv);
+}
+.uchip[aria-pressed='true'] b {
+  color: var(--carbon);
+}
+.uchip--unsafe {
+  border-color: var(--ember-lt);
+  background: rgba(11, 9, 8, 0.6);
+}
+.uchip--unsafe b {
+  color: var(--ember-lt);
+}
+.uchip--unsafe[aria-pressed='true'] {
+  background: var(--ember-lt);
+  border-color: var(--ember-lt);
+  color: var(--carbon);
+}
+.uchip--unsafe[aria-pressed='true'] b {
+  color: var(--carbon);
+}
+
+/* the 3-D explorer — sheet 3 */
+#xpWrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/10;
+  overflow: hidden;
+  cursor: grab;
+  background: rgba(7, 20, 34, 0.35);
+  border: 1px solid rgba(226, 240, 248, 0.25);
+}
+#xpWrap:active {
+  cursor: grabbing;
+}
+#xpWrap canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+#xpLabels {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+.xp-label {
+  position: absolute;
+  transform: translate(-50%, -130%);
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #f2f8fc;
+  background: rgba(7, 20, 34, 0.78);
+  border: 1px solid rgba(226, 240, 248, 0.45);
+  padding: 3px 6px;
+  white-space: nowrap;
+}
+.xp-cap {
+  margin: 12px 0 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #d7e7f2;
+  max-width: 70ch;
+  min-height: 2.4em;
+}
+.xp-hud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+  align-items: center;
+}
+.xp-stations {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.blueprint .uchip {
+  border-color: rgba(226, 240, 248, 0.45);
+  color: #a9c6d8;
+}
+.blueprint .uchip b {
+  color: #f2f8fc;
+}
+.blueprint .uchip[aria-pressed='true'] {
+  background: #f2f8fc;
+  border-color: #f2f8fc;
+  color: #0f2438;
+}
+.blueprint .uchip[aria-pressed='true'] b {
+  color: #0f2438;
+}
+.blueprint .seg {
+  border-color: #d7e7f2;
+}
+.blueprint .seg label {
+  border-color: #d7e7f2;
+  color: #a9c6d8;
+}
+.blueprint .seg label:has(input:checked) {
+  background: #f2f8fc;
+  color: #0f2438;
+}
+.blueprint .playrow input[type='range']::-webkit-slider-runnable-track {
+  background: #d7e7f2;
+  opacity: 0.9;
+}
+.blueprint .playrow input[type='range']::-moz-range-track {
+  background: #d7e7f2;
+  opacity: 0.9;
+}
+.blueprint .playrow .mono {
+  color: #f2f8fc;
+}
+
+/* methods / sources */
+.disc {
+  border: 1px solid var(--rule-hi);
+  padding: clamp(16px, 2.2vw, 24px);
+  background: var(--plate);
+}
+.disc p:first-child {
+  font-family: var(--disp);
+  font-weight: 600;
+  font-size: 1.0625rem;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+.srcs {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0;
+  border-top: 1px solid var(--rule);
+}
+.srcs li {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--rule);
+  display: grid;
+  gap: 4px 14px;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+}
+.src-id {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+  padding-top: 0.25em;
+  white-space: nowrap;
+}
+.src-body {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+.src-body em {
+  font-style: normal;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  color: var(--fg-2);
+  display: block;
+  margin-top: 3px;
+}
+.src-verify {
+  font-family: var(--mono);
+  font-size: 0.4375rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ember);
+  border: 1px solid currentColor;
+  padding: 2px 5px;
+  display: inline-block;
+  margin-top: 5px;
+}
+footer {
+  padding-block: clamp(40px, 6vh, 70px);
+  border-top: 1px solid var(--rule-hi);
+  margin-top: clamp(40px, 6vh, 70px);
+}
+.foot-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 26px;
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+}
+
+/* data-layer failure notice */
+html[data-nodata] #dataFail {
+  display: block;
+}
+#dataFail {
+  display: none;
+  margin: 0 auto;
+  max-width: 56ch;
+  padding: clamp(28px, 6vh, 64px) var(--gut);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+#dataFail b {
+  display: block;
+  font-family: var(--disp);
+  font-weight: 700;
+  font-size: 1.25rem;
+  letter-spacing: -0.015em;
+  margin-bottom: 10px;
+}
+html[data-nodata] #core > main > section:not(#dataFailHost) {
+  display: none;
+}
+
+html[data-tray='1'] {
+  overflow: hidden;
+}
+
+/* scroll reveal */
+.rise {
+  opacity: 0;
+  transform: translateY(15px);
+  transition:
+    opacity 0.7s var(--ease),
+    transform 0.7s var(--ease);
+}
+.rise.in {
+  opacity: 1;
+  transform: none;
+}
+
+/* ===========================================================================
+   RESPONSIVE — rail becomes a top instrument bar on narrow screens
+   =========================================================================== */
+@media (max-width: 1080px) {
+  :root {
+    --rail: 66px;
+  }
+}
+@media (max-width: 860px) {
+  :root {
+    --rail: 0px;
+  }
+  #gauge {
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: auto;
+    width: auto;
+    height: 46px;
+    flex-direction: row;
+    align-items: stretch;
+    border-right: 0;
+    border-bottom: 1px solid rgba(244, 239, 230, 0.2);
+    background: linear-gradient(90deg, #17130e, #0b0906);
+  }
+  #gauge::after {
+    display: none;
+  }
+  .gauge-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 0 12px;
+    border-bottom: 0;
+    border-right: 1px solid rgba(244, 239, 230, 0.16);
+  }
+  .gauge-brand {
+    display: none;
+  }
+  .gauge-read {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+  }
+  .gauge-num {
+    font-size: 0.8125rem;
+  }
+  .gauge-unit {
+    display: inline;
+    margin: 0;
+    font-size: 0.4375rem;
+  }
+  .gauge-stratum {
+    margin: 0;
+    font-size: 0.4375rem;
+    max-width: 14ch;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .gauge-col {
+    flex: 1 1 auto;
+  }
+  .gauge-foot {
+    display: none;
+  }
+  #core {
+    margin-left: 0;
+    padding-top: 46px;
+  }
+}
+@media (max-width: 560px) {
+  h1 {
+    font-size: clamp(2.4rem, 13vw, 3.6rem);
+  }
+  .contact {
+    height: clamp(150px, 24vh, 220px);
+  }
+  .tag-punch,
+  .tag-wire {
+    display: none;
+  }
+  .tag-hd,
+  .tag-claim,
+  .tag-f {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+  .tag-stamp {
+    margin-left: 15px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .rise {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media print {
+  #gauge,
+  .grain,
+  #tip {
+    display: none;
+  }
+  #core {
+    margin-left: 0;
+  }
+  .stratum {
+    background: #fff !important;
+    color: #000 !important;
+  }
+}

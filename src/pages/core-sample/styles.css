@@ -1,0 +1,3074 @@
+/* ===========================================================================
+   COLLAPSE EARTH — V4 "CORE SAMPLE"
+   A drill core read top to bottom. The page descends through four strata;
+   a fixed depth-gauge rail on the left is the instrument housing.
+
+   PROGRESSIVE DISCLOSURE. The default scroll is a spine, not a document:
+   headlines, key figures, visuals and one-line summaries. Depth lives in
+   specimen drawers (native <details>) and arrives only when asked for.
+   Fully expanded it is still 13,000+ words — nothing was deleted, and every
+   figure is one interaction away. A drawer summary may shorten prose but never
+   a hedge or a badge: a collapsed capital total keeps its ≥ or ≈ and lists
+   every badge its underlying entries use.
+
+   WORD BUDGET — STATE THE BASIS OR THE NUMBER MEANS NOTHING. Counters in use on
+   this project disagree by ~1,400 words on this same page, so any figure quoted
+   without its basis is unusable and "headroom" computed against the wrong one is
+   phantom. Measured at 1440×900 in the default state — nothing expanded, nothing
+   hovered, a closed <details> contributing only its <summary>, and a word being a
+   whitespace-separated token with at least one alphanumeric character:
+
+     basis                                          now    before the assay field
+     A. prose only, SVG text excluded             2,149                     2,110
+     B. all rendered text, SVG included           2,492                     2,468
+     C. final-check.mjs (looser element rule)     3,590              not measured
+     page height                              11,682 px                 11,649 px
+
+   B is the basis the ~2,500 target has been tracked against here, and B is what
+   a report should quote unless it says otherwise. It is also what v4-measure.mjs
+   reports. Note what C means, though: on the project's own end-to-end harness
+   this page has been ~1,100 words over ~2,500 since long before the assay field,
+   so C's "headroom" was never real and must not be spent. Scroll-reveal opacity
+   is NOT treated as hidden in any of these — that copy is read, just later — and
+   counting it out understates the page by ~1,100.
+
+   THE DELTA IS WHAT TRAVELS, not the absolute: an absolute is only comparable
+   against the identical script. The assay field cost +24 on B (+39 on A) while
+   REMOVING the 1-D chart it replaced, and its review round a further +2 on B.
+   Re-measure with `scratchpad/word-bases.mjs`, which defines all three, rather
+   than trusting a number in a report — two implementations of nominally the same
+   basis have already differed by ~215 words on this page.
+
+   CONTRAST DISCIPLINE (WCAG 2.1; normal text needs 4.5:1, large text 3:1).
+
+   HOW IT IS VERIFIED, and this matters more than the numbers: contrast is
+   measured from RENDERED SCREENSHOT PIXELS, not from modelled composites.
+   The audit blanks every glyph, screenshots each screenful, and takes the
+   modal pixel behind each text box. An earlier version composited declared
+   colours over modelled stratum grounds and reported zero failures while two
+   components were sitting at 2.6:1 — because a model never sees the plates
+   BETWEEN the stratum and the text (.co-grid's 28% gap plate, a chip's wash,
+   the two mix-blend-mode grain layers). Two rules follow from that:
+     · a component variant TINTS its base, it never REPLACES it — replacing
+       the light wash is what stacked .co--flag to 34.5% black over ochre;
+     · the kraft inks are darker than the stock alone would need, because the
+       multiply grain darkens the real ground behind them by roughly 15%.
+
+   Ink is declared BY THE STRATUM, never by a scroll-driven attribute on
+   <body> — otherwise Act III's text would render with light-ground ink
+   whenever the reader happened to be somewhere else on the page. `color` is
+   set on .stratum itself, since an inherited colour is a RESOLVED value and
+   would otherwise capture var(--fg) as it stood on <body>.
+
+   The rail is a constant carbon bezel, so its ink never depends on the
+   stratum beside it. The dossier tray is opaque for the same reason. No body
+   text sits on a stratum-to-stratum transition: those happen inside the
+   photographic contact bands, where every label carries its own opaque plate
+   (≥12.8:1 whatever video frame is underneath). Page content behind the open
+   tray is dimmed by a modal scrim and is inert — scroll locked, focus
+   trapped — so it is deliberately excluded from measurement.
+   =========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  margin: 0;
+}
+img,
+video,
+svg {
+  display: block;
+  max-width: 100%;
+}
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+}
+table {
+  border-collapse: collapse;
+}
+
+:root {
+  /* strata grounds — the descent */
+  --firn: #f5f1e8;
+  --bone: #ede6da;
+  --bone-d: #e2d8c6;
+  --ochre: #c8973f;
+  --ochre-d: #bc8637;
+  --rust: #9c4a22;
+  --rust-d: #3a1c0e;
+  --carbon: #17130e;
+  --carbon-d: #0b0906;
+
+  /* inks, per ground */
+  --ink: #17130e;
+  --ink-2: #5c4b37; /* light grounds only */
+  --ink-o2: #2e2317; /* ochre ground only  */
+  --inv: #f4efe6;
+  --inv-2: #eaddc9;
+
+  /* label stock + accents */
+  --kraft: #d6c4a0;
+  --kraft-hi: #e3d5b8;
+  --kraft-lo: #c9b693;
+  --kraft-edge: #a8906a;
+  --kraft-ink: #2b2118;
+  --kraft-ink-2: #2f2113;
+  --kraft-kill: #2e1409;
+  --kraft-val: #16303b;
+  --kraft-stamp: #5a1a0c;
+  /* pixel audit: --kraft-val reads 4.48:1 as ink directly on the assay field's
+     shaded corner (#BB8A3D after the multiply grain) — a 0.02 miss on AA. This
+     is the same ink taken two steps darker, for text sitting on ochre rather
+     than on kraft stock. Measures 4.84:1 there. */
+  --ice-deep: #14293a;
+  /* The kraft inks are darker than the stock alone would need: the fixed grain
+     layer multiplies over the tags, so the real ground behind this text is
+     ~15% darker than --kraft-lo. Pixel sampling found that; modelling missed it. */
+  --ice: #3e6b7a;
+  --ice-lt: #8fb8c7;
+  --ice-dk: #33596a; /* small text on light */
+  --ember: #d2653c;
+  --ember-dk: #b8391a; /* -dk is the light-ground variant */
+
+  /* Defaults for anything outside a stratum. Each stratum RE-DECLARES these,
+     because which ink is legible is a property of the ground it sits on, not
+     of where the reader has scrolled to. */
+  --fg: var(--ink);
+  --fg-2: var(--ink-2);
+  --accent: var(--ice);
+  --alert: var(--ember-dk);
+  --rule: rgba(23, 19, 14, 0.22);
+  --rule-hi: rgba(23, 19, 14, 0.44);
+  --plate: rgba(23, 19, 14, 0.045);
+
+  --rail: 88px;
+  --gut: clamp(20px, 4.2vw, 64px);
+  --maxw: 1200px;
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  --mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --disp: 'Syne', 'Syne Fallback', system-ui, sans-serif;
+  --serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+}
+/* --- ink is owned by the stratum, so contrast is a static property --------
+   Measured ratios for each pairing are in the header block above. Sections
+   never inherit an ink meant for a different ground, and no body text sits on
+   a stratum-to-stratum transition: those happen inside the contact bands,
+   where every label carries its own opaque plate. */
+.s-firn,
+.s-bone {
+  --fg: var(--ink);
+  --fg-2: var(--ink-2);
+  --accent: var(--ice);
+  --alert: var(--ember-dk);
+  --rule: rgba(23, 19, 14, 0.22);
+  --rule-hi: rgba(23, 19, 14, 0.44);
+  --plate: rgba(23, 19, 14, 0.045);
+}
+.s-ochre {
+  --fg: var(--ink);
+  --fg-2: var(--ink-o2);
+  --accent: #1f4152;
+  --alert: #2a0f06;
+  --rule: rgba(23, 19, 14, 0.3);
+  --rule-hi: rgba(23, 19, 14, 0.54);
+  --plate: rgba(23, 19, 14, 0.07);
+}
+.s-rust,
+.s-carbon {
+  --fg: var(--inv);
+  --fg-2: var(--inv-2);
+  --accent: var(--ice-lt);
+  --alert: var(--ember);
+  --rule: rgba(244, 239, 230, 0.24);
+  --rule-hi: rgba(244, 239, 230, 0.46);
+  --plate: rgba(244, 239, 230, 0.05);
+}
+
+body {
+  background: var(--firn);
+  color: var(--fg);
+  font-family: var(--serif);
+  font-size: clamp(1rem, 0.96rem + 0.18vw, 1.0625rem);
+  line-height: 1.62;
+  font-optical-sizing: auto;
+  transition: color 0.5s var(--ease);
+}
+
+/* --- material tooth: two fixed grain layers so both light and dark strata
+       pick up texture (multiply reads on light, screen reads on dark) ------ */
+.grain {
+  position: fixed;
+  inset: -10%;
+  pointer-events: none;
+  z-index: 70;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='220' height='220' filter='url(%23g)'/></svg>");
+  background-size: 220px 220px;
+}
+.grain--dark {
+  mix-blend-mode: multiply;
+  opacity: 0.3;
+}
+.grain--lift {
+  mix-blend-mode: screen;
+  opacity: 0.055;
+}
+
+/* ===========================================================================
+   DEPTH-GAUGE RAIL — the signature element.
+   A scale drawing of the whole 3,053 m core in linear depth, with laminations
+   drawn at fixed AGE intervals so they compress downward exactly as annual
+   layers thin under load. A cursor bracket tracks the reading depth.
+   =========================================================================== */
+#gauge {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: var(--rail);
+  z-index: 50;
+  background: linear-gradient(180deg, #17130e 0%, #100d09 62%, #0b0906 100%);
+  color: var(--inv);
+  border-right: 1px solid rgba(244, 239, 230, 0.17);
+  display: flex;
+  flex-direction: column;
+  font-family: var(--mono);
+}
+#gauge::after {
+  /* machined highlight on the bezel edge */
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 1px;
+  background: linear-gradient(180deg, rgba(244, 239, 230, 0.3), rgba(244, 239, 230, 0.04));
+}
+.gauge-head {
+  padding: 14px 10px 10px;
+  border-bottom: 1px solid rgba(244, 239, 230, 0.16);
+  flex: 0 0 auto;
+}
+.gauge-brand {
+  font-size: 0.5rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(244, 239, 230, 0.62);
+  margin: 0 0 9px;
+  line-height: 1.4;
+}
+.gauge-read {
+  display: block;
+}
+.gauge-num {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+.gauge-unit {
+  font-size: 0.5rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(244, 239, 230, 0.6);
+  display: block;
+  margin-top: 1px;
+}
+.gauge-read + .gauge-read {
+  margin-top: 9px;
+}
+.gauge-stratum {
+  margin-top: 11px;
+  font-size: 0.5rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ice-lt);
+  line-height: 1.5;
+}
+.gauge-col {
+  flex: 1 1 auto;
+  min-height: 0;
+  position: relative;
+}
+.gauge-col svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.gauge-foot {
+  flex: 0 0 auto;
+  padding: 8px 10px 12px;
+  border-top: 1px solid rgba(244, 239, 230, 0.16);
+  font-size: 0.45rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: rgba(244, 239, 230, 0.5);
+  line-height: 1.55;
+}
+.g-lam {
+  stroke: rgba(244, 239, 230, 0.3);
+  stroke-width: 0.6;
+}
+.g-lam--minor {
+  stroke: rgba(244, 239, 230, 0.13);
+}
+.g-tick {
+  stroke: rgba(244, 239, 230, 0.7);
+  stroke-width: 1;
+}
+.g-tickmin {
+  stroke: rgba(244, 239, 230, 0.34);
+  stroke-width: 0.8;
+}
+.g-label {
+  fill: rgba(244, 239, 230, 0.74);
+  font-family: var(--mono);
+  font-size: 6.4px;
+  letter-spacing: 0.06em;
+}
+.g-anthro {
+  stroke: var(--ember);
+  stroke-width: 1.2;
+}
+.g-anthro-t {
+  fill: var(--ember);
+  font-family: var(--mono);
+  font-size: 5.6px;
+  letter-spacing: 0.09em;
+}
+.g-contact {
+  stroke: rgba(244, 239, 230, 0.55);
+  stroke-width: 0.8;
+  stroke-dasharray: 2 2;
+}
+.g-cursor line {
+  stroke: var(--inv);
+  stroke-width: 1.2;
+}
+.g-cursor path {
+  fill: none;
+  stroke: var(--inv);
+  stroke-width: 1.2;
+}
+.g-cursor circle {
+  fill: var(--ice-lt);
+  stroke: var(--carbon);
+  stroke-width: 0.8;
+}
+.g-core-edge {
+  fill: none;
+  stroke: rgba(244, 239, 230, 0.5);
+  stroke-width: 0.9;
+}
+
+/* ===========================================================================
+   PAGE FRAME + STRATA
+   =========================================================================== */
+#core {
+  margin-left: var(--rail);
+}
+.stratum {
+  position: relative;
+  isolation: isolate;
+  color: var(--fg);
+}
+/* color is set HERE, not on <body>: an inherited `color` is a RESOLVED value,
+   so var(--fg) must be evaluated on the element that declares --fg. */
+.wrap {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding-inline: var(--gut);
+}
+
+.s-firn {
+  background: linear-gradient(180deg, #f7f4ee 0%, var(--firn) 55%, #f0eade 100%);
+}
+.s-bone {
+  background: linear-gradient(180deg, var(--bone) 0%, var(--bone-d) 100%);
+}
+.s-ochre {
+  background: linear-gradient(180deg, var(--ochre) 0%, var(--ochre-d) 100%);
+}
+.s-rust {
+  background: linear-gradient(180deg, var(--rust) 0%, #6e2f14 46%, var(--rust-d) 100%);
+}
+.s-carbon {
+  background: linear-gradient(180deg, var(--carbon) 0%, var(--carbon-d) 100%);
+}
+
+.act {
+  padding-block: clamp(64px, 9vh, 120px) clamp(72px, 11vh, 140px);
+}
+
+/* ===========================================================================
+   TYPE
+   =========================================================================== */
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+  margin: 0;
+}
+.eyebrow b {
+  font-weight: 600;
+  color: var(--fg);
+}
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--disp);
+  font-weight: 700;
+  margin: 0;
+  text-wrap: balance;
+}
+h1 {
+  font-size: clamp(2.9rem, 10.5vw, 7rem);
+  line-height: 0.86;
+  letter-spacing: -0.045em;
+  font-weight: 800;
+}
+h2 {
+  font-size: clamp(1.7rem, 4.4vw, 3rem);
+  line-height: 0.98;
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+h3 {
+  font-size: clamp(1.1rem, 1.9vw, 1.45rem);
+  line-height: 1.14;
+  letter-spacing: -0.012em;
+  font-weight: 600;
+}
+h4 {
+  font-size: 1rem;
+  line-height: 1.25;
+  letter-spacing: -0.006em;
+  font-weight: 600;
+}
+p {
+  margin: 0 0 1em;
+  max-width: 70ch;
+}
+p:last-child {
+  margin-bottom: 0;
+}
+a {
+  color: inherit;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  text-decoration-color: var(--rule-hi);
+}
+a:hover {
+  text-decoration-color: currentColor;
+}
+.lede {
+  font-size: clamp(1.15rem, 1.05rem + 0.6vw, 1.5rem);
+  line-height: 1.44;
+  max-width: 44ch;
+}
+.note {
+  font-size: 0.875rem;
+  line-height: 1.56;
+  color: var(--fg-2);
+  max-width: 64ch;
+}
+.mono {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+}
+.num {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+.sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.rule {
+  border: 0;
+  border-top: 1px solid var(--rule-hi);
+  margin: 0;
+}
+.hair {
+  border: 0;
+  border-top: 1px solid var(--rule);
+  margin: 0;
+}
+
+/* section header: eyebrow encodes the depth interval the act actually spans */
+.act-head {
+  display: grid;
+  gap: clamp(14px, 2vw, 22px);
+  grid-template-columns: minmax(0, 1fr);
+  margin-bottom: clamp(30px, 4.5vh, 54px);
+}
+@media (min-width: 900px) {
+  .act-head {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    align-items: end;
+  }
+}
+.act-head .eyebrow {
+  grid-column: 1/-1;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--rule-hi);
+}
+.act-numeral {
+  font-family: var(--disp);
+  font-weight: 800;
+  font-size: 0.8em;
+  letter-spacing: 0.02em;
+}
+
+/* ===========================================================================
+   HERO
+   =========================================================================== */
+#hero {
+  padding-block: clamp(46px, 7vh, 86px) clamp(56px, 8vh, 104px);
+}
+.hero-grid {
+  display: grid;
+  gap: clamp(26px, 4vw, 50px);
+  grid-template-columns: minmax(0, 1fr);
+}
+@media (min-width: 940px) {
+  .hero-grid {
+    grid-template-columns: minmax(0, 1.18fr) minmax(0, 0.82fr);
+    align-items: start;
+  }
+}
+.hero-title {
+  margin: 0.18em 0 0.34em;
+}
+.hero-title span {
+  display: block;
+}
+.hero-title .t2 {
+  color: var(--fg-2);
+}
+.hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  padding-block: 10px;
+  border-top: 1px solid var(--rule-hi);
+  border-bottom: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+}
+
+/* the readout: a big number is right here because the whole page is read
+   against this one variable */
+.readout {
+  border: 1px solid var(--rule-hi);
+  background: var(--plate);
+  padding: clamp(16px, 2.2vw, 24px);
+}
+.readout-top {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.readout-val {
+  font-family: var(--mono);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(3rem, 8vw, 4.75rem);
+  line-height: 0.84;
+  letter-spacing: -0.045em;
+}
+.readout-unit {
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+  max-width: 15ch;
+  line-height: 1.5;
+}
+.readout-band {
+  margin-top: 16px;
+}
+.readout-band svg {
+  width: 100%;
+  height: 34px;
+  overflow: visible;
+}
+.readout-note {
+  margin-top: 14px;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--fg-2);
+}
+.readout-src {
+  margin-top: 10px;
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+}
+
+/* core photograph plate */
+.plate {
+  border: 1px solid var(--rule-hi);
+  background: #0e0b08;
+  position: relative;
+  overflow: hidden;
+}
+.plate video,
+.plate img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.06) brightness(1.02);
+}
+.plate--hero {
+  aspect-ratio: 16/9;
+}
+/* The hero clip is held on its poster until asked for: it is the only clip in
+   the first viewport, and fetching it on load put the page over budget. */
+.plate-play {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  background: rgba(11, 9, 8, 0.9);
+  color: var(--inv);
+  border: 1px solid rgba(244, 239, 230, 0.4);
+  padding: 8px 12px 8px 10px;
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  line-height: 1.3;
+  text-align: left;
+}
+.plate-play:hover {
+  background: var(--inv);
+  color: var(--carbon);
+  border-color: var(--inv);
+}
+.plate-play em {
+  display: block;
+  font-style: normal;
+  font-size: 0.4375rem;
+  letter-spacing: 0.13em;
+  color: var(--inv-2);
+  margin-top: 2px;
+}
+.plate-play:hover em {
+  color: var(--carbon);
+}
+.plate-play-ico {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  flex: 0 0 auto;
+  border-width: 5px 0 5px 8px;
+  border-color: transparent transparent transparent currentColor;
+}
+.plate-cap {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+  margin-top: 8px;
+  line-height: 1.6;
+}
+.hero-anthro {
+  margin-top: clamp(22px, 3vh, 34px);
+  padding-top: 14px;
+  border-top: 1px solid var(--rule-hi);
+  display: grid;
+  gap: 6px;
+}
+.hero-anthro strong {
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--alert);
+  font-weight: 600;
+}
+
+/* ===========================================================================
+   CONTACT BANDS — photographic strata at every act boundary.
+   Base layer carries the stratum-to-stratum gradient; the footage multiplies
+   into it, so the rock layering literally is the colour transition.
+   =========================================================================== */
+.contact {
+  position: relative;
+  height: clamp(230px, 36vh, 410px);
+  overflow: hidden;
+  isolation: isolate;
+}
+.contact-base {
+  position: absolute;
+  inset: 0;
+}
+.contact--A .contact-base {
+  background: linear-gradient(180deg, var(--bone-d) 0%, var(--ochre) 100%);
+}
+.contact--B .contact-base {
+  background: linear-gradient(180deg, var(--ochre-d) 0%, var(--rust) 100%);
+}
+.contact--C .contact-base {
+  background: linear-gradient(180deg, var(--rust-d) 0%, var(--carbon) 100%);
+}
+.contact-media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  mix-blend-mode: multiply;
+  filter: grayscale(0.62) contrast(1.22);
+}
+.contact--C .contact-media {
+  mix-blend-mode: screen;
+  opacity: 0.5;
+  filter: grayscale(0.3) contrast(1.1);
+}
+.contact-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(11, 9, 8, 0.34) 0%, rgba(11, 9, 8, 0) 62%);
+}
+.contact--C .contact-scrim {
+  background: linear-gradient(90deg, rgba(11, 9, 8, 0.6) 0%, rgba(11, 9, 8, 0.1) 70%);
+}
+/* The label is an opaque specimen plate taped over the band, not a soft scrim:
+   #F4EFE6 on rgba(11,9,8,.88) composites to at worst 12.8:1 whatever footage
+   or gradient sits underneath, so contrast never depends on the video frame. */
+.contact-label {
+  position: absolute;
+  left: var(--gut);
+  bottom: var(--gut);
+  max-width: min(46ch, calc(100% - var(--gut) * 2));
+  background: rgba(11, 9, 8, 0.88);
+  padding: clamp(13px, 1.6vw, 20px);
+  border-left: 2px solid var(--inv);
+}
+.contact-chip {
+  display: inline-block;
+  background: var(--inv);
+  color: var(--carbon);
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  font-weight: 500;
+  letter-spacing: 0.19em;
+  text-transform: uppercase;
+  padding: 5px 9px;
+  line-height: 1.4;
+}
+.contact-name {
+  font-family: var(--disp);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: clamp(1rem, 2.4vw, 1.6rem);
+  line-height: 1.06;
+  letter-spacing: 0.01em;
+  margin: 11px 0 0;
+  color: var(--inv);
+}
+.contact-sub {
+  margin: 7px 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--inv-2);
+  max-width: 42ch;
+}
+.contact-flip {
+  display: inline-block;
+  margin-top: 11px;
+  background: var(--inv);
+  color: var(--carbon);
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 4px 8px;
+}
+
+/* ===========================================================================
+   ACT I — globe, dial, dossier, threshold bands
+   =========================================================================== */
+.atlas {
+  display: grid;
+  gap: clamp(22px, 3vw, 40px);
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+}
+@media (min-width: 1000px) {
+  .atlas {
+    grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
+  }
+}
+.reading {
+  border: 1px solid var(--rule-hi);
+  background: var(--plate);
+  padding: clamp(15px, 2vw, 20px);
+  margin-top: clamp(16px, 2.2vh, 24px);
+}
+.reading h4 {
+  margin: 0 0 8px;
+}
+.reading p {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--fg-2);
+  max-width: 52ch;
+}
+
+.globe-cell {
+  position: relative;
+}
+.globe-frame {
+  border: 1px solid var(--rule-hi);
+  background: rgba(255, 255, 255, 0.28);
+  position: relative;
+  aspect-ratio: 1/1;
+  max-width: 560px;
+  margin-inline: auto;
+  touch-action: none;
+  cursor: grab;
+}
+.globe-frame:active {
+  cursor: grabbing;
+}
+.globe-frame svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.globe-corner {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border: 1px solid var(--rule-hi);
+}
+.globe-corner.tl {
+  top: -1px;
+  left: -1px;
+  border-right: 0;
+  border-bottom: 0;
+}
+.globe-corner.tr {
+  top: -1px;
+  right: -1px;
+  border-left: 0;
+  border-bottom: 0;
+}
+.globe-corner.bl {
+  bottom: -1px;
+  left: -1px;
+  border-right: 0;
+  border-top: 0;
+}
+.globe-corner.br {
+  bottom: -1px;
+  right: -1px;
+  border-left: 0;
+  border-top: 0;
+}
+.globe-hint {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+  text-align: center;
+  margin-top: 10px;
+}
+
+.g-sphere {
+  fill: rgba(255, 255, 255, 0.42);
+  stroke: var(--ink);
+  stroke-width: 1.15;
+}
+.g-grat {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 0.4;
+  opacity: 0.26;
+}
+.g-land {
+  fill: url(#hatchLand);
+  stroke: var(--ink);
+  stroke-width: 0.85;
+  stroke-linejoin: round;
+}
+.g-halo {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 0.4;
+  opacity: 0.35;
+}
+.g-cascade {
+  fill: none;
+  stroke: var(--alert);
+  stroke-width: 1.1;
+  stroke-dasharray: 3 2.4;
+}
+.mk {
+  cursor: pointer;
+}
+.mk-ring {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.1;
+}
+.mk-ring--pending {
+  stroke-dasharray: 2 1.7;
+  opacity: 0.72;
+}
+.mk-wedge {
+  stroke: var(--ink);
+  stroke-width: 0.7;
+}
+.mk-core {
+  fill: var(--ink);
+}
+.mk-cross {
+  stroke: var(--bone);
+  stroke-width: 0.9;
+}
+.mk-lab {
+  font-family: var(--mono);
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  fill: var(--ink);
+  paint-order: stroke;
+  stroke: var(--bone);
+  stroke-width: 2.6;
+  stroke-linejoin: round;
+}
+.mk[aria-selected='true'] .mk-ring {
+  stroke-width: 2;
+}
+
+/* the dial */
+.dial {
+  margin-top: clamp(20px, 2.6vh, 30px);
+  border: 1px solid var(--rule-hi);
+  background: var(--plate);
+  padding: clamp(14px, 2vw, 20px);
+}
+.dial-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.dial-lab {
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+}
+.dial-val {
+  font-family: var(--mono);
+  font-weight: 600;
+  font-size: 1.5rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+}
+.dial-val small {
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  font-weight: 400;
+  text-transform: uppercase;
+  color: var(--fg-2);
+  margin-left: 5px;
+}
+input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 26px;
+  background: transparent;
+  margin: 12px 0 0;
+  display: block;
+}
+input[type='range']::-webkit-slider-runnable-track {
+  height: 3px;
+  background: var(--ink);
+  opacity: 0.85;
+}
+input[type='range']::-moz-range-track {
+  height: 3px;
+  background: var(--ink);
+  opacity: 0.85;
+}
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 15px;
+  height: 22px;
+  margin-top: -10px;
+  background: var(--carbon);
+  border: 1px solid var(--bone);
+  border-radius: 1px;
+  box-shadow: 0 0 0 1px var(--ink);
+}
+input[type='range']::-moz-range-thumb {
+  width: 15px;
+  height: 22px;
+  background: var(--carbon);
+  border: 1px solid var(--bone);
+  border-radius: 1px;
+  box-shadow: 0 0 0 1px var(--ink);
+}
+.dial-scale {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.1em;
+  color: var(--fg-2);
+  margin-top: 2px;
+}
+.dial-count {
+  margin-top: 12px;
+  padding-top: 11px;
+  border-top: 1px solid var(--rule);
+  display: grid;
+  gap: 7px;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+}
+.dial-count div {
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+  line-height: 1.45;
+}
+.dial-count b {
+  display: block;
+  font-size: 1.375rem;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* legend */
+.legend {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--rule);
+  display: grid;
+  gap: 8px;
+}
+.legend-row {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+}
+.legend-row svg {
+  width: 26px;
+  height: 26px;
+  overflow: visible;
+}
+.legend-row p {
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: var(--fg-2);
+  max-width: 48ch;
+}
+.legend-row b {
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  display: block;
+}
+
+/* ===========================================================================
+   DOSSIER — a specimen tray pulled from the right edge of the bench.
+   Opaque carbon ground with its own kraft-lined header, so its legibility is
+   independent of whichever stratum it happens to slide over. Everything inside
+   is measured against the tray, never against the page behind it.
+   =========================================================================== */
+.dos-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 88;
+  background: rgba(11, 9, 8, 0.62);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.32s var(--ease);
+}
+.dos-scrim[data-open='1'] {
+  opacity: 1;
+  pointer-events: auto;
+}
+/* the class display beats the hidden attribute's UA rule — without this the
+   closed tray's grip pokes a 10px sliver into the right edge of the viewport */
+.dossier[hidden],
+.dos-scrim[hidden] {
+  display: none;
+}
+
+.dossier {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 90;
+  width: min(560px, 92vw);
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, #1c1712 0%, var(--carbon) 30%, var(--carbon-d) 100%);
+  color: var(--inv);
+  border-left: 1px solid rgba(244, 239, 230, 0.28);
+  box-shadow: -24px 0 60px -20px rgba(11, 9, 8, 0.85);
+  transform: translateX(101%);
+  transition: transform 0.38s var(--ease);
+  overscroll-behavior: contain;
+}
+.dossier[data-open='1'] {
+  transform: none;
+}
+/* the machined pull-handle on the tray's leading edge */
+.dossier::before {
+  content: '';
+  position: absolute;
+  left: -1px;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, rgba(244, 239, 230, 0.42), rgba(244, 239, 230, 0.06));
+}
+.dos-grip {
+  position: absolute;
+  left: -16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 74px;
+  background: var(--carbon);
+  border: 1px solid rgba(244, 239, 230, 0.28);
+  border-right: 0;
+  display: grid;
+  place-items: center;
+  gap: 3px;
+  align-content: center;
+  pointer-events: none;
+}
+.dos-grip i {
+  display: block;
+  width: 5px;
+  height: 1px;
+  background: rgba(244, 239, 230, 0.5);
+}
+
+.dossier-hd {
+  flex: 0 0 auto;
+  padding: clamp(16px, 2.2vw, 22px) clamp(18px, 2.4vw, 26px) 14px;
+  background: linear-gradient(168deg, var(--kraft-hi), var(--kraft) 60%, var(--kraft-lo));
+  color: var(--kraft-ink);
+  border-bottom: 2px solid var(--kraft-edge);
+  display: grid;
+  gap: 10px;
+}
+.dossier-hd .dossier-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 14px;
+}
+.dossier-tier {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--kraft-ink-2);
+  margin: 0 0 5px;
+}
+#dosName {
+  color: var(--kraft-ink);
+}
+.dossier-close {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border: 1px solid var(--kraft-ink);
+  padding: 6px 9px;
+  color: var(--kraft-ink);
+  flex: 0 0 auto;
+  background: rgba(255, 255, 255, 0.34);
+}
+.dossier-close:hover {
+  background: var(--kraft-ink);
+  color: var(--kraft-hi);
+}
+.dossier-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: clamp(14px, 2vw, 20px) clamp(18px, 2.4vw, 26px) clamp(28px, 4vw, 40px);
+  --fg: var(--inv);
+  --fg-2: var(--inv-2);
+  --rule: rgba(244, 239, 230, 0.22);
+  --rule-hi: rgba(244, 239, 230, 0.44);
+  --accent: var(--ice-lt);
+  --alert: var(--ember);
+}
+.dossier-empty {
+  color: var(--inv-2);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+/* the tray, closed: a labelled edge you can see is there */
+.dos-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+  border: 1px solid var(--rule-hi);
+  padding: 7px 11px;
+}
+.dos-tab:hover {
+  color: var(--fg);
+  border-color: var(--fg);
+}
+.dl {
+  margin: 0;
+}
+.dl-row {
+  padding: 11px 0;
+  border-bottom: 1px solid var(--rule);
+  display: grid;
+  gap: 3px;
+}
+.dl-row:last-child {
+  border-bottom: 0;
+}
+.dl-k {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+}
+.dl-v {
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+.dl-v .num {
+  font-weight: 600;
+}
+.thr-line {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  flex-wrap: wrap;
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+}
+.thr-line .c {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+.thr-line .r {
+  font-size: 0.8125rem;
+  color: var(--fg-2);
+}
+.conf {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+.pips {
+  display: inline-flex;
+  gap: 2px;
+}
+.pips i {
+  width: 5px;
+  height: 10px;
+  border: 1px solid currentColor;
+  display: block;
+}
+.pips i.on {
+  background: currentColor;
+}
+.flag {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 3px 7px;
+  border: 1px solid currentColor;
+}
+.flag--contested {
+  color: var(--alert);
+}
+.flag--handle {
+  color: var(--accent);
+}
+.cascade-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.cascade-links button {
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.09em;
+  border: 1px solid var(--rule-hi);
+  padding: 4px 8px;
+  color: var(--fg-2);
+}
+/* --fg, not --ink: these buttons now live in the carbon tray, where a dark
+   hover colour would erase them. */
+.cascade-links button:hover {
+  color: var(--fg);
+  border-color: var(--fg);
+}
+.src-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 5px;
+}
+.src-list li {
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: var(--fg-2);
+  padding-left: 14px;
+  position: relative;
+}
+.src-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 8px;
+  height: 1px;
+  background: var(--rule-hi);
+}
+
+/* threshold band chart */
+.bands {
+  margin-top: clamp(44px, 6vh, 74px);
+}
+.bands-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--rule-hi);
+}
+.bands-scroll {
+  overflow-x: auto;
+  margin-top: 4px;
+}
+#bandsSvg {
+  display: block;
+  min-width: 660px;
+  width: 100%;
+  height: auto;
+}
+.bx-group {
+  font-family: var(--mono);
+  font-size: 8.6px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  fill: var(--ink-2);
+}
+.bx-name {
+  font-family: var(--serif);
+  font-size: 12px;
+  fill: var(--ink);
+}
+.bx-name--sel {
+  font-weight: 600;
+}
+.bx-meta {
+  font-family: var(--mono);
+  font-size: 8.4px;
+  letter-spacing: 0.07em;
+  fill: var(--ink-2);
+}
+.bx-track {
+  fill: url(#hatchBand);
+  stroke: var(--ink);
+  stroke-width: 0.85;
+}
+/* NO `fill` here on purpose: an author rule beats a presentation attribute, so
+   declaring it would freeze the state colour the JS sets per dial value. */
+.bx-fill {
+  stroke: none;
+}
+.bx-central {
+  stroke: var(--ink);
+  stroke-width: 1.4;
+}
+.bx-cdot {
+  fill: var(--bone);
+  stroke: var(--ink);
+  stroke-width: 1;
+}
+.bx-row {
+  cursor: pointer;
+}
+.bx-row:hover .bx-hit,
+.bx-row:focus-visible .bx-hit {
+  fill: rgba(23, 19, 14, 0.055);
+}
+.bx-hit {
+  fill: transparent;
+}
+.bx-axis line {
+  stroke: var(--ink);
+  stroke-width: 0.7;
+  opacity: 0.3;
+}
+.bx-axis text {
+  font-family: var(--mono);
+  font-size: 8.4px;
+  letter-spacing: 0.06em;
+  fill: var(--ink-2);
+}
+.bx-now {
+  stroke: var(--ice);
+  stroke-width: 1.2;
+}
+.bx-nowband {
+  fill: var(--ice);
+  opacity: 0.14;
+}
+.bx-dial {
+  stroke: var(--ink);
+  stroke-width: 1.3;
+  stroke-dasharray: 4 2.6;
+}
+.bx-flag {
+  font-family: var(--mono);
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0.11em;
+}
+.bx-sel rect.bx-hit {
+  fill: rgba(23, 19, 14, 0.08);
+}
+
+/* tooltip (shared) */
+#tip {
+  position: fixed;
+  z-index: 80;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, -118%);
+  transition: opacity 0.12s linear;
+  background: var(--carbon);
+  color: var(--inv);
+  border: 1px solid rgba(244, 239, 230, 0.28);
+  padding: 9px 11px;
+  max-width: 290px;
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+}
+#tip b {
+  display: block;
+  font-family: var(--disp);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  margin-bottom: 4px;
+  text-transform: none;
+}
+#tip.on {
+  opacity: 1;
+}
+
+/* noscript */
+.ns {
+  border: 1px solid var(--rule-hi);
+  padding: clamp(16px, 2.4vw, 26px);
+  margin-top: 26px;
+  background: var(--plate);
+}
+.ns table {
+  width: 100%;
+  font-size: 0.8125rem;
+}
+.ns caption {
+  text-align: left;
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+  padding-bottom: 9px;
+}
+.ns th,
+.ns td {
+  text-align: left;
+  padding: 7px 12px 7px 0;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+}
+.ns th {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+  font-weight: 500;
+}
+
+/* ===========================================================================
+   ACT II — misallocation. THE ASSAY FIELD.
+
+   This replaces the 1-D capital dot-plot and subsumes everything it carried:
+   the same log capital axis, the same hatched not-disclosed gutter for the two
+   categories whose sources give no figure, the same per-category value (now
+   with its ≥/≈ hedge, which the dot-plot dropped) and the same gap assessment.
+   What it adds is the second axis — the editorial leverage band.
+
+   The Y axis is BANDED ROWS, not gridlines, and the bands are numbered rather
+   than scaled. That is deliberate and it is the whole difference from the v1
+   scatter this rebuilds: v1 put a synthesised "potential climate impact" on a
+   continuous numeric axis, which reads as a measurement. Alternating plates and
+   a labelled ordinal cannot be read as a distance, so nothing here invites the
+   reader to measure the gap between band 4 and band 5.
+
+   Colours: discs are carbon on the ochre stratum so the numeral inside them is
+   light ink on a dark disc, never ink on ochre. Flagged discs restate the gap
+   assessment in a second channel (an outer ring) as well as fill, so the flag
+   survives colour-vision deficiency and greyscale printing.
+   =========================================================================== */
+.field-scroll {
+  overflow-x: auto;
+}
+#fieldSvg {
+  display: block;
+  min-width: 780px;
+  width: 100%;
+  height: auto;
+}
+.fd-hd {
+  font-family: var(--mono);
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  fill: var(--ink-o2);
+}
+/* NON-TEXT CONTRAST (WCAG 1.4.11, 3:1) — and the arithmetic that decided how.
+   Sampled ochre is ≈rgb(189,142,62), relative luminance ≈0.305. A LIGHTER wash on
+   that ground tops out at (1.05)/(0.305+0.05) = 2.96:1 even at pure white, so no
+   light region fill can reach 3:1 here. Going dark enough to reach it (≈60% ink)
+   puts the ground at ≈0.064 and drops the ink captions that sit INSIDE the shaded
+   corner to ≈1.9:1 — trading a graphics failure for a text failure.
+   So each region is made perceivable by its BOUNDARY, which is what 1.4.11 asks
+   of a graphical object: solid full-strength ink outlines and hatch lines at
+   ≈6:1, with the fill left as a light secondary cue. Measured values are in the
+   review notes; the fills are reported honestly rather than claimed as passing. */
+.fd-axis line {
+  stroke: var(--ink);
+  stroke-width: 0.8;
+}
+.fd-axis text {
+  font-family: var(--mono);
+  font-size: 8.4px;
+  letter-spacing: 0.06em;
+  fill: var(--ink-o2);
+}
+/* The alternating plates are the one thing NOT raised to 3:1, by the same
+   arithmetic: a plate dark enough to clear it against bare ochre would fail AA
+   for every caption printed on it. They are a reading aid only — row identity is
+   carried by the band numbers at ≈6:1 and by each marker's own caption. */
+.fd-band {
+  fill: rgba(23, 19, 14, 0.05);
+}
+.fd-bandnum {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  fill: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.fd-break {
+  stroke: var(--ink);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+}
+/* the gutter is a REGION, not a position: a hatch, so no reader can mistake the
+   marker inside it for a value on the axis */
+.fd-gutter {
+  fill: url(#hatchGutter);
+  stroke: var(--ink);
+  stroke-width: 1.4;
+  stroke-dasharray: 4 2.6;
+}
+.fd-sweet {
+  fill: rgba(247, 244, 238, 0.34);
+  stroke: var(--ink);
+  stroke-width: 1.6;
+  stroke-dasharray: 7 4;
+}
+.fd-disc {
+  fill: var(--carbon);
+  stroke: var(--kraft-hi);
+  stroke-width: 1.4;
+}
+.fd-disc--flag {
+  fill: var(--kraft-stamp);
+}
+.fd-ring {
+  fill: none;
+  stroke: var(--kraft-stamp);
+  stroke-width: 1.2;
+  stroke-opacity: 0.85;
+}
+.fd-disc--none {
+  stroke-dasharray: 2.6 2;
+}
+.fd-num {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  font-weight: 600;
+  fill: var(--inv);
+  letter-spacing: 0;
+}
+.fd-name {
+  font-family: var(--serif);
+  font-size: 11.5px;
+  fill: var(--ink);
+}
+.fd-val {
+  font-family: var(--mono);
+  font-size: 9.2px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  fill: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.fd-mk {
+  cursor: pointer;
+}
+.fd-mk:hover .fd-hit,
+.fd-mk:focus-visible .fd-hit {
+  fill: rgba(23, 19, 14, 0.075);
+}
+.fd-mk:focus-visible {
+  outline: none;
+}
+/* field-study link under a marker. Underlined by default rather than on hover:
+   on a dense plot an affordance that only appears on hover is invisible to
+   anyone who does not hover, and the whole point is that it be findable. */
+.fd-fwt {
+  font-family: var(--mono);
+  font-size: 8.6px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  fill: var(--ice-deep);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.fd-fw {
+  cursor: pointer;
+}
+.fd-fw:hover .fd-fwt {
+  fill: var(--ink);
+}
+.fd-fw:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+.fd-mk:focus-visible .fd-disc {
+  stroke: #1f4152;
+  stroke-width: 3;
+}
+.fd-hit {
+  fill: transparent;
+}
+.fd-callout {
+  margin: 14px 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  max-width: 76ch;
+  border-left: 3px solid var(--ink);
+  padding-left: 12px;
+}
+
+/* ===========================================================================
+   OPPORTUNITY BOARD — Act II leads with it. In core-sample language these are
+   the flagged intervals: the depths the assay says to go back and look at.
+   Membership is derived from the data (gap assessment at or above the board
+   threshold), never hardcoded.
+   =========================================================================== */
+.opp {
+  margin-bottom: clamp(40px, 6vh, 68px);
+  border-top: 3px solid var(--ink);
+  padding-top: 16px;
+}
+.opp-lede {
+  font-family: var(--disp);
+  font-weight: 700;
+  font-size: clamp(1.25rem, 1.05rem + 1.1vw, 2rem);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  margin: 10px 0 0;
+  max-width: 34ch;
+  text-wrap: balance;
+}
+.opp-sub {
+  margin: 12px 0 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--fg-2);
+  max-width: 66ch;
+}
+.opp-grid {
+  display: grid;
+  gap: 1px;
+  margin-top: clamp(20px, 3vh, 30px);
+  background: rgba(23, 19, 14, 0.3);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 268px), 1fr));
+}
+.opp-card {
+  background: rgba(247, 244, 238, 0.5);
+  padding: clamp(15px, 1.8vw, 20px);
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+.opp-card--unranked {
+  background:
+    repeating-linear-gradient(135deg, rgba(23, 19, 14, 0.055) 0 3px, transparent 3px 9px),
+    rgba(247, 244, 238, 0.5);
+}
+.opp-rank {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+.opp-rank b {
+  font-family: var(--mono);
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+.opp-rank span {
+  font-family: var(--mono);
+  font-size: 0.4375rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+  text-align: right;
+  line-height: 1.5;
+}
+/* three lines reserved: category names run 2–3 lines, and the comparison bars
+   below them only scan as a row if they start at the same height */
+.opp-name {
+  font-family: var(--disp);
+  font-weight: 600;
+  font-size: 1.0625rem;
+  line-height: 1.16;
+  letter-spacing: -0.012em;
+  margin: 0;
+  min-height: 3.48em;
+}
+@media (max-width: 620px) {
+  .opp-name {
+    min-height: 0;
+  }
+}
+.opp-gap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.opp-gap .pips i {
+  width: 9px;
+  height: 15px;
+}
+.opp-gap em {
+  font-style: normal;
+  font-family: var(--mono);
+  font-size: 0.4375rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+}
+/* the leverage text absorbs the slack so the comparison bars line up ACROSS
+   cards — they are the point of the board and must be scannable in a row */
+.opp-lev {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  margin: 0;
+  flex: 1 1 auto;
+}
+.opp-bars {
+  display: grid;
+  gap: 7px;
+  padding-top: 11px;
+  border-top: 1px solid rgba(23, 19, 14, 0.26);
+}
+.opp-bar {
+  display: grid;
+  gap: 3px;
+}
+.opp-bar-k {
+  font-family: var(--mono);
+  font-size: 0.4375rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+.opp-bar-k b {
+  font-size: 0.6875rem;
+  letter-spacing: -0.01em;
+  color: var(--fg);
+  font-variant-numeric: tabular-nums;
+}
+.opp-bar-t {
+  height: 9px;
+  background: rgba(23, 19, 14, 0.13);
+  position: relative;
+  box-shadow: inset 0 0 0 1px rgba(23, 19, 14, 0.28);
+}
+.opp-bar-f {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--ink);
+  min-width: 2px;
+}
+.opp-bar--ref .opp-bar-f {
+  background: transparent;
+  background-image: repeating-linear-gradient(90deg, var(--ink) 0 2px, transparent 2px 4px);
+}
+.opp-bar-f--none {
+  background: transparent;
+  background-image: repeating-linear-gradient(135deg, var(--ink) 0 2px, transparent 2px 5px);
+  width: 100% !important;
+}
+.opp-hyp {
+  padding-top: 11px;
+  border-top: 1px solid rgba(23, 19, 14, 0.26);
+}
+.opp-hyp-k {
+  font-family: var(--mono);
+  font-size: 0.4375rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+  margin: 0 0 6px;
+}
+.xlinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.xlink {
+  font-family: var(--mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.06em;
+  border: 1px solid var(--rule-hi);
+  padding: 5px 8px;
+  color: var(--fg);
+  background: rgba(255, 255, 255, 0.26);
+  text-align: left;
+  line-height: 1.35;
+}
+.xlink:hover {
+  background: var(--ink);
+  color: var(--firn);
+  border-color: var(--ink);
+}
+.xlink b {
+  font-weight: 600;
+}
+/* a jumped-to target announces itself briefly */
+@keyframes flagPulse {
+  0% {
+    box-shadow: 0 0 0 3px var(--accent);
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+.jumped {
+  animation: flagPulse 1.5s var(--ease) 1;
+}
+
+/* ===========================================================================
+   DISCLOSURE — specimen drawers.
+   Native <details>/<summary> throughout: works with JavaScript off, is keyboard
+   operable for free, is exposed correctly to assistive tech without any aria
+   bookkeeping, and Chromium expands a closed <details> for find-in-page. No
+   JS-driven disclosure exists on this page, so there is no aria-expanded to
+   maintain. Nothing is deleted by closing one — every figure is one
+   interaction away, and no summary rounds away a hedge or a badge.
+   =========================================================================== */
+summary {
+  cursor: pointer;
+  list-style: none;
+  display: block;
+}
+summary::-webkit-details-marker {
+  display: none;
+}
+summary::marker {
+  content: '';
+}
+summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* the drawer pull: an engraved handle that seats when the drawer is out */
+.pull {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex: 0 0 auto;
+  font-family: var(--mono);
+  font-size: 0.4375rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+  white-space: nowrap;
+}
+.pull i {
+  display: block;
+  width: 15px;
+  height: 9px;
+  position: relative;
+  border: 1px solid currentColor;
+  border-radius: 1px;
+}
+.pull i::before,
+.pull i::after {
+  content: '';
+  position: absolute;
+  background: currentColor;
+  transition:
+    transform 0.22s var(--ease),
+    opacity 0.22s var(--ease);
+}
+.pull i::before {
+  left: 3px;
+  right: 3px;
+  top: 3px;
+  height: 1px;
+}
+.pull i::after {
+  left: 50%;
+  top: 2px;
+  bottom: 2px;
+  width: 1px;
+  margin-left: -0.5px;
+}
+details[open] > summary .pull i::after {
+  transform: scaleY(0);
+  opacity: 0;
+}
+details[open] > summary .pull {
+  color: var(--fg);
+}
+summary:hover .pull {
+  color: var(--fg);
+}
+.pull-open {
+  display: none;
+}
+details[open] > summary .pull-open {
+  display: inline;
+}
+details[open] > summary .pull-shut {
+  display: none;
+}
+
+/* Act II ledger row */
+.iv > summary {
+  display: grid;
+  gap: 5px 18px;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  padding: 15px 0;
+}
+.iv > summary:hover .iv-name {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+.iv-badges {
+  display: flex;
+  gap: 3px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  max-width: 15ch;
+}
+.iv-badge {
+  font-family: var(--mono);
+  font-size: 0.375rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px solid rgba(23, 19, 14, 0.5);
+  padding: 2px 4px;
+  line-height: 1.3;
+  background: rgba(247, 244, 238, 0.42);
+}
+.iv-badge[data-b='announced'] {
+  border-style: dashed;
+}
+.iv-gap {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.iv-gap .pips i {
+  width: 5px;
+  height: 11px;
+}
+.iv-gap span {
+  font-family: var(--mono);
+  font-size: 0.375rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+}
+@media (max-width: 760px) {
+  .iv > summary {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .iv-badges {
+    grid-column: 1/-1;
+    justify-content: flex-start;
+    max-width: none;
+  }
+  .iv-gap {
+    grid-column: 1/-1;
+  }
+}
+
+/* Act III tag: the face stays, the seven fields are the drawer */
+.tag-face {
+  padding: 0;
+}
+.tag > summary {
+  display: block;
+}
+.tag-oneline {
+  padding: 13px 18px 0;
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+.tag-oneline b {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--kraft-ink-2);
+  display: block;
+  margin-bottom: 4px;
+}
+.tag-sig {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  padding: 13px 18px;
+  margin: 0;
+}
+.tag-sig-i {
+  font-family: var(--mono);
+  font-size: 0.4375rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  border: 1px solid var(--kraft-edge);
+  padding: 4px 7px;
+  background: rgba(255, 255, 255, 0.26);
+}
+.tag-sig-i b {
+  font-weight: 600;
+}
+.tag-sig-i--kill {
+  border-color: var(--kraft-kill);
+  color: var(--kraft-kill);
+}
+.tag > summary .pull {
+  padding: 0 18px 15px;
+  color: var(--kraft-ink-2);
+}
+.tag > summary:hover .pull,
+.tag[open] > summary .pull {
+  color: var(--kraft-ink);
+}
+.tag-body {
+  border-top: 1px solid var(--kraft-edge);
+}
+
+/* company card */
+.co > summary {
+  display: block;
+}
+.co-body {
+  margin-top: 11px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(23, 19, 14, 0.24);
+}
+.co > summary .pull {
+  margin-top: 10px;
+}
+
+/* tier drawer + methods drawer (the tier summary reuses .tier-hd) */
+.meth-dz {
+  border-top: 1px solid var(--rule);
+}
+.meth-dz > summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px 18px;
+  padding: 15px 0;
+  flex-wrap: wrap;
+}
+.meth-dz-right {
+  display: flex;
+  align-items: center;
+  gap: 8px 14px;
+  flex-wrap: wrap;
+}
+.meth-dz > summary h4 {
+  font-size: 0.9375rem;
+}
+.meth-dz-n {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+  white-space: normal;
+  max-width: 34ch;
+}
+.meth-dz-body {
+  padding-bottom: 22px;
+}
+
+/* an inline "read more" drawer for methodology footnotes */
+.fn {
+  margin-top: 12px;
+}
+.fn > summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+  border: 1px solid var(--rule-hi);
+  padding: 6px 9px;
+}
+.fn > summary:hover {
+  color: var(--fg);
+  border-color: var(--fg);
+}
+.fn-body {
+  margin-top: 12px;
+}
+.fn-body .note {
+  font-size: 0.8125rem;
+}
+
+/* funding chips */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+}
+.chip {
+  display: inline-grid;
+  gap: 1px;
+  border: 1px solid rgba(23, 19, 14, 0.5);
+  background: rgba(247, 244, 238, 0.5);
+  padding: 5px 8px;
+  font-family: var(--mono);
+  line-height: 1.35;
+}
+.chip-amt {
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+.chip-amt em {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 0.625rem;
+  color: var(--fg-2);
+}
+.chip-meta {
+  font-size: 0.4375rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+}
+.chip-who {
+  font-size: 0.5rem;
+  letter-spacing: 0.03em;
+  text-transform: none;
+  color: var(--ink);
+  max-width: 26ch;
+}
+.chip[data-badge='verified'] {
+  border-left: 3px solid var(--carbon);
+}
+.chip[data-badge='delivered'] {
+  border-left: 3px solid var(--carbon);
+}
+.chip[data-badge='announced'] {
+  border-left: 3px dashed rgba(23, 19, 14, 0.75);
+}
+.chip[data-badge='deployed-grants'] {
+  border-left: 3px dotted var(--carbon);
+}
+/* Stream variants LAYER over the light wash; they never replace it. Replacing
+   it put the aggregate chip's meta text at 4.29:1 on bare ochre. */
+.chip[data-stream='target'] {
+  background:
+    repeating-linear-gradient(135deg, rgba(23, 19, 14, 0.05) 0 3px, transparent 3px 7px),
+    rgba(247, 244, 238, 0.5);
+  border-style: dashed;
+}
+.chip[data-stream='aggregate'] {
+  background:
+    repeating-linear-gradient(45deg, rgba(23, 19, 14, 0.07) 0 2px, transparent 2px 6px),
+    rgba(247, 244, 238, 0.5);
+  box-shadow: inset 0 0 0 1px rgba(23, 19, 14, 0.22);
+}
+.chip--absence {
+  background: transparent;
+  border-style: dotted;
+}
+
+.iv-list {
+  display: grid;
+  gap: 0;
+  margin-top: clamp(34px, 5vh, 58px);
+  border-top: 1px solid var(--rule-hi);
+}
+.iv {
+  border-bottom: 1px solid var(--rule-hi);
+}
+.iv-name {
+  font-family: var(--disp);
+  font-weight: 600;
+  font-size: clamp(1rem, 1.5vw, 1.2rem);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+.iv-sec {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+}
+.iv-cap {
+  font-family: var(--mono);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  text-align: right;
+  white-space: nowrap;
+}
+.iv-cap small {
+  display: block;
+  font-size: 0.4375rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+}
+.iv-body {
+  padding-bottom: 24px;
+}
+.iv-grid {
+  display: grid;
+  gap: clamp(16px, 2.4vw, 30px);
+  grid-template-columns: minmax(0, 1fr);
+}
+@media (min-width: 860px) {
+  .iv-grid {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  }
+}
+.field {
+  padding-top: 13px;
+  border-top: 1px solid var(--rule);
+  margin-top: 13px;
+}
+.field:first-child {
+  border-top: 0;
+  margin-top: 0;
+  padding-top: 0;
+}
+.field-k {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+  margin: 0 0 5px;
+}
+.field-v {
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  margin: 0;
+  max-width: 64ch;
+}
+.field--warn .field-k {
+  color: var(--alert);
+}
+.assess {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+.assess .pips i {
+  width: 7px;
+  height: 13px;
+}
+.assess span {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+}
+
+/* company atlas */
+.tiers {
+  display: grid;
+  gap: clamp(28px, 4vh, 46px);
+  margin-top: clamp(40px, 6vh, 66px);
+}
+.tier-hd {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-bottom: 9px;
+  border-bottom: 1px solid var(--rule-hi);
+  margin-bottom: 18px;
+}
+.tier-n {
+  font-family: var(--disp);
+  font-weight: 800;
+  font-size: 1.5rem;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+.tier-lab {
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+}
+.co-grid {
+  display: grid;
+  gap: 1px;
+  background: rgba(23, 19, 14, 0.28);
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+}
+.co {
+  background: rgba(247, 244, 238, 0.44);
+  padding: 16px;
+}
+/* A flagged card keeps the SAME light base as its siblings — an earlier version
+   replaced the wash with a dark tint, which stacked with .co-grid's 28% plate
+   and dropped the exact cards the contract wants clearly marked to 2.6–3.1:1.
+   The flag now reads through structure — hatched edge, heavier rule, stamp —
+   never through a background that fights the ink. */
+.co--flag {
+  background:
+    repeating-linear-gradient(135deg, rgba(23, 19, 14, 0.07) 0 3px, transparent 3px 8px),
+    rgba(247, 244, 238, 0.44);
+  box-shadow:
+    inset 4px 0 0 var(--ink),
+    inset 0 0 0 1px rgba(23, 19, 14, 0.3);
+}
+.co--flag .co-name {
+  padding-left: 2px;
+}
+.co-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: start;
+  min-width: 0;
+}
+.co-name {
+  font-family: var(--disp);
+  font-weight: 600;
+  font-size: 1rem;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+.co-geo {
+  font-family: var(--mono);
+  font-size: 0.4375rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+  text-align: right;
+  flex: 0 0 auto;
+}
+.co-one {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  margin: 8px 0 0;
+}
+.co-fact {
+  display: block;
+  margin: 11px 0 0;
+  padding-top: 10px;
+  border-top: 1px solid rgba(23, 19, 14, 0.24);
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+.co-stamp {
+  display: inline-block;
+  margin: 9px 0 0;
+  font-family: var(--mono);
+  font-size: 0.4375rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  border: 1px solid var(--ink);
+  padding: 3px 6px;
+}
+.co-quote {
+  margin: 9px 0 0;
+  font-size: 0.6875rem;
+  line-height: 1.5;
+  font-style: italic;
+  padding-left: 10px;
+  border-left: 2px solid rgba(23, 19, 14, 0.4);
+  color: var(--fg-2);
+}
+.badge {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.4375rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 3px 6px;
+  border: 1px solid currentColor;
+}
+
+/* ===========================================================================
+   ACT III — hypothesis engine as core-sample tags (kraft labels)
+   =========================================================================== */
+.tags {
+  display: grid;
+  gap: clamp(26px, 3.4vw, 40px);
+  margin-top: clamp(34px, 5vh, 56px);
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr));
+}
+.tag {
+  background: linear-gradient(168deg, var(--kraft-hi) 0%, var(--kraft) 34%, var(--kraft-lo) 100%);
+  color: var(--kraft-ink);
+  position: relative;
+  padding: 0 0 20px;
+  box-shadow:
+    0 1px 0 var(--kraft-edge),
+    0 14px 30px -14px rgba(11, 9, 8, 0.8);
+  border: 1px solid var(--kraft-edge);
+}
+.tag::after {
+  /* torn fibre edge along the foot */
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 3px;
+  background: repeating-linear-gradient(90deg, var(--kraft-edge) 0 3px, transparent 3px 7px);
+  opacity: 0.7;
+}
+.tag-punch {
+  position: absolute;
+  top: 13px;
+  left: 16px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--rust-d);
+  box-shadow:
+    inset 0 1px 2px rgba(0, 0, 0, 0.6),
+    0 1px 0 var(--kraft-hi);
+}
+.tag-wire {
+  position: absolute;
+  top: 20px;
+  left: 31px;
+  width: 52px;
+  height: 1px;
+  background: var(--kraft-edge);
+  transform: rotate(-11deg);
+  transform-origin: left center;
+}
+.tag-hd {
+  padding: 13px 18px 12px 42px;
+  border-bottom: 1px solid var(--kraft-edge);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.tag-id {
+  font-family: var(--mono);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+/* The header slot carries the cross-link back to the intervention category.
+   It used to repeat h.maturity, which the "maturity" field already prints. */
+.tag-xlink {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.09em;
+  color: var(--kraft-ink);
+  border: 1px solid var(--kraft-edge);
+  padding: 5px 8px;
+  text-align: right;
+  max-width: 26ch;
+  line-height: 1.35;
+  background: rgba(255, 255, 255, 0.3);
+}
+.tag-xlink:hover {
+  background: var(--kraft-ink);
+  color: var(--kraft-hi);
+  border-color: var(--kraft-ink);
+}
+.tag-xlink em {
+  font-style: normal;
+  display: block;
+  font-size: 0.4375rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--kraft-ink-2);
+}
+.tag-xlink:hover em {
+  color: var(--kraft-lo);
+}
+.tag-none {
+  font-family: var(--mono);
+  font-size: 0.4375rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--kraft-ink-2);
+  text-align: right;
+  max-width: 22ch;
+  line-height: 1.5;
+}
+.tag-claim {
+  margin: 0;
+  padding: 16px 18px;
+  font-family: var(--disp);
+  font-weight: 600;
+  font-size: clamp(1rem, 1.35vw, 1.15rem);
+  line-height: 1.26;
+  letter-spacing: -0.012em;
+  border-bottom: 1px solid var(--kraft-edge);
+}
+.tag-stamp {
+  margin: 0 18px 0;
+  transform: rotate(-2.4deg);
+  display: inline-block;
+  border: 2px solid var(--kraft-stamp);
+  color: var(--kraft-stamp);
+  padding: 5px 9px;
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  position: relative;
+  top: -8px;
+  background: var(--kraft-hi);
+}
+.tag-f {
+  padding: 13px 18px 0;
+  border-top: 1px solid rgba(168, 144, 106, 0.5);
+}
+.tag-f:first-of-type {
+  border-top: 0;
+}
+.tag-k {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  font-weight: 500;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+  color: var(--kraft-ink-2);
+  margin: 0 0 5px;
+}
+.tag-v {
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  margin: 0;
+}
+.tag-f--kill {
+  background: rgba(156, 74, 34, 0.13);
+  padding-bottom: 13px;
+  border-top: 1px solid var(--rust);
+  border-bottom: 1px solid rgba(168, 144, 106, 0.5);
+}
+.tag-f--kill .tag-k {
+  color: var(--kraft-kill);
+}
+.tag-f--kill .tag-k::before {
+  content: '↑ ';
+  font-family: var(--serif);
+}
+.tag-f--val {
+  background: rgba(62, 107, 122, 0.07);
+  padding-bottom: 13px;
+}
+.tag-f--val .tag-k {
+  color: var(--kraft-val);
+}
+.tag-order {
+  font-family: var(--mono);
+  font-size: 0.4375rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--kraft-ink-2);
+  padding: 9px 18px 0;
+  margin: 0;
+}
+.tag-actors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin: 0;
+}
+.tag-actors li {
+  list-style: none;
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.05em;
+  border: 1px solid var(--kraft-edge);
+  padding: 3px 6px;
+}
+.tag-src {
+  font-family: var(--mono);
+  font-size: 0.4375rem;
+  letter-spacing: 0.1em;
+  color: var(--kraft-ink-2);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ===========================================================================
+   METHODS
+   =========================================================================== */
+.meth-grid {
+  display: grid;
+  gap: clamp(26px, 3.6vw, 50px);
+  grid-template-columns: minmax(0, 1fr);
+}
+@media (min-width: 960px) {
+  .meth-grid {
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+  }
+}
+.disc {
+  border: 1px solid var(--rule-hi);
+  padding: clamp(16px, 2.2vw, 24px);
+  background: var(--plate);
+}
+.disc p:first-child {
+  font-family: var(--disp);
+  font-weight: 600;
+  font-size: 1.0625rem;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+.srcs {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0;
+  border-top: 1px solid var(--rule);
+}
+.srcs li {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--rule);
+  display: grid;
+  gap: 4px 14px;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+}
+.src-id {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+  padding-top: 0.25em;
+  white-space: nowrap;
+}
+.src-body {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+.src-body em {
+  font-style: normal;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  color: var(--fg-2);
+  display: block;
+  margin-top: 3px;
+}
+.src-verify {
+  font-family: var(--mono);
+  font-size: 0.4375rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ember);
+  border: 1px solid currentColor;
+  padding: 2px 5px;
+  display: inline-block;
+  margin-top: 5px;
+}
+.credits {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 12px;
+}
+.credits li {
+  font-size: 0.75rem;
+  line-height: 1.5;
+  padding-left: 14px;
+  position: relative;
+}
+.credits li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 8px;
+  height: 1px;
+  background: var(--rule-hi);
+}
+.credits b {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  display: block;
+  color: var(--fg-2);
+  font-weight: 500;
+}
+.calib {
+  margin-top: 22px;
+}
+.calib table {
+  width: 100%;
+  font-family: var(--mono);
+  font-size: 0.625rem;
+}
+.calib th,
+.calib td {
+  text-align: right;
+  padding: 5px 10px 5px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.calib th:first-child,
+.calib td:first-child {
+  text-align: left;
+}
+.calib th {
+  font-size: 0.4375rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+  font-weight: 500;
+}
+footer {
+  padding-block: clamp(40px, 6vh, 70px);
+  border-top: 1px solid var(--rule-hi);
+  margin-top: clamp(40px, 6vh, 70px);
+}
+.foot-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 26px;
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+}
+
+/* If the data layer fails to load, say so rather than showing a bare skeleton. */
+html[data-nodata] #dataFail {
+  display: block;
+}
+#dataFail {
+  display: none;
+  margin: 0 auto;
+  max-width: 56ch;
+  padding: clamp(28px, 6vh, 64px) var(--gut);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+#dataFail b {
+  display: block;
+  font-family: var(--disp);
+  font-weight: 700;
+  font-size: 1.25rem;
+  letter-spacing: -0.015em;
+  margin-bottom: 10px;
+}
+html[data-nodata] #core > main > section:not(#dataFailHost) {
+  display: none;
+}
+
+/* body scroll is locked while the dossier tray is out */
+html[data-tray='1'] {
+  overflow: hidden;
+}
+
+/* ===========================================================================
+   SCROLL REVEAL (opt-in, disabled under reduced motion)
+   =========================================================================== */
+.rise {
+  opacity: 0;
+  transform: translateY(15px);
+  transition:
+    opacity 0.7s var(--ease),
+    transform 0.7s var(--ease);
+}
+.rise.in {
+  opacity: 1;
+  transform: none;
+}
+
+/* ===========================================================================
+   RESPONSIVE — rail becomes a top instrument bar on narrow screens
+   =========================================================================== */
+@media (max-width: 1080px) {
+  :root {
+    --rail: 66px;
+  }
+}
+@media (max-width: 860px) {
+  :root {
+    --rail: 0px;
+  }
+  #gauge {
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: auto;
+    width: auto;
+    height: 46px;
+    flex-direction: row;
+    align-items: stretch;
+    border-right: 0;
+    border-bottom: 1px solid rgba(244, 239, 230, 0.2);
+    background: linear-gradient(90deg, #17130e, #0b0906);
+  }
+  #gauge::after {
+    display: none;
+  }
+  .gauge-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 0 12px;
+    border-bottom: 0;
+    border-right: 1px solid rgba(244, 239, 230, 0.16);
+  }
+  .gauge-brand {
+    display: none;
+  }
+  .gauge-read {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+  }
+  .gauge-read + .gauge-read {
+    margin-top: 0;
+  }
+  .gauge-num {
+    font-size: 0.8125rem;
+  }
+  .gauge-unit {
+    display: inline;
+    margin: 0;
+    font-size: 0.4375rem;
+  }
+  .gauge-stratum {
+    margin: 0;
+    font-size: 0.4375rem;
+    max-width: 12ch;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .gauge-col {
+    flex: 1 1 auto;
+  }
+  .gauge-foot {
+    display: none;
+  }
+  #core {
+    margin-left: 0;
+    padding-top: 46px;
+  }
+}
+@media (max-width: 560px) {
+  h1 {
+    font-size: clamp(2.4rem, 13vw, 3.6rem);
+  }
+  .contact {
+    height: clamp(190px, 30vh, 260px);
+  }
+  .tag-punch,
+  .tag-wire {
+    display: none;
+  }
+  .tag-hd,
+  .tag-claim,
+  .tag-f,
+  .tag-order {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+  .tag-stamp {
+    margin-left: 15px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .rise {
+    opacity: 1;
+    transform: none;
+  }
+  .contact-media {
+    display: none;
+  }
+  .contact-poster {
+    display: block !important;
+  }
+}
+@media print {
+  #gauge,
+  .grain,
+  #tip {
+    display: none;
+  }
+  #core {
+    margin-left: 0;
+  }
+  .stratum {
+    background: #fff !important;
+    color: #000 !important;
+  }
+}

@@ -1,0 +1,593 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Collapse Earth — Core Sample</title>
+    <!-- The only counts on this page that are typed rather than derived: a <meta>
+     cannot read the data layer. Keep "sixteen" and "ten" in sync with
+     COLLAPSE_DATA.tippingSystems.length and .hypotheses.length — everywhere in
+     the body, including the prose, those words are rendered (see numWord). -->
+    <meta
+      name="description"
+      content="A stratigraphic reading of sixteen Earth-system tipping elements, the capital allocated against them, and ten falsifiable hypotheses. Research and opinion, not investment advice."
+    />
+    <meta name="color-scheme" content="light dark" />
+    <!-- the four strata, stacked: avoids a favicon 404 without a second request -->
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Crect width='8' height='2' fill='%23EDE6DA'/%3E%3Crect y='2' width='8' height='2' fill='%23C8973F'/%3E%3Crect y='4' width='8' height='2' fill='%239C4A22'/%3E%3Crect y='6' width='8' height='2' fill='%2317130E'/%3E%3C/svg%3E"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+    <script type="module" src="./main.ts"></script>
+  </head>
+  <body data-tone="light" data-stratum="firn">
+    <div class="grain grain--dark" aria-hidden="true"></div>
+    <div class="grain grain--lift" aria-hidden="true"></div>
+
+    <!-- =======================================================================
+     DEPTH-GAUGE RAIL. Every figure inside it is written by JS from the
+     illustrative depth–age calibration; nothing numeric is hardcoded here.
+     ======================================================================= -->
+    <aside id="gauge" aria-label="Core depth gauge">
+      <div class="gauge-head">
+        <p class="gauge-brand">Core log<br />read top down</p>
+        <span class="gauge-read">
+          <span class="gauge-num" id="gDepth">—</span>
+          <span class="gauge-unit" id="gDepthU"></span>
+        </span>
+        <span class="gauge-read">
+          <span class="gauge-num" id="gAge">—</span>
+          <span class="gauge-unit" id="gAgeU"></span>
+        </span>
+        <p class="gauge-stratum" id="gStratum"></p>
+      </div>
+      <div class="gauge-col">
+        <svg id="gaugeSvg" aria-hidden="true" preserveAspectRatio="none"></svg>
+      </div>
+      <p class="gauge-foot" id="gFoot"></p>
+    </aside>
+
+    <div id="core">
+      <main>
+        <section id="dataFailHost">
+          <p id="dataFail" role="alert">
+            <b>The data layer did not load.</b> Every figure on this page is read from
+            <span class="mono">the data layer</span> at runtime, so nothing is rendered from the
+            markup itself. Reload, or check that the file is being served alongside this page.
+          </p>
+        </section>
+
+        <!-- =====================================================================
+       HERO — the sawn face of the core, laid on the bench
+       ===================================================================== -->
+        <section id="hero" class="stratum s-firn">
+          <div class="wrap">
+            <p class="eyebrow" id="heroEyebrow"></p>
+            <h1 class="hero-title"><span>Collapse</span><span class="t2">Earth</span></h1>
+            <div class="hero-meta" id="heroMeta"></div>
+
+            <div class="hero-grid" style="margin-top: clamp(26px, 4vh, 44px)">
+              <div>
+                <p class="lede">
+                  <span id="ledeSysN">—</span> Earth systems carry thresholds we can estimate but
+                  cannot schedule. Capital has concentrated in the interventions that are easiest to
+                  count, not the ones with the most leverage.
+                </p>
+                <p class="note" style="margin-top: 1.1em">
+                  Read as a core log: scroll is descent, and the rail reports the depth. Four strata
+                  — the thresholds, the misallocation, the hypotheses, the record.
+                </p>
+
+                <div class="hero-anthro">
+                  <strong id="anthroLab"></strong>
+                  <p class="note" id="anthroNote" style="margin: 0"></p>
+                </div>
+              </div>
+
+              <div>
+                <div class="readout" id="readout">
+                  <p class="dial-lab" id="readoutK"></p>
+                  <div class="readout-top">
+                    <span class="readout-val" id="readoutV">—</span>
+                    <span class="readout-unit" id="readoutU"></span>
+                  </div>
+                  <div class="readout-band"><svg id="readoutSvg" aria-hidden="true"></svg></div>
+                  <p class="readout-note" id="readoutNote"></p>
+                  <p class="readout-src" id="readoutSrc"></p>
+                </div>
+
+                <div class="plate plate--hero" id="heroPlate" style="margin-top: 18px"></div>
+                <p class="plate-cap" id="heroPlateCap"></p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- =====================================================================
+       ACT I — THE THRESHOLDS
+       ===================================================================== -->
+        <section id="act1" class="stratum s-bone act">
+          <div class="wrap">
+            <header class="act-head">
+              <p class="eyebrow" id="act1Eyebrow"></p>
+              <div>
+                <h2><span class="act-numeral">I</span> &nbsp;The thresholds</h2>
+              </div>
+              <div>
+                <p class="note" style="margin: 0">
+                  Every threshold is a range, not a date. Turn the dial and each element fills in
+                  proportion to how far into its own uncertainty band the dial has gone — nothing
+                  flips at a central value.
+                </p>
+              </div>
+            </header>
+
+            <div class="atlas">
+              <div class="globe-cell">
+                <div
+                  class="globe-frame"
+                  id="globeFrame"
+                  tabindex="0"
+                  role="group"
+                  aria-describedby="globeHint"
+                  aria-label="Globe of tipping elements"
+                >
+                  <svg id="globeSvg" aria-hidden="true"></svg>
+                  <span class="globe-corner tl"></span><span class="globe-corner tr"></span>
+                  <span class="globe-corner bl"></span><span class="globe-corner br"></span>
+                </div>
+                <p class="globe-hint" id="globeHint">
+                  Drag or arrow-key to turn · Tab onto an element · Enter pulls its dossier
+                </p>
+              </div>
+
+              <div>
+                <div class="dial">
+                  <div class="dial-top">
+                    <span class="dial-lab" id="dialLab"></span>
+                    <span class="dial-val" id="dialVal"></span>
+                  </div>
+                  <input type="range" id="dial" aria-describedby="dialCount" />
+                  <div class="dial-scale" id="dialScale"></div>
+                  <div class="dial-count" id="dialCount" aria-live="polite"></div>
+                  <details class="fn">
+                    <summary>
+                      <span class="pull-shut">how the markers read</span>
+                      <span class="pull-open">hide the key</span>
+                    </summary>
+                    <div class="fn-body"><div class="legend" id="legend"></div></div>
+                  </details>
+                </div>
+
+                <div class="reading">
+                  <h4>The dossier</h4>
+                  <p>
+                    Choose any element and its full record slides out from the right as a specimen
+                    tray.
+                  </p>
+                  <button class="dos-tab" id="dosOpenLast" type="button">
+                    Open the last dossier
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="bands" id="bands">
+              <div class="bands-head">
+                <div>
+                  <p class="eyebrow" id="bandsEyebrow"></p>
+                  <h3 style="margin-top: 8px">Threshold bands</h3>
+                </div>
+                <p class="note" style="margin: 0; max-width: 44ch; font-size: 0.8125rem">
+                  Bars run minimum to maximum, the notch is the central estimate, and every row
+                  prints the paper's own confidence rating.
+                </p>
+              </div>
+              <div class="bands-scroll">
+                <svg
+                  id="bandsSvg"
+                  role="group"
+                  aria-label="Threshold bands for every tipping element. Each row is a focusable control that opens that element's dossier."
+                ></svg>
+              </div>
+              <details class="fn">
+                <summary>
+                  <span class="pull-shut">how to read this chart</span>
+                  <span class="pull-open">close</span>
+                </summary>
+                <div class="fn-body"><p class="note" id="bandsFoot" style="margin: 0"></p></div>
+              </details>
+            </div>
+
+            <!-- No-JavaScript fallback. It carries no figures on purpose: every number on
+           this page is bound to a source and a date in the data layer, and a static
+           table cannot carry that binding. Element names and transition speeds are
+           listed so the atlas is still navigable, with the authority named. -->
+            <noscript>
+              <div class="ns">
+                <table>
+                  <caption>
+                    Tipping elements — static index (no-JavaScript fallback)
+                  </caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Element</th>
+                      <th scope="col">Category</th>
+                      <th scope="col">Group</th>
+                      <th scope="col">Trigger to impact</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Greenland Ice Sheet</td>
+                      <td>cryosphere</td>
+                      <td>global core</td>
+                      <td>millennia</td>
+                    </tr>
+                    <tr>
+                      <td>West Antarctic Ice Sheet</td>
+                      <td>cryosphere</td>
+                      <td>global core</td>
+                      <td>centuries to millennia</td>
+                    </tr>
+                    <tr>
+                      <td>Atlantic Meridional Overturning Circulation</td>
+                      <td>ocean circulation</td>
+                      <td>global core</td>
+                      <td>decades</td>
+                    </tr>
+                    <tr>
+                      <td>Labrador–Irminger Sea / subpolar gyre convection</td>
+                      <td>ocean circulation</td>
+                      <td>global core</td>
+                      <td>years to a decade</td>
+                    </tr>
+                    <tr>
+                      <td>East Antarctic subglacial basins</td>
+                      <td>cryosphere</td>
+                      <td>global core</td>
+                      <td>millennia</td>
+                    </tr>
+                    <tr>
+                      <td>Amazon rainforest dieback</td>
+                      <td>biosphere</td>
+                      <td>global core</td>
+                      <td>decades</td>
+                    </tr>
+                    <tr>
+                      <td>Boreal permafrost collapse</td>
+                      <td>carbon feedback</td>
+                      <td>global core</td>
+                      <td>decades</td>
+                    </tr>
+                    <tr>
+                      <td>Arctic winter sea ice collapse</td>
+                      <td>cryosphere</td>
+                      <td>global core</td>
+                      <td>decades</td>
+                    </tr>
+                    <tr>
+                      <td>East Antarctic Ice Sheet</td>
+                      <td>cryosphere</td>
+                      <td>global core</td>
+                      <td>millennia</td>
+                    </tr>
+                    <tr>
+                      <td>Low-latitude coral reefs</td>
+                      <td>biosphere</td>
+                      <td>regional impact</td>
+                      <td>years</td>
+                    </tr>
+                    <tr>
+                      <td>Boreal permafrost abrupt thaw</td>
+                      <td>carbon feedback</td>
+                      <td>regional impact</td>
+                      <td>decades to centuries</td>
+                    </tr>
+                    <tr>
+                      <td>Barents Sea ice abrupt loss</td>
+                      <td>cryosphere</td>
+                      <td>regional impact</td>
+                      <td>decades</td>
+                    </tr>
+                    <tr>
+                      <td>Mountain glacier loss</td>
+                      <td>cryosphere</td>
+                      <td>regional impact</td>
+                      <td>centuries</td>
+                    </tr>
+                    <tr>
+                      <td>Sahel &amp; West African monsoon greening</td>
+                      <td>monsoon</td>
+                      <td>regional impact</td>
+                      <td>years to decades</td>
+                    </tr>
+                    <tr>
+                      <td>Boreal forest southern dieback</td>
+                      <td>biosphere</td>
+                      <td>regional impact</td>
+                      <td>decades</td>
+                    </tr>
+                    <tr>
+                      <td>Boreal forest northward expansion</td>
+                      <td>biosphere</td>
+                      <td>regional impact</td>
+                      <td>decades</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <p class="note" style="margin-top: 14px">
+                  Threshold ranges, confidence ratings, impacts and cascades need JavaScript to
+                  render, because each one is bound to its citation in the data layer. The authority
+                  for all of them is Armstrong McKay et al., <em>Science</em> (2022), Table 1 —
+                  listed in full under Methods &amp; sources.
+                </p>
+              </div>
+            </noscript>
+          </div>
+        </section>
+
+        <!-- CONTACT A ------------------------------------------------------------ -->
+        <section class="contact contact--A" id="contactA" aria-labelledby="contactAName">
+          <div class="contact-base"></div>
+          <div class="contact-media-slot" data-tags="strata" data-pick="first"></div>
+          <div class="contact-scrim"></div>
+          <div class="contact-label">
+            <span class="contact-chip" id="contactAChip"></span>
+            <p class="contact-name" id="contactAName">Contact</p>
+            <p class="contact-sub" id="contactASub"></p>
+          </div>
+        </section>
+
+        <!-- =====================================================================
+       ACT II — THE MISALLOCATION
+       ===================================================================== -->
+        <section id="act2" class="stratum s-ochre act">
+          <div class="wrap">
+            <header class="act-head">
+              <p class="eyebrow" id="act2Eyebrow"></p>
+              <div>
+                <h2><span class="act-numeral">II</span> &nbsp;The misallocation</h2>
+              </div>
+              <div>
+                <p class="note" style="margin: 0; color: var(--fg-2)">
+                  Equity raised, capital being sought, offtake commitments, prizes, grants and
+                  sector roll-ups are different kinds of money. They are never summed together, and
+                  every figure carries the badge and date its source gave it.
+                </p>
+              </div>
+            </header>
+
+            <!-- The board leads the act: the flagged intervals, before the full log. -->
+            <section class="opp" id="opp" aria-labelledby="oppLede">
+              <p class="eyebrow" id="oppEyebrow"></p>
+              <h3 class="opp-lede" id="oppLede"></h3>
+              <p class="opp-sub" id="oppSub"></p>
+              <div class="opp-grid" id="oppGrid"></div>
+              <details class="fn">
+                <summary>
+                  <span class="pull-shut">how this board is ordered</span>
+                  <span class="pull-open">close</span>
+                </summary>
+                <div class="fn-body">
+                  <p class="note" id="oppFoot" style="margin: 0; color: var(--fg-2)"></p>
+                </div>
+              </details>
+            </section>
+
+            <p class="eyebrow" id="fieldEyebrow"></p>
+            <h3 style="margin: 8px 0 16px">The assay field</h3>
+            <div class="field-scroll"><svg id="fieldSvg" role="group"></svg></div>
+            <p class="note fd-callout" id="fieldCallout"></p>
+            <details class="fn">
+              <summary>
+                <span class="pull-shut">how to read the assay field</span>
+                <span class="pull-open">close</span>
+              </summary>
+              <div class="fn-body">
+                <p class="note" id="fieldFoot" style="margin: 0; color: var(--fg-2)"></p>
+              </div>
+            </details>
+
+            <h3 style="margin: clamp(34px, 5vh, 54px) 0 4px">The full ledger</h3>
+            <div class="iv-list" id="ivList"></div>
+
+            <div class="tiers" id="tiers">
+              <header style="margin-bottom: -8px">
+                <p class="eyebrow" id="atlasEyebrow"></p>
+                <h3 style="margin-top: 8px">Company atlas</h3>
+                <p class="note" style="margin-top: 10px; color: var(--fg-2); max-width: 62ch">
+                  Staged by conviction, not by size. Nothing announced is shown as delivered.
+                </p>
+              </header>
+            </div>
+          </div>
+        </section>
+
+        <!-- CONTACT B — the stratum where the page goes dark --------------------- -->
+        <section class="contact contact--B" id="contactB" aria-labelledby="contactBName">
+          <div class="contact-base"></div>
+          <div class="contact-media-slot" data-tags="strata" data-pick="second"></div>
+          <div class="contact-scrim"></div>
+          <div class="contact-label">
+            <span class="contact-chip" id="contactBChip"></span>
+            <p class="contact-name" id="contactBName">Contact</p>
+            <p class="contact-sub" id="contactBSub"></p>
+            <span class="contact-flip">below this line the page reads light on dark</span>
+          </div>
+        </section>
+
+        <!-- =====================================================================
+       ACT III — THE HYPOTHESIS ENGINE (core-sample tags)
+       ===================================================================== -->
+        <section id="act3" class="stratum s-rust act">
+          <div class="wrap">
+            <header class="act-head">
+              <p class="eyebrow" id="act3Eyebrow"></p>
+              <div>
+                <h2><span class="act-numeral">III</span> &nbsp;The hypothesis engine</h2>
+              </div>
+              <div>
+                <p class="note" style="margin: 0">
+                  <span id="act3ClaimsN">—</span> claims, each tagged like a sample pulled from the
+                  core. Open a tag for all seven fields — kill criteria always printed above
+                  validation, because a claim that cannot be killed is not a hypothesis.
+                </p>
+              </div>
+            </header>
+            <div class="tags" id="tags"></div>
+          </div>
+        </section>
+
+        <!-- CONTACT C ------------------------------------------------------------ -->
+        <section class="contact contact--C" id="contactC" aria-labelledby="contactCName">
+          <div class="contact-base"></div>
+          <div class="contact-media-slot" data-tags="ice" data-pick="first"></div>
+          <div class="contact-scrim"></div>
+          <div class="contact-label">
+            <span class="contact-chip" id="contactCChip"></span>
+            <p class="contact-name" id="contactCName">Contact</p>
+            <p class="contact-sub" id="contactCSub"></p>
+          </div>
+        </section>
+
+        <!-- =====================================================================
+       METHODS & SOURCES
+       ===================================================================== -->
+        <section id="methods" class="stratum s-carbon act">
+          <div class="wrap">
+            <header class="act-head">
+              <p class="eyebrow" id="methEyebrow"></p>
+              <div><h2>Methods &amp; sources</h2></div>
+              <div>
+                <p class="note" style="margin: 0">
+                  Bedrock. Four drawers: what this is built on, and where it is uncertain.
+                </p>
+              </div>
+            </header>
+
+            <div class="disc" style="margin-bottom: clamp(28px, 4vh, 48px)">
+              <p>This is a research position, not investment advice.</p>
+              <p class="note" id="discData" style="margin-bottom: 0"></p>
+            </div>
+
+            <!-- Four drawers, all shut by default. Nothing is removed: every citation,
+           credit and calibration figure is one interaction away. -->
+            <details class="meth-dz">
+              <summary>
+                <h4>Sources</h4>
+                <span class="meth-dz-right"
+                  ><span class="meth-dz-n" id="srcEyebrow"></span
+                  ><span class="pull"
+                    ><i></i><span class="pull-shut">open</span
+                    ><span class="pull-open">close</span></span
+                  ></span
+                >
+              </summary>
+              <div class="meth-dz-body">
+                <ul class="srcs" id="srcs"></ul>
+              </div>
+            </details>
+
+            <details class="meth-dz">
+              <summary>
+                <h4>How the figures are handled</h4>
+                <span class="meth-dz-right"
+                  ><span class="meth-dz-n"
+                    >thresholds · money · absences · assessments · hypotheses</span
+                  ><span class="pull"
+                    ><i></i><span class="pull-shut">open</span
+                    ><span class="pull-open">close</span></span
+                  ></span
+                >
+              </summary>
+              <div class="meth-dz-body" id="methNotes"></div>
+            </details>
+
+            <details class="meth-dz">
+              <summary>
+                <h4>Media credits &amp; licences</h4>
+                <span class="meth-dz-right"
+                  ><span class="meth-dz-n" id="creditsN"></span
+                  ><span class="pull"
+                    ><i></i><span class="pull-shut">open</span
+                    ><span class="pull-open">close</span></span
+                  ></span
+                >
+              </summary>
+              <div class="meth-dz-body">
+                <ul class="credits" id="credits"></ul>
+              </div>
+            </details>
+
+            <details class="meth-dz" style="border-bottom: 1px solid var(--rule)">
+              <summary>
+                <h4>Depth–age calibration</h4>
+                <span class="meth-dz-right"
+                  ><span class="meth-dz-n">illustrative, not measured data</span
+                  ><span class="pull"
+                    ><i></i><span class="pull-shut">open</span
+                    ><span class="pull-open">close</span></span
+                  ></span
+                >
+              </summary>
+              <div class="meth-dz-body calib">
+                <p class="note" style="margin-top: 0; font-size: 0.8125rem" id="calibNote"></p>
+                <table id="calibTable"></table>
+              </div>
+            </details>
+
+            <footer>
+              <div class="foot-row" id="footRow"></div>
+            </footer>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- =======================================================================
+     DOSSIER — a specimen tray that slides out of the right edge. Fixed and
+     opaque, so it is never confused with the section it was opened from and
+     its legibility never depends on the stratum behind it.
+     ======================================================================= -->
+    <div class="dos-scrim" id="dosScrim" data-open="0" hidden></div>
+
+    <aside
+      class="dossier"
+      id="dossier"
+      data-open="0"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="dosName"
+      hidden
+    >
+      <span class="dos-grip" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+      <div class="dossier-hd">
+        <div class="dossier-top">
+          <div>
+            <p class="dossier-tier" id="dosTier"></p>
+            <h3 id="dosName">Select an element</h3>
+          </div>
+          <button class="dossier-close" id="dosClose" type="button">Close · esc</button>
+        </div>
+      </div>
+      <div class="dossier-body" id="dosBody">
+        <p class="dossier-empty">
+          Pick an element on the globe or in the band chart. The dossier reports its threshold range
+          and confidence rating, how long the transition takes once triggered, what it does to the
+          rest of the system, and the sources the numbers come from.
+        </p>
+      </div>
+    </aside>
+
+    <div id="tip" role="status" aria-live="off"></div>
+  </body>
+</html>
