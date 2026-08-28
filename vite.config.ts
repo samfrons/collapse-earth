@@ -1,21 +1,27 @@
-import { resolve } from 'node:path';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vite';
 
-const page = (name: string) => resolve(__dirname, 'src/pages', name, 'index.html');
+// This file is ESM (`"type": "module"`), so `__dirname` does not exist. Deriving it
+// from `import.meta.url` is the portable form and does not depend on how the bundler
+// happens to transpile the config.
+const root = dirname(fileURLToPath(import.meta.url));
+
+const page = (name: string) => resolve(root, 'src/pages', name, 'index.html');
 
 export default defineConfig({
-  root: resolve(__dirname, 'src'),
-  publicDir: resolve(__dirname, 'public'),
+  root: resolve(root, 'src'),
+  publicDir: resolve(root, 'public'),
   resolve: {
-    alias: { '@': resolve(__dirname, 'src') },
+    alias: { '@': resolve(root, 'src') },
   },
   build: {
-    outDir: resolve(__dirname, 'dist'),
+    outDir: resolve(root, 'dist'),
     emptyOutDir: true,
     target: 'es2022',
     rollupOptions: {
       input: {
-        index: resolve(__dirname, 'src/index.html'),
+        index: resolve(root, 'src/index.html'),
         'core-sample': page('core-sample'),
         'the-seam': page('the-seam'),
       },
