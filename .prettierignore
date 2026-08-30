@@ -1,0 +1,5 @@
+dist
+archive
+node_modules
+pnpm-lock.yaml
+src/assets/*.json

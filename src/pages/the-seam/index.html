@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Collapse Earth — The Seam</title>
+    <meta
+      name="description"
+      content="A field study beneath Core Sample §1: abandoned-mine methane in the EU. The inventory, a modelled digital twin of one mine, a first-of-a-kind abatement unit, and the company thesis. Research and opinion, not investment advice."
+    />
+    <!-- Unlisted while its citation gates are open — same discipline as the lead's
+     pre-ship gates. Remove noindex only after the verify pass. -->
+    <meta name="robots" content="noindex" />
+    <meta name="color-scheme" content="light dark" />
+    <!-- the five grounds of this page's descent, stacked -->
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 10'%3E%3Crect width='8' height='2' fill='%23F5F1E8'/%3E%3Crect y='2' width='8' height='2' fill='%23EDE6DA'/%3E%3Crect y='4' width='8' height='2' fill='%23C8973F'/%3E%3Crect y='6' width='8' height='2' fill='%239C4A22'/%3E%3Crect y='8' width='8' height='2' fill='%2317130E'/%3E%3C/svg%3E"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+    <script type="module" src="./main.ts"></script>
+  </head>
+  <body data-tone="light" data-stratum="surface">
+    <div class="grain grain--dark" aria-hidden="true"></div>
+    <div class="grain grain--lift" aria-hidden="true"></div>
+
+    <!-- =======================================================================
+     SHAFT-GAUGE RAIL. Every figure inside it is written by JS from the
+     schematic shaft profile; nothing numeric is hardcoded here.
+     ======================================================================= -->
+    <aside id="gauge" aria-label="Mine shaft gauge — schematic">
+      <div class="gauge-head">
+        <p class="gauge-brand">Mine log<br />read top down</p>
+        <span class="gauge-read">
+          <span class="gauge-num" id="gDepth">—</span>
+          <span class="gauge-unit" id="gDepthU"></span>
+        </span>
+        <p class="gauge-stratum" id="gStratum"></p>
+      </div>
+      <div class="gauge-col">
+        <svg id="gaugeSvg" aria-hidden="true" preserveAspectRatio="none"></svg>
+      </div>
+      <p class="gauge-foot" id="gFoot"></p>
+    </aside>
+
+    <div id="core">
+      <main>
+        <section id="dataFailHost">
+          <p id="dataFail" role="alert">
+            <b>The data layer did not load.</b> Every figure on this page is read from
+            <span class="mono">the data layer</span> at runtime, so nothing is rendered from the
+            markup itself. Reload, or check that the file is being served alongside this page.
+          </p>
+        </section>
+
+        <!-- =====================================================================
+       HERO — surface works
+       ===================================================================== -->
+        <section id="hero" class="stratum s-firn">
+          <div class="wrap">
+            <p class="eyebrow" id="heroEyebrow"></p>
+            <h1 class="hero-title"><span>The</span><span class="t2">Seam</span></h1>
+            <div class="hero-meta" id="heroMeta"></div>
+
+            <div class="hero-grid" style="margin-top: clamp(26px, 4vh, 44px)">
+              <div>
+                <p class="lede" id="heroLede"></p>
+                <p class="note" style="margin-top: 1.1em" id="heroNote"></p>
+
+                <div class="clock rise" id="clockHost" hidden>
+                  <p class="readout-k" id="clockK"></p>
+                  <svg id="clockSvg" role="img"></svg>
+                </div>
+
+                <div class="hero-anthro">
+                  <strong id="heroStampLab"></strong>
+                  <p class="note" id="heroStampNote" style="margin: 0"></p>
+                </div>
+              </div>
+
+              <div>
+                <div class="readout-grid" id="readouts"></div>
+                <p class="note" id="heroDisc" style="margin-top: 14px; font-size: 0.75rem"></p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- =====================================================================
+       ACT I — THE INVENTORY (overburden)
+       ===================================================================== -->
+        <section id="act1" class="stratum s-bone act">
+          <div class="wrap">
+            <header class="act-head">
+              <p class="eyebrow" id="act1Eyebrow"></p>
+              <div>
+                <h2><span class="act-numeral">I</span> &nbsp;The inventory</h2>
+              </div>
+              <div>
+                <p class="note" style="margin: 0" id="act1Note"></p>
+              </div>
+            </header>
+
+            <p class="eyebrow" id="seamEyebrow"></p>
+            <h3 style="margin: 8px 0 16px">The seam field</h3>
+            <div class="field-scroll rise"><svg id="seamSvg" role="group"></svg></div>
+            <p class="note fd-callout rise" id="seamCallout"></p>
+            <details class="fn">
+              <summary>
+                <span class="pull-shut">how to read the seam field</span>
+                <span class="pull-open">close</span>
+              </summary>
+              <div class="fn-body"><p class="note" id="seamFoot" style="margin: 0"></p></div>
+            </details>
+
+            <details class="fn" id="dzQuality">
+              <summary>
+                <span class="pull-shut"
+                  >the broken inventory — flooded status, conflicting totals</span
+                >
+                <span class="pull-open">close</span>
+              </summary>
+              <div class="fn-body" id="dzQualityBody"></div>
+            </details>
+            <details class="fn" id="dzRegulation">
+              <summary>
+                <span class="pull-shut">the regulation — who is responsible, and by when</span>
+                <span class="pull-open">close</span>
+              </summary>
+              <div class="fn-body" id="dzRegulationBody"></div>
+            </details>
+
+            <!-- No-JavaScript fallback: the page's three load-bearing tables. The
+           interactive twin cannot be carried statically; its defaults are
+           described in prose so nothing essential is JavaScript-only. -->
+            <noscript>
+              <div class="ns">
+                <table>
+                  <caption>
+                    The six mines — half of EU abandoned-mine methane (modelled, GEM June 2024)
+                  </caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Mine</th>
+                      <th scope="col">Country</th>
+                      <th scope="col">Closed</th>
+                      <th scope="col">MCM CH₄/yr</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>ČSA (Karviná)</td>
+                      <td>Czech Republic</td>
+                      <td>2021</td>
+                      <td>≈36</td>
+                    </tr>
+                    <tr>
+                      <td>Auguste Victoria</td>
+                      <td>Germany</td>
+                      <td>2015</td>
+                      <td>≈28 (8.4 if flooded)</td>
+                    </tr>
+                    <tr>
+                      <td>KWK Mysłowice-Wesoła I</td>
+                      <td>Poland</td>
+                      <td>not stated</td>
+                      <td>≈26</td>
+                    </tr>
+                    <tr>
+                      <td>Darkov</td>
+                      <td>Czech Republic</td>
+                      <td>2021</td>
+                      <td>≈24</td>
+                    </tr>
+                    <tr>
+                      <td>KWK Rydułtowy I</td>
+                      <td>Poland</td>
+                      <td>not stated</td>
+                      <td>≈19</td>
+                    </tr>
+                    <tr>
+                      <td>Prosper-Haniel</td>
+                      <td>Germany</td>
+                      <td>2018</td>
+                      <td>≈18</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <table style="margin-top: 18px">
+                  <caption>
+                    EU total, three scenarios (mines abandoned 2015–2023, underground)
+                  </caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Scenario</th>
+                      <th scope="col">MCM/yr</th>
+                      <th scope="col">kt/yr</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>all unknown-status mines dry</td>
+                      <td>298.2</td>
+                      <td>≈200</td>
+                    </tr>
+                    <tr>
+                      <td>all unknown-status mines flooded</td>
+                      <td>275.7</td>
+                      <td>≈185</td>
+                    </tr>
+                    <tr>
+                      <td>every mine flooded (best case)</td>
+                      <td>238.7</td>
+                      <td>—</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <table style="margin-top: 18px">
+                  <caption>
+                    Regulation (EU) 2024/1787, Arts. 24–26 — closed and abandoned underground coal
+                    mines (operations ceased after 3 Aug 1954)
+                  </caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Date</th>
+                      <th scope="col">Obligation</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>2025-08-05</td>
+                      <td>member state inventories published (Art. 25(1))</td>
+                    </tr>
+                    <tr>
+                      <td>2026-05-05</td>
+                      <td>measurement begins on elements above 0.5 t CH₄/yr (Art. 25(2))</td>
+                    </tr>
+                    <tr>
+                      <td>2026-08-05</td>
+                      <td>first yearly emissions reports — estimates (Art. 25(6))</td>
+                    </tr>
+                    <tr>
+                      <td>2027-02-05</td>
+                      <td>
+                        member state mitigation plans, closed and abandoned mines alike (Art. 26(1))
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>2030-01-01</td>
+                      <td>
+                        venting and flaring prohibited; only demonstrated infeasibility or safety
+                        excepts (Art. 26(2))
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <p class="note" style="margin-top: 14px">
+                  The digital twin in level ii needs JavaScript. Its default state: Auguste
+                  Victoria, flooded status unknown — a dry path declining hyperbolically (Kholod et
+                  al. 2020: b = 2.017, D = 0.302/yr) from ≈48 MCM/yr at closure to ≈10 in 2050,
+                  against a flooded path (exponential, 0.672/yr) that is effectively zero by 2023.
+                  Every figure is modelled, none measured — sources under Methods at depth.
+                </p>
+              </div>
+            </noscript>
+          </div>
+        </section>
+
+        <!-- CONTACT A ------------------------------------------------------------ -->
+        <section class="contact contact--A" id="contactA" aria-labelledby="contactAName">
+          <div class="contact-base"></div>
+          <div class="contact-media-slot" data-tags="strata" data-pick="first"></div>
+          <div class="contact-scrim"></div>
+          <div class="contact-label">
+            <span class="contact-chip" id="contactAChip"></span>
+            <p class="contact-name" id="contactAName">Contact</p>
+            <p class="contact-sub" id="contactASub"></p>
+          </div>
+        </section>
+
+        <!-- =====================================================================
+       ACT II — THE SHAFT: one mine, modelled
+       ===================================================================== -->
+        <section id="act2" class="stratum s-ochre act">
+          <div class="wrap">
+            <header class="act-head">
+              <p class="eyebrow" id="act2Eyebrow"></p>
+              <div>
+                <h2><span class="act-numeral">II</span> &nbsp;The shaft</h2>
+              </div>
+              <div>
+                <p class="note" style="margin: 0" id="act2Note"></p>
+              </div>
+            </header>
+            <div id="twinHost"></div>
+          </div>
+        </section>
+
+        <!-- CONTACT B — where the page goes dark ---------------------------------- -->
+        <section class="contact contact--B" id="contactB" aria-labelledby="contactBName">
+          <div class="contact-base"></div>
+          <div class="contact-media-slot" data-tags="strata" data-pick="second"></div>
+          <div class="contact-scrim"></div>
+          <div class="contact-label">
+            <span class="contact-chip" id="contactBChip"></span>
+            <p class="contact-name" id="contactBName">Contact</p>
+            <p class="contact-sub" id="contactBSub"></p>
+            <span class="contact-flip">below this line the page reads light on dark</span>
+          </div>
+        </section>
+
+        <!-- =====================================================================
+       ACT III — THE WORKING FACE: the unit
+       ===================================================================== -->
+        <section id="act3" class="stratum s-rust act">
+          <div class="wrap">
+            <header class="act-head">
+              <p class="eyebrow" id="act3Eyebrow"></p>
+              <div>
+                <h2><span class="act-numeral">III</span> &nbsp;The working face</h2>
+              </div>
+              <div>
+                <p class="note" style="margin: 0" id="act3Note"></p>
+              </div>
+            </header>
+            <div id="unitHost"></div>
+          </div>
+        </section>
+
+        <!-- CONTACT C ------------------------------------------------------------ -->
+        <section class="contact contact--C" id="contactC" aria-labelledby="contactCName">
+          <div class="contact-base"></div>
+          <div class="contact-media-slot" data-tags="strata" data-pick="first"></div>
+          <div class="contact-scrim"></div>
+          <div class="contact-label">
+            <span class="contact-chip" id="contactCChip"></span>
+            <p class="contact-name" id="contactCName">Contact</p>
+            <p class="contact-sub" id="contactCSub"></p>
+          </div>
+        </section>
+
+        <!-- =====================================================================
+       ACT IV — AT DEPTH: the company · methods & sources
+       ===================================================================== -->
+        <section id="act4" class="stratum s-carbon act">
+          <div class="wrap">
+            <header class="act-head">
+              <p class="eyebrow" id="act4Eyebrow"></p>
+              <div>
+                <h2><span class="act-numeral">IV</span> &nbsp;At depth</h2>
+              </div>
+              <div>
+                <p class="note" style="margin: 0" id="act4Note"></p>
+              </div>
+            </header>
+            <div id="ventureHost"></div>
+
+            <div id="methods" style="margin-top: clamp(44px, 7vh, 72px)">
+              <div class="disc" style="margin-bottom: clamp(28px, 4vh, 48px)">
+                <p>This is a research position, not investment advice.</p>
+                <p class="note" id="discData" style="margin-bottom: 0"></p>
+              </div>
+
+              <details class="meth-dz">
+                <summary>
+                  <h4>Sources</h4>
+                  <span class="meth-dz-right"
+                    ><span class="meth-dz-n" id="srcEyebrow"></span
+                    ><span class="pull"
+                      ><i></i><span class="pull-shut">open</span
+                      ><span class="pull-open">close</span></span
+                    ></span
+                  >
+                </summary>
+                <div class="meth-dz-body">
+                  <ul class="srcs" id="srcs"></ul>
+                </div>
+              </details>
+
+              <details class="meth-dz">
+                <summary>
+                  <h4>Model assumptions</h4>
+                  <span class="meth-dz-right"
+                    ><span class="meth-dz-n" id="methAssumpN"></span
+                    ><span class="pull"
+                      ><i></i><span class="pull-shut">open</span
+                      ><span class="pull-open">close</span></span
+                    ></span
+                  >
+                </summary>
+                <div class="meth-dz-body" id="methAssump"></div>
+              </details>
+
+              <details class="meth-dz">
+                <summary>
+                  <h4>Media credits &amp; licences</h4>
+                  <span class="meth-dz-right"
+                    ><span class="meth-dz-n" id="creditsN"></span
+                    ><span class="pull"
+                      ><i></i><span class="pull-shut">open</span
+                      ><span class="pull-open">close</span></span
+                    ></span
+                  >
+                </summary>
+                <div class="meth-dz-body"><ul class="src-list" id="credits"></ul></div>
+              </details>
+
+              <details class="meth-dz" style="border-bottom: 1px solid var(--rule)">
+                <summary>
+                  <h4>How the figures are handled</h4>
+                  <span class="meth-dz-right"
+                    ><span class="meth-dz-n">modelled vs measured · units · the two lenses</span
+                    ><span class="pull"
+                      ><i></i><span class="pull-shut">open</span
+                      ><span class="pull-open">close</span></span
+                    ></span
+                  >
+                </summary>
+                <div class="meth-dz-body" id="methNotes"></div>
+              </details>
+
+              <footer>
+                <div class="foot-row" id="footRow"></div>
+              </footer>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- DOSSIER — the right-sliding specimen tray (mine dossier / module pane) -->
+    <div class="dos-scrim" id="dosScrim" data-open="0" hidden></div>
+
+    <aside
+      class="dossier"
+      id="dossier"
+      data-open="0"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="dosName"
+      hidden
+    >
+      <span class="dos-grip" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+      <div class="dossier-hd">
+        <div class="dossier-top">
+          <div>
+            <p class="dossier-tier" id="dosTier"></p>
+            <h3 id="dosName">Select a mine</h3>
+          </div>
+          <button class="dossier-close" id="dosClose" type="button">Close · esc</button>
+        </div>
+      </div>
+      <div class="dossier-body" id="dosBody">
+        <p class="dossier-empty">
+          Pick a mine in the seam field. The dossier reports its modelled emissions, what is and is
+          not known about its status, and the sources.
+        </p>
+      </div>
+    </aside>
+
+    <div id="tip" role="status" aria-live="polite"></div>
+  </body>
+</html>

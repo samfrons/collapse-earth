@@ -7,6 +7,7 @@
 ## HARD GATE before pointing `/` at Core Sample
 
 **Verify the six `verify:true` citations in `collapse-data.v2.js` `meta.sources`** (they render on-page as "still to confirm before print"):
+
 1. `benyami2024` — Ben-Yami et al., Science Advances 2024 (AMOC record-length caveat) — confirm exact DOI
 2. `carbonplan` — CarbonPlan's "four orders of magnitude" ERW claim — pin exact publication
 3. `mes-trl2024` — Trends in Biotechnology 2024, MES TRL 3/4

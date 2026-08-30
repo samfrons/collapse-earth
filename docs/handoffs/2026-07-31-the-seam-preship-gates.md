@@ -59,9 +59,9 @@
 > growth and clogging, and the 9-overlay/15-preset system. All uncalibrated, and the
 > upstream model has no channelling term so it **over-predicts at high biomass**. The
 > sheet therefore states no absolute performance figure — a CDP check asserts this. The
-> one performance number on the plate is Limbri et al. 2014's *measurement*
+> one performance number on the plate is Limbri et al. 2014's _measurement_
 > (27.2 g CH₄ m⁻³ h⁻¹) and their own scale-up from it (≈7,200 m³ of bed for 50 m³ s⁻¹),
-> quoted as a measurement and included because it is the strongest argument *against*
+> quoted as a measurement and included because it is the strongest argument _against_
 > what the sheet draws.
 >
 > **The finding is structural, not parameter-dependent** — worth knowing before anyone
@@ -157,7 +157,7 @@ entry and the H1 tag (data-driven `fieldwork` fields in `collapse-data.v2.js`).
   Shaft cross-section (particles ∝ modelled rate, water table per flooding assumption,
   REDUCED-motion static fallback), routing chart with corrected safety bands, playhead,
   counters, economics sandbox (start-year forfeit hatch, carbon price as upside), editable
-  assumptions pane (22 constants, all sourced, zero PENDING *as of that round* —
+  assumptions pane (22 constants, all sourced, zero PENDING _as of that round_ —
   see the 2026-08-01 note: Sheet M-004 later reopened this gate).
 - **Act III, the unit** — containerized cutaway with four state chips; kraft-plated
   CONCEPT stamp; module bill drawer.
@@ -167,14 +167,14 @@ entry and the H1 tag (data-driven `fieldwork` fields in `collapse-data.v2.js`).
 
 ## Corrections the verification pass forced (do not revert)
 
-1. **Kholod Table 1 is mis-typeset** — it puts b=2.017/Di=0.302 in the *flooded* row, but
+1. **Kholod Table 1 is mis-typeset** — it puts b=2.017/Di=0.302 in the _flooded_ row, but
    Eq. 4 (flooded) is exponential with no b term. EPA's abandoned-mines methodology
    (Table 3.1, "Flooding = Exp(−0.672t)") disambiguates. The parameter block carries a
    comment so nobody "fixes" it back.
 2. **The 15–30% flare band died.** UNECE BPG p.20 rules use of methane-air mixtures
    unacceptable within safety factors of 2.5× LEL (2%) and 2× UEL (30%) — everything
    between 2% and 30% routes as sealed dilution → RTO, never raw use. The 30% engine
-   floor is a *transport-safety* limit.
+   floor is a _transport-safety_ limit.
 3. Density convention named: 0.67 kg/m³ (IPCC 2006 coal Tier 1, 20 °C) — matches GEM's own
    MCM↔kt pairs exactly.
 4. GWP AR6 fossil 82.5/29.8 confirmed exact. Destruction efficiency default 90%
@@ -187,7 +187,7 @@ entry and the H1 tag (data-driven `fieldwork` fields in `collapse-data.v2.js`).
   Enter on chart marks). Driver: `scratchpad/cdp-test.mjs` (session scratchpad copy).
 - Pixel-sampled contrast spot audit: all text pairings ≥4.5:1 after fixes (new
   `--ember-lt:#F6A97F` for dark grounds; deep `#5A1A0C` for alert marks on ochre; dark
-  plot plates on rust/carbon; kraft-plated stamps). NOTE: this was a *spot* audit of new
+  plot plates on rust/carbon; kraft-plated stamps). NOTE: this was a _spot_ audit of new
   pairings, not the lead's full blank-glyph modal-pixel audit.
 - Word budget: **basis B = 1,698** (target at the time ≤2,400; raised to ≤2,600 on
   2026-08-01 — see item 7) via the rebuilt
@@ -254,15 +254,16 @@ entry and the H1 tag (data-driven `fieldwork` fields in `collapse-data.v2.js`).
    Mines collection on HathiTrust/Internet Archive. Expect the published LOC to land
    near 11.7% (nitrogen diluent) rather than 12.1%; if so, update `cow_loc` and re-run
    `scratchpad/bio-tests.mjs` — the sweep test already asserts the finding survives it.
+
 7. ~~**Both budgets are now effectively spent, and basis B is over.**~~
    **CLOSED 2026-08-01 — Sam raised the word budget for this page from ≤2,400 to
    ≤2,600 on basis B.** Measured with `scratchpad/word-bases.mjs` (the only counter
    whose numbers are comparable to each other):
 
-   | Gate | Target | Before sheet 4 | Now | Verdict |
-   |---|---|---|---|---|
-   | basis B | ≤2,600 *(was 2,400)* | 2,333 | **2,469** | inside, 131 to spare |
-   | height @1440 | ≤12,000 | ≈11,000 | **11,761** | inside, 239px to spare |
+   | Gate         | Target               | Before sheet 4 | Now        | Verdict                |
+   | ------------ | -------------------- | -------------- | ---------- | ---------------------- |
+   | basis B      | ≤2,600 _(was 2,400)_ | 2,333          | **2,469**  | inside, 131 to spare   |
+   | height @1440 | ≤12,000              | ≈11,000        | **11,761** | inside, 239px to spare |
 
    Reasoning, so the raise is not read as the budget quietly drifting: the sheet costs
    ~136 words net after two trim passes (full hedge moved into a drawer, prose mirror
@@ -272,6 +273,7 @@ entry and the H1 tag (data-driven `fieldwork` fields in `collapse-data.v2.js`).
    one. **The height budget is unchanged and is now the binding constraint — treat 12,000px
    as the gate that must not move.** With 239px of headroom, any further default-visible
    addition to this page needs a height measurement before it lands, not after.
+
 8. ~~Sheet 4 has had no pixel-contrast audit.~~ **CLOSED 2026-08-01.**
    `scratchpad/contrast-m004.mjs` runs the lead's rendered-pixel method over the sheet:
    blank the glyphs, screenshot, take the modal pixel behind each text rect, and let
@@ -279,17 +281,18 @@ entry and the H1 tag (data-driven `fieldwork` fields in `collapse-data.v2.js`).
    (worst 7.19:1, the ember `nose` label). Non-text graphics pass 1.4.11.
 
    Two things the audit caught that are worth keeping:
-   - *Method bug, not a page bug.* Blanking with `visibility:hidden` also removes an
+   - _Method bug, not a page bug._ Blanking with `visibility:hidden` also removes an
      element's own background, which turned the selected chip (dark ink on a near-white
      pill) into "dark ink on the dark plate" and reported a false 1.06:1. Blank glyphs
      with transparent `color`/`fill` instead, never `visibility`.
-   - *Real finding.* At realistic conversions the bed's ochre→ice ramp ends measure only
+   - _Real finding._ At realistic conversions the bed's ochre→ice ramp ends measure only
      **1.51:1** apart, so the axial profile was effectively colour-only. Fixed the way
      the assay field already handles this — **redundant encoding**: a polyline whose
      horizontal position tracks methane remaining, drawn as a `#0B1A28` casing under an
      `#F2F8FC` core so it holds on every fill in the ramp (4.23:1 on its better stroke).
      The profile now survives colour-vision deficiency and a greyscale print. Do not
      "simplify" that line away — the hue ramp alone does not carry the information.
+
 9. **`rosso1993` was missing from `PAGE_SOURCE_IDS`** (found by CodeRabbit on PR #2, which
    caught the same class of omission for four other ids Sam fixed in `66611cb`). This is
    worse than a thin Sources drawer: `renderMethods()` derives the "still to confirm"

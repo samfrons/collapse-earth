@@ -1,6 +1,21 @@
-.DS_Store
-.vercel
+# dependencies & build output
 node_modules
+dist
+.vite
+
+# local environment
 .env
 .env.local
+.env.*.local
+.vercel
+
+# editor / OS noise
+.DS_Store
+
+# agent + tooling scratch, never part of the published repo
+scratchpad/
+archive/
 .playwright-mcp/
+.superpowers/
+.remember/
+.claude/
