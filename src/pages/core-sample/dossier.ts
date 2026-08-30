@@ -17,6 +17,14 @@ import { actOne, confidencePips, crossing, STATE_WORD, systemById } from './thre
 let lastTrigger: Element | null = null;
 let open = false;
 
+/**
+ * The close transition hides the pane 380 ms after it starts. A reader can close the
+ * tray and pick another element well inside that window, so the handle is kept and
+ * cancelled on reopen — otherwise the pending hide lands on an already-open tray and
+ * leaves focus sitting inside a hidden pane.
+ */
+let hideTimer: ReturnType<typeof setTimeout> | undefined;
+
 const row = (key: string, value: SafeHtml): SafeHtml =>
   html`<div class="dl-row">
     <div class="dl-k">${key}</div>
@@ -26,6 +34,8 @@ const row = (key: string, value: SafeHtml): SafeHtml =>
 export const openTray = (): void => {
   const pane = byId('dossier');
   const scrim = byId('dosScrim');
+
+  clearTimeout(hideTimer);
 
   // The hover tooltip would otherwise be stranded over the page: focus moves into
   // the tray, so the marker or row that raised it never receives a blur.
@@ -44,6 +54,11 @@ export const openTray = (): void => {
 };
 
 export const closeTray = (): void => {
+  // Idempotent: the document-level Escape handler fires on every press, and without
+  // this an unrelated Escape would re-run the focus restore below, pulling the page
+  // back to whichever marker was last used.
+  if (!open) return;
+
   const pane = byId('dossier');
   const scrim = byId('dosScrim');
 
@@ -57,8 +72,9 @@ export const closeTray = (): void => {
     pane.hidden = true;
     scrim.hidden = true;
   };
+  clearTimeout(hideTimer);
   if (prefersReducedMotion()) finish();
-  else setTimeout(finish, 380);
+  else hideTimer = setTimeout(finish, 380);
 
   if (lastTrigger instanceof HTMLElement && document.contains(lastTrigger)) {
     lastTrigger.focus({ preventScroll: false });
@@ -196,7 +212,14 @@ export const fillDossier = (id: TippingSystemId): void => {
   for (const button of byId('dosBody').querySelectorAll<HTMLElement>('[data-goto]')) {
     button.addEventListener('click', () => {
       const goto = button.getAttribute('data-goto');
-      if (goto) selectSystem(goto as TippingSystemId, button);
+      if (!goto) return;
+
+      // Selecting from inside the pane refills `dosBody`, which detaches this button
+      // while it holds focus — focus would fall to <body>, outside the trap, and the
+      // tray is already open so nothing would move it back. Hand focus to the close
+      // button instead, and never record a detached node as the restore target.
+      selectSystem(goto as TippingSystemId);
+      byId('dosClose').focus();
     });
   }
 };

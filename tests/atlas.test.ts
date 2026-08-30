@@ -18,7 +18,6 @@ import {
   interventions,
   meta,
   tippingSystems,
-  crossingAt,
   isOpportunity,
   medianDisclosedCapital,
   OPPORTUNITY_THRESHOLD,
@@ -26,6 +25,7 @@ import {
   totalForStream,
   undisclosedCapitalRows,
 } from '../src/data';
+import { crossing } from '../src/pages/core-sample/thresholds';
 
 const sourceIds = new Set(meta.sources.map((s) => s.id as string));
 
@@ -93,9 +93,19 @@ describe('tipping thresholds', () => {
     const [first] = tippingSystems;
     expect(first).toBeDefined();
     if (!first) return;
-    expect(crossingAt(first, first.threshold.min - 0.1)).toBe('below');
-    expect(crossingAt(first, first.threshold.central)).toBe('within');
-    expect(crossingAt(first, first.threshold.max + 0.1)).toBe('beyond');
+    expect(crossing(first, first.threshold.min - 0.1).state).toBe('ahead');
+    expect(crossing(first, first.threshold.central).state).toBe('inside');
+    expect(crossing(first, first.threshold.max + 0.1).state).toBe('past');
+  });
+
+  it('reports how far into the band the reading sits, clamped to it', () => {
+    const [first] = tippingSystems;
+    expect(first).toBeDefined();
+    if (!first) return;
+    expect(crossing(first, first.threshold.min).frac).toBeCloseTo(0, 6);
+    expect(crossing(first, first.threshold.max).frac).toBeCloseTo(1, 6);
+    expect(crossing(first, first.threshold.min - 99).frac).toBe(0);
+    expect(crossing(first, first.threshold.max + 99).frac).toBe(1);
   });
 });
 
@@ -115,14 +125,20 @@ describe('funding arithmetic', () => {
   it('never mixes streams into capital raised', () => {
     for (const iv of interventions) {
       const others = (['target', 'contract', 'prize', 'grant', 'aggregate'] as const).reduce(
-        (n, s) => n + totalForStream(iv, s),
+        (n, stream) => n + totalForStream(iv, stream),
         0,
       );
-      // If any other stream carries money, the capital total must be strictly smaller
-      // than a total that had swept everything in.
-      if (others > 0) {
-        expect(totalCapitalRaised(iv), iv.id).toBeLessThan(totalCapitalRaised(iv) + others);
-      }
+      if (others === 0) continue;
+
+      // Built independently of the selector: every countable row regardless of stream.
+      // Comparing against `totalCapitalRaised(iv) + others` would have reduced to
+      // `x < x + others` and passed even if the selector swept in every stream.
+      const everyStream = iv.funding
+        .filter((f) => f.withinCumulative === undefined)
+        .reduce((n, f) => n + (f.amount ?? 0), 0);
+
+      expect(totalCapitalRaised(iv), iv.id).toBeLessThan(everyStream);
+      expect(totalCapitalRaised(iv) + others, iv.id).toBeCloseTo(everyStream, 6);
     }
   });
 
@@ -168,7 +184,7 @@ describe('the single flagged set', () => {
     }
   });
 
-  it('keeps every gap score inside the one-to-five scale it is labelled with', () => {
+  it('keeps every editorial ordinal inside the scale it is labelled with', () => {
     for (const iv of interventions) {
       expect(iv.gapScore, iv.id).toBeGreaterThanOrEqual(1);
       expect(iv.gapScore, iv.id).toBeLessThanOrEqual(5);

@@ -26,6 +26,10 @@ import {
 let lastTrigger: Element | null = null;
 let open = false;
 
+/** See the lead page's dossier: a reopen inside the 380 ms close transition would
+ *  otherwise be hidden by the pending timer, with focus left inside it. */
+let hideTimer: ReturnType<typeof setTimeout> | undefined;
+
 /** Repaint hook, so the tray does not have to import the twin panel. */
 let onAssumptionChange: (() => void) | null = null;
 export const wireAssumptionRepaint = (handler: () => void): void => {
@@ -35,6 +39,7 @@ export const wireAssumptionRepaint = (handler: () => void): void => {
 export const openTray = (): void => {
   const pane = byId('dossier');
   const scrim = byId('dosScrim');
+  clearTimeout(hideTimer);
   hideTip();
   pane.hidden = false;
   scrim.hidden = false;
@@ -48,6 +53,8 @@ export const openTray = (): void => {
 };
 
 export const closeTray = (): void => {
+  if (!open) return;
+
   const pane = byId('dossier');
   const scrim = byId('dosScrim');
   hideTip();
@@ -60,8 +67,9 @@ export const closeTray = (): void => {
     pane.hidden = true;
     scrim.hidden = true;
   };
+  clearTimeout(hideTimer);
   if (prefersReducedMotion()) finish();
-  else setTimeout(finish, 380);
+  else hideTimer = setTimeout(finish, 380);
 
   if (lastTrigger instanceof HTMLElement && document.contains(lastTrigger)) {
     lastTrigger.focus({ preventScroll: false });

@@ -681,9 +681,13 @@ const wireControls = (): void => {
     lastY = e.clientY;
     view.needsFrame = true;
   });
-  wrap.addEventListener('pointerup', () => {
-    dragging = false;
-  });
+  // pointercancel matters as much as pointerup: a touch the browser takes over for
+  // scrolling never fires pointerup, and the camera would keep orbiting unpressed.
+  for (const event of ['pointerup', 'pointercancel'] as const) {
+    wrap.addEventListener(event, () => {
+      dragging = false;
+    });
+  }
 
   wrap.addEventListener('keydown', (e) => {
     if (!view) return;

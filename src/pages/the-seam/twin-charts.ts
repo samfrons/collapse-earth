@@ -37,6 +37,18 @@ interface NowLine {
   readonly group: d3.Selection<SVGGElement, unknown, HTMLElement, unknown>;
 }
 
+/**
+ * The two charts do not share an x domain: the decline chart starts at the mine's
+ * closure year, the purity chart at the unit's start year, and the playhead ranges over
+ * the former. A year before a chart's domain must therefore be *omitted* from that
+ * chart rather than drawn — an unclamped scale would put the line outside the plot,
+ * where it reads as a position on an axis that does not contain it.
+ */
+const withinDomain = (g: NowLine, year: number): boolean => {
+  const [lo, hi] = g.x.domain();
+  return lo !== undefined && hi !== undefined && year >= lo && year <= hi;
+};
+
 let declineNow: NowLine | null = null;
 let routeNow: NowLine | null = null;
 
@@ -784,6 +796,7 @@ export const paintNowLines = (year: number): void => {
   for (const g of [routeNow, declineNow]) {
     if (!g) continue;
     g.group.selectAll('*').remove();
+    if (!withinDomain(g, year)) continue;
     const px = g.x(year);
     g.group
       .append('line')

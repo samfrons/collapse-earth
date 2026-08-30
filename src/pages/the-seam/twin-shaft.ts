@@ -333,12 +333,20 @@ interface Particle {
 let particles: Particle[] = [];
 let running = false;
 
+/**
+ * Density carries information here, so the animated and reduced-motion views must read
+ * the same factor. They previously disagreed: a flooded specimen past the cutoff showed
+ * no particles when animated and dry-path density when still.
+ */
+const emissionFraction = (tw: Twin): number => {
+  const t = Math.max(0, playheadYear(tw) - tw.closed);
+  return twin.get().status === 'flooded' ? floodedFactor(t, 'central') : dryFactor(t, 'central');
+};
+
 const stepParticles = (tw: Twin): void => {
   if (!view) return;
   const geo = view.geometry;
-  const t = Math.max(0, playheadYear(tw) - tw.closed);
-  const frac =
-    twin.get().status === 'flooded' ? floodedFactor(t, 'central') : dryFactor(t, 'central');
+  const frac = emissionFraction(tw);
 
   if (particles.length < 40 && Math.random() < frac * 0.55) {
     particles.push({
@@ -368,8 +376,7 @@ const stepParticles = (tw: Twin): void => {
 export const drawStaticGas = (tw: Twin): void => {
   if (!view) return;
   const geo = view.geometry;
-  const t = Math.max(0, playheadYear(tw) - tw.closed);
-  const n = Math.round(dryFactor(t, 'central') * 26);
+  const n = Math.round(emissionFraction(tw) * 26);
 
   view.particles.selectAll('*').remove();
   for (let i = 0; i < n; i++) {

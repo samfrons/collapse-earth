@@ -245,9 +245,16 @@ export interface Intervention {
   readonly leverage: string;
   /** Honest TRL, spelled out — including where one category spans a wide spread. */
   readonly maturity: string;
-  /** 0–1 normalised leverage, for the assay chart's y-axis. */
+  /**
+   * Editorial leverage, as an **ordinal 1–5** — the assay chart's vertical. Deliberately
+   * not a scale: band 5 is higher than band 4, but not by any stated amount, and the
+   * interval between bands is undefined.
+   */
   readonly leverageBand: number;
-  /** 0–1 normalised technology readiness, for the assay chart's x-axis. */
+  /**
+   * Technology readiness, **1–9**, read off the `maturity` statement rather than
+   * assessed. Drives the assay marker's size, in three steps.
+   */
   readonly trlBand: number;
   readonly funding: readonly FundingEntry[];
   readonly delivered: string;

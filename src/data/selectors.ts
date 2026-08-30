@@ -11,7 +11,7 @@
  * tests. Pages call `totalCapitalRaised(iv)`; they do not touch `.amount`.
  */
 
-import type { FundingEntry, FundingStream, Intervention, TippingSystem } from './schema';
+import type { FundingEntry, FundingStream, Intervention } from './schema';
 
 /* -------------------------------------------------------------------------- */
 /* Money                                                                      */
@@ -113,27 +113,3 @@ export const isOpportunity = (iv: Intervention): boolean => iv.gapScore >= OPPOR
 /** Interventions flagged as under-funded relative to their leverage, ledger order preserved. */
 export const opportunities = (interventions: readonly Intervention[]): readonly Intervention[] =>
   interventions.filter(isOpportunity);
-
-/* -------------------------------------------------------------------------- */
-/* Warming                                                                    */
-/* -------------------------------------------------------------------------- */
-
-/** Where a given warming level sits relative to a tipping system's threshold band. */
-export type CrossingState = 'below' | 'within' | 'beyond';
-
-/**
- * Deliberately three-valued. A two-valued "crossed / not crossed" would force the
- * uncertainty band to collapse to its central estimate, which is precisely the
- * claim the science does not support.
- */
-export const crossingAt = (system: TippingSystem, degreesC: number): CrossingState => {
-  if (degreesC < system.threshold.min) return 'below';
-  if (degreesC > system.threshold.max) return 'beyond';
-  return 'within';
-};
-
-/** Systems whose threshold band the given warming level has entered or passed. */
-export const systemsInPlay = (
-  systems: readonly TippingSystem[],
-  degreesC: number,
-): readonly TippingSystem[] => systems.filter((s) => crossingAt(s, degreesC) !== 'below');

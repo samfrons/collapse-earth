@@ -150,6 +150,8 @@ const render = (): void => {
       return;
     }
     if (ev.key === 'Escape') {
+      // closeTray() is a no-op when nothing is open, so a stray Escape only dismisses
+      // a tooltip rather than yanking focus back to the last-used marker.
       closeTray();
       hideTip();
     }
