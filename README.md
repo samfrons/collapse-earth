@@ -106,7 +106,7 @@ Requires Node 20+ and [pnpm](https://pnpm.io).
 
 ```bash
 pnpm install
-pnpm dev          # vite dev server, opens the switcher
+pnpm dev          # vite dev server, opens Core Sample
 ```
 
 | Command        | What it does                                         |
@@ -156,7 +156,9 @@ that it cannot quietly stop being true.
 ## Deployment
 
 Deployed on [Vercel](https://vercel.com). `pnpm build` emits `dist/`; `/` serves Core
-Sample and `/the-seam` serves the field study. Pushing to `main` deploys to production;
+Sample and `/the-seam` serves the field study, both as rewrites. There is deliberately no
+file at the output root — Vercel resolves the filesystem before it applies rewrites, so a
+real `index.html` there would shadow the rewrite. Pushing to `main` deploys to production;
 other branches get preview URLs.
 
 ## A note on the archive

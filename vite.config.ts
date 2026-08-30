@@ -20,12 +20,14 @@ export default defineConfig({
     emptyOutDir: true,
     target: 'es2022',
     rollupOptions: {
+      // Deliberately no root index.html: Vercel resolves the filesystem before it
+      // applies rewrites, so a real file at "/" would shadow the rewrite to the lead
+      // page. "/" is a rewrite, and the only thing that serves it is Core Sample.
       input: {
-        index: resolve(root, 'src/index.html'),
         'core-sample': page('core-sample'),
         'the-seam': page('the-seam'),
       },
     },
   },
-  server: { open: '/index.html' },
+  server: { open: '/pages/core-sample/index.html' },
 });

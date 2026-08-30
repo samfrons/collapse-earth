@@ -4,8 +4,8 @@
   "outputDirectory": "dist",
   "cleanUrls": true,
   "rewrites": [
-    { "source": "/", "destination": "/pages/core-sample/index.html" },
-    { "source": "/the-seam", "destination": "/pages/the-seam/index.html" }
+    { "source": "/", "destination": "/pages/core-sample" },
+    { "source": "/the-seam", "destination": "/pages/the-seam" }
   ],
   "headers": [
     {
