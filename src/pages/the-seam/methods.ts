@@ -153,6 +153,8 @@ export const renderMethods = (media: MediaLedger): void => {
     html`<span>Collapse Earth — the seam</span><span>field study · beneath §1</span
       ><span>updated ${meta.updated}</span
       ><span>${amm.inventory.counts.total} mines · ${cited.length} sources</span
-      ><span>research and opinion</span><span><a href="/">← core sample</a></span>`,
+      ><span>research and opinion</span
+      ><span>© 2026 Sam Frons · <a href="https://samfrons.xyz">samfrons.xyz</a></span
+      ><span><a href="/">← core sample</a></span>`,
   );
 };

@@ -184,6 +184,7 @@ export const renderMethods = (media: MediaLedger): void => {
       `updated ${meta.updated}`,
       `${tippingSystems.length} elements · ${meta.sources.length} sources`,
       'research and opinion',
+      html`© 2026 Sam Frons · <a href="https://samfrons.xyz">samfrons.xyz</a>`,
     ].map((t) => html`<span>${t}</span>`)}`,
   );
 };
